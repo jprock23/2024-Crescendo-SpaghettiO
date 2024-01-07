@@ -24,4 +24,12 @@ public class Ports {
     public static final int ringPusher = 12;
     public static final int launcherAngle1 = 13;
     public static final int launcherAngle2 = 14;
+
+    //climbing 
+    public static final int climber1 = 15;
+    public static final int climber2 = 16;
+
+    //Intake
+    public static final int roller = 17;
+    public static final int flipper = 18;
 }

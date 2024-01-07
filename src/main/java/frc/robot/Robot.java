@@ -14,6 +14,8 @@ import frc.robot.subsystems.Launcher;
 import frc.robot.subsystems.VisionTablesListener;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
+import frc.robot.subsystems.Climbing;
+import frc.robot.subsystems.Intake;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -34,6 +36,8 @@ public class Robot extends TimedRobot {
    */
     private Launcher launcher;
     private Drivebase drivebase;
+    private Climbing climber;
+    private Intake intake;
     private VisionTablesListener visionTables;
     private AutoAlign visAlign;
     private static TorqueLogiPro driver;
@@ -48,15 +52,15 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     drivebase = Drivebase.getInstance();
     launcher = Launcher.getInstance();
-
+    climber = Climbing.getInstance();
+    intake = Intake.getInstance();
+    
     driver = new TorqueLogiPro(0);
     operator = new XboxController(1);
     drivebase.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0)));
 
     visionTables = VisionTablesListener.getInstance();
     visAlign = AutoAlign.getInstance();
-
-
 
     m_chooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -66,6 +70,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
       CommandScheduler.getInstance().run();
       drivebase.periodic();
+      
 
       SmartDashboard.putBoolean("Arm Manual:", manual);
       visionTables.putInfoOnDashboard();
@@ -97,15 +102,16 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
       boolean fieldRelative = true;
+      boolean climbingMode = false;
 
       /* Drive Controls */
       double 
       ySpeed = -driver.getRoll();
       double xSpeed = -driver.getPitch();
 
-      // double ySpeed = driver.getLeftY();
+      //double ySpeed = driver.getLeftY();
       //double xSpeed = driver.getLeftX();
-      // double rot = driver.getRightX();
+      //double rot = driver.getRightX();
       double rot = 0;
 
       SmartDashboard.putNumber("Xspeed", xSpeed);
@@ -113,29 +119,48 @@ public class Robot extends TimedRobot {
       SmartDashboard.putNumber("Vision yPose", visAlign.getY());
       SmartDashboard.putNumber("rot", rot);
 
-      if (driver.getTrigger())
+      if (driver.getTrigger()) {
           rot = driver.getYaw();
-
-      if (driver.getButtonByIndex(10))
+      }
+      if (driver.getButtonByIndex(10)) {
           fieldRelative = ! fieldRelative;
-      if (driver.getButtonByIndex(7))
+      }
+      if (driver.getButtonByIndex(7)) {
           drivebase.lockWheels();
-      else if (driver.getButtonByIndex(2)){
+      }
+      else if (driver.getButtonByIndex(2)) {
           //drivebase.drive(0, 0, visAlign.getRotSpeed(), fieldRelative);
           drivebase.drive(visAlign.getXSpeed(), visAlign.getYSpeed(), visAlign.getRotSpeed(), fieldRelative);
-      } else
+      } else {
           drivebase.drive(xSpeed, ySpeed, rot, fieldRelative);
+      }
 
+      //swap to climbing mode
+      if(operator.getYButtonPressed())
+        climbingMode = !climbingMode;
+      
+      //Controls for launcher for now
+      if(operator.getAButton()) {
+        launcher.setLauncherPower(1.0);
+      } else if(operator.getBButton()) {
+        launcher.setLauncherPower(0.0);
+      } 
+      
+      //Controls for Intake
+      intake.setIntakePowers(operator.getLeftTriggerAxis(), operator.getRightX());
 
+      if(climbingMode) {
+        //Controls for climbing for now
+        climber.setClimberPower(operator.getLeftY(), operator.getRightX());
 
-
-
-          //Controls for launcher for now
-          if(operator.getAButton()){
-            launcher.setLauncherPower(1.0);
-          }else if(operator.getBButton()){
-            launcher.setLauncherPower(0.0);
-          }
+        // if(operator.getRightTriggerAxis() > 0.0){
+        //     climber.setClimberPower(1.0,1.0);
+        // } else if(operator.getLeftTriggerAxis()>0.0){
+        //     climber.setClimberPower(-1.0,-1.0);
+        // }else{
+        //   climber.setClimberPower(0.0,0.0);
+        // }
+      }
   }
 
   @Override

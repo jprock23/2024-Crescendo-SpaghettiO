@@ -7,11 +7,24 @@ import frc.robot.Ports;
 
 public class Launcher {
 
+    public enum LauncherPosition {
+        AMP,
+        SPEAKER,
+        RETRACTED,
+    }
+
+    public enum LauncherControl {
+        MANUAL,
+        PID,
+    }
+
     private CANSparkMax flywheel1;
     private CANSparkMax flywheel2;
     private CANSparkMax ringPusher;
     private CANSparkMax launcherAngle1;
     private CANSparkMax launcherAngle2;
+    private LauncherPosition launcherPosition = LauncherPosition.RETRACTED;
+    private LauncherControl controlMode = LauncherControl.PID;
     public static Launcher instance;
 
     public Launcher() {

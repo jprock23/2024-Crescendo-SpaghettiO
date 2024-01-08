@@ -4,8 +4,15 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Ports;
 
+
+
 public class Intake {
 
+    public enum IntakePosition{
+        GROUND,
+        RETRACTED,
+    }
+     
     private CANSparkMax roller;
     private CANSparkMax flipper;
     public static Intake instance;
@@ -24,7 +31,6 @@ public class Intake {
         roller.set(rollerPower);
         roller.set(flipperPower);
     }
-    
     
     public static Intake getInstance() {
         if(instance == null)

@@ -38,8 +38,10 @@ public class Robot extends TimedRobot {
     private Drivebase drivebase;
     private Climbing climber;
     private Intake intake;
+  
     private VisionTablesListener visionTables;
     private AutoAlign visAlign;
+
     private static TorqueLogiPro driver;
     private static XboxController operator;
     
@@ -74,6 +76,7 @@ public class Robot extends TimedRobot {
 
       SmartDashboard.putBoolean("Arm Manual:", manual);
       visionTables.putInfoOnDashboard();
+      SmartDashboard.putNumber("Laucnh power", launcher.getPower());
   }
 
   @Override
@@ -138,13 +141,16 @@ public class Robot extends TimedRobot {
       //swap to climbing mode
       if(operator.getYButtonPressed())
         climbingMode = !climbingMode;
-      
-      //Controls for launcher for now
-      if(operator.getAButton()) {
-        launcher.setLauncherPower(1.0);
-      } else if(operator.getBButton()) {
-        launcher.setLauncherPower(0.0);
-      } 
+
+      if(operator.getRightBumper()){
+        launcher.increasePower();
+      }
+
+      if(operator.getLeftBumper()){
+        launcher.increasePower();
+      }
+
+      launcher.setLauncherPower();
       
       //Controls for Intake
       intake.setIntakePowers(operator.getLeftTriggerAxis(), operator.getRightX());

@@ -132,4 +132,18 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
+  public static final class LauncherConstant {
+    public static final double launchPCoefficient = 0.0;
+    public static final double launchICoefficient = 0.0;
+    public static final double launchDCoefficient = 0.0;
+
+    public static final double anglePCoefficient = 0.0;
+    public static final double angleICoefficient = 0.0;
+    public static final double angleDCoefficient = 0.0;                
+
+    public static final double flickerPCoefficient = 0.0;
+    public static final double flickerICoefficient = 0.0;
+    public static final double flickerDCoefficient = 0.0;
+  }
 }

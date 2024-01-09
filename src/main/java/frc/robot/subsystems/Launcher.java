@@ -1,11 +1,13 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
-import frc.robot.Constants.LauncherConstant;
+import frc.robot.Constants.LauncherConstants;
 import frc.robot.Ports;
 
 public class Launcher {
@@ -15,18 +17,20 @@ public class Launcher {
     public enum LauncherState {
         AMP(0.0),
         SPEAKER(0.0),
+        HANDOFF(0.0),
         RETRACTED(0.0);
 
-        private double postion;
+        private double position;
 
         private LauncherState(double position) {
-            this.postion = position;
+            this.position = position;
         }
     }
 
     public enum LauncherVoltage {
         AMP(0.0),
         SPEAKER(0.0),
+        HANDOFF(0.0),
         OFF(0.0);
 
         private double volts;
@@ -52,9 +56,13 @@ public class Launcher {
         }
     }
 
+    private boolean test = true;
+
     private CANSparkMax launchMotor1;
     private CANSparkMax launchMotor2;
+
     private CANSparkMax flicker;
+
     private CANSparkMax launcherAngle1;
     private CANSparkMax launcherAngle2;
 
@@ -65,6 +73,10 @@ public class Launcher {
     private SparkMaxPIDController launchPID2;
 
     private SparkMaxPIDController flickerPID;
+
+    private AbsoluteEncoder angleEncoder1;
+    private AbsoluteEncoder angleEncoder2;
+
 
     private LauncherState launcherState = LauncherState.RETRACTED;
     private LauncherVoltage launcherVolts = LauncherVoltage.OFF;
@@ -97,13 +109,13 @@ public class Launcher {
         launchPID1 = launchMotor1.getPIDController();
         launchPID2 = launchMotor2.getPIDController();
 
-        launchPID1.setP(LauncherConstant.launchPCoefficient);
-        launchPID1.setI(LauncherConstant.launchICoefficient);
-        launchPID1.setD(LauncherConstant.launchDCoefficient);
+        launchPID1.setP(LauncherConstants.launchPCoefficient);
+        launchPID1.setI(LauncherConstants.launchICoefficient);
+        launchPID1.setD(LauncherConstants.launchDCoefficient);
          
-        launchPID2.setP(LauncherConstant.launchPCoefficient);
-        launchPID2.setI(LauncherConstant.launchICoefficient);
-        launchPID2.setD(LauncherConstant.launchDCoefficient);
+        launchPID2.setP(LauncherConstants.launchPCoefficient);
+        launchPID2.setI(LauncherConstants.launchICoefficient);
+        launchPID2.setD(LauncherConstants.launchDCoefficient);
 
         launchPID1.setFeedbackDevice(launchMotor1.getEncoder());
         launchPID2.setFeedbackDevice(launchMotor2.getEncoder());
@@ -111,37 +123,39 @@ public class Launcher {
         anglePID1 = launcherAngle1.getPIDController();
         anglePID2 = launcherAngle2.getPIDController();
 
-        anglePID1.setP(LauncherConstant.anglePCoefficient);
-        anglePID1.setI(LauncherConstant.angleICoefficient);
-        anglePID1.setD(LauncherConstant.angleDCoefficient);
+        angleEncoder1 = launcherAngle1.getAbsoluteEncoder(Type.kDutyCycle);
+        angleEncoder2 = launcherAngle2.getAbsoluteEncoder(Type.kDutyCycle);
 
-        anglePID1.setP(LauncherConstant.anglePCoefficient);
-        anglePID1.setI(LauncherConstant.angleICoefficient);
-        anglePID1.setD(LauncherConstant.angleDCoefficient);
+        anglePID1.setP(LauncherConstants.anglePCoefficient);
+        anglePID1.setI(LauncherConstants.angleICoefficient);
+        anglePID1.setD(LauncherConstants.angleDCoefficient);
 
-        anglePID1.setFeedbackDevice(launcherAngle1.getEncoder());
-        anglePID2.setFeedbackDevice(launcherAngle2.getEncoder());
+        anglePID1.setP(LauncherConstants.anglePCoefficient);
+        anglePID1.setI(LauncherConstants.angleICoefficient);
+        anglePID1.setD(LauncherConstants.angleDCoefficient);
+
+        anglePID1.setFeedbackDevice(angleEncoder1);
+        anglePID2.setFeedbackDevice(angleEncoder2);
 
         flickerPID =flicker.getPIDController();
-        flickerPID.setP(LauncherConstant.anglePCoefficient);
-        flickerPID.setI(LauncherConstant.angleICoefficient);
-        flickerPID.setD(LauncherConstant.angleDCoefficient);
+        flickerPID.setP(LauncherConstants.anglePCoefficient);
+        flickerPID.setI(LauncherConstants.angleICoefficient);
+        flickerPID.setD(LauncherConstants.angleDCoefficient);
 
         flickerPID.setFeedbackDevice(flicker.getEncoder());
-
-       
 
     }
 
     public void periodic(){
-        setLauncherPower();
+        if (test){
+            setLauncherPower();
+        }
 
-        anglePID1.setReference(launcherState.postion,  CANSparkMax.ControlType.kPosition);
-        anglePID2.setReference(launcherState.postion,  CANSparkMax.ControlType.kPosition);
+        anglePID1.setReference(launcherState.position,  CANSparkMax.ControlType.kPosition);
+        anglePID2.setReference(launcherState.position,  CANSparkMax.ControlType.kPosition);
 
         launchPID1.setReference(launcherVolts.volts, CANSparkMax.ControlType.kVoltage);
         launchPID2.setReference(launcherVolts.volts, CANSparkMax.ControlType.kVoltage);
-
 
     }
 
@@ -164,6 +178,22 @@ public class Launcher {
 
     public double getPower(){
         return power;
+    }
+
+    public double getLauncherPosition() {
+        return (angleEncoder1.getPosition() + angleEncoder2.getPosition())/2;
+    }
+
+
+    public boolean hasReachedPose(double tolerance) {
+        if (Math.abs(getLauncherPosition() - launcherState.position) > tolerance) {
+            return true;
+        }
+            return false;
+    }
+
+    public void setTest(){
+        test = !test;
     }
 
     public void setFlickerState(FlickerState state){

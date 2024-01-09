@@ -133,7 +133,7 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
   }
 
-  public static final class LauncherConstant {
+  public static final class LauncherConstants {
     public static final double launchPCoefficient = 0.0;
     public static final double launchICoefficient = 0.0;
     public static final double launchDCoefficient = 0.0;
@@ -146,4 +146,12 @@ public final class Constants {
     public static final double flickerICoefficient = 0.0;
     public static final double flickerDCoefficient = 0.0;
   }
+
+  public static final class IntakeConstants {
+    public static final double flipperPCoefficient = 0.0;
+    public static final double flipperICoefficient = 0.0;
+    public static final double flipperDCoefficient = 0.0;
+
+  }
+
 }

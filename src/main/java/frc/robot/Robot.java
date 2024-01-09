@@ -150,10 +150,11 @@ public class Robot extends TimedRobot {
         launcher.increasePower();
       }
 
+      if (operator.getBButton()){
+        launcher.setTest();
+      }
+
       launcher.setLauncherPower();
-      
-      //Controls for Intake
-      intake.setIntakePowers(operator.getLeftTriggerAxis(), operator.getRightX());
 
       if(climbingMode) {
         //Controls for climbing for now

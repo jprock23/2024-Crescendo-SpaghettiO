@@ -20,6 +20,7 @@ import frc.robot.subsystems.Intake;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -66,6 +67,10 @@ public class Robot extends TimedRobot {
 
     m_chooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto choices", m_chooser);
+
+    CameraServer.startAutomaticCapture(0);
+
+    
   }
 
   @Override
@@ -77,6 +82,7 @@ public class Robot extends TimedRobot {
       SmartDashboard.putBoolean("Arm Manual:", manual);
       visionTables.putInfoOnDashboard();
       SmartDashboard.putNumber("Laucnh power", launcher.getPower());
+      
   }
 
   @Override
@@ -104,6 +110,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+
+
       boolean fieldRelative = true;
       boolean climbingMode = false;
 

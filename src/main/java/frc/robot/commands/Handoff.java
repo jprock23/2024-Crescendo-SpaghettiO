@@ -55,7 +55,6 @@ public class Handoff extends Command {
     }
 
 
-
   }
 
   @Override

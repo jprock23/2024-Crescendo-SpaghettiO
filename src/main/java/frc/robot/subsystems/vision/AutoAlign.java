@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.vision;
 import edu.wpi.first.math.controller.PIDController;
 
 public class AutoAlign {

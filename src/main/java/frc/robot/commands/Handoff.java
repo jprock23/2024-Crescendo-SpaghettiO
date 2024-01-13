@@ -6,11 +6,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Launcher;
-import frc.robot.subsystems.Intake.IntakePosition;
-import frc.robot.subsystems.Launcher.LauncherState;
-import frc.robot.subsystems.Launcher.LauncherVoltage;
+
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeStates.*;
+
+import frc.robot.subsystems.launcher.*;
+import frc.robot.subsystems.launcher.LauncherStates.*;
+import frc.robot.subsystems.launcher.LauncherStates.LauncherVoltage;
 
 public class Handoff extends Command {
 

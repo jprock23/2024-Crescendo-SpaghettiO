@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.AutoAlign;
-import frc.robot.subsystems.Launcher;
-import frc.robot.subsystems.VisionTablesListener;
+import frc.robot.subsystems.launcher.*;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.intake.Intake;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
-import frc.robot.subsystems.Climbing;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.vision.AutoAlign;
+import frc.robot.subsystems.vision.VisionTablesListener;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
    */
     private Launcher launcher;
     private Drivebase drivebase;
-    private Climbing climber;
+    private Climber climber;
     private Intake intake;
   
     private VisionTablesListener visionTables;
@@ -55,7 +55,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     drivebase = Drivebase.getInstance();
     launcher = Launcher.getInstance();
-    climber = Climbing.getInstance();
+    climber = Climber.getInstance();
     intake = Intake.getInstance();
     
     driver = new TorqueLogiPro(0);
@@ -69,7 +69,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     CameraServer.startAutomaticCapture(0);
-
     
   }
 

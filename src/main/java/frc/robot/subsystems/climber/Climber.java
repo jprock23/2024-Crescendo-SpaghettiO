@@ -1,17 +1,17 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.climber;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Ports;
 
-public class Climbing {
+public class Climber {
 
     private CANSparkMax climber1;
     private CANSparkMax climber2;
-    public static Climbing instance;
+    public static Climber instance;
 
-    public Climbing() {
+    public Climber() {
         climber1 = new CANSparkMax(Ports.climber1,MotorType.kBrushless);
         climber1.setInverted(false);
         climber1.burnFlash();
@@ -26,9 +26,9 @@ public class Climbing {
         climber2.set(climber2Power);
     }
 
-    public static Climbing getInstance() {
+    public static Climber getInstance() {
         if(instance == null){
-             instance = new Climbing();
+             instance = new Climber();
         }
         return instance;
     }

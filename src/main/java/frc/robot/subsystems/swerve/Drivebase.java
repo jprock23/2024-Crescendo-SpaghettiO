@@ -45,11 +45,11 @@ public class Drivebase extends SubsystemBase {
 
     // Swerve modules
 
-    frontLeft = new SwerveModule(Ports.leftSpeed1, Ports.leftAngle1, DriveConstants.kFrontLeftChassisAngularOffset);
-    backLeft = new SwerveModule(Ports.leftSpeed2, Ports.leftAngle2, DriveConstants.kBackLeftChassisAngularOffset);
+    frontLeft = new SwerveModule(Ports.frontLeftDrive, Ports.frontLeftSteer, DriveConstants.kFrontLeftChassisAngularOffset);
+    backLeft = new SwerveModule(Ports.backLeftDrive, Ports.backLeftSteer, DriveConstants.kBackLeftChassisAngularOffset);
 
-    frontRight = new SwerveModule(Ports.rightSpeed1, Ports.rightAngle1, DriveConstants.kFrontRightChassisAngularOffset);
-    backRight = new SwerveModule(Ports.rightSpeed2, Ports.rightAngle2, DriveConstants.kBackRightChassisAngularOffset);
+    frontRight = new SwerveModule(Ports.frontRightDrive, Ports.frontRighttSteer, DriveConstants.kFrontRightChassisAngularOffset);
+    backRight = new SwerveModule(Ports.backRightDrive, Ports.backRightSteer, DriveConstants.kBackRightChassisAngularOffset);
 
     // gyro
     gyro = new AHRS(SPI.Port.kMXP);

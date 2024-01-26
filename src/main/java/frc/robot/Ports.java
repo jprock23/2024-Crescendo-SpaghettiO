@@ -2,21 +2,21 @@ package frc.robot;
 
 public class Ports {
 
-    // 1 is front
+    // 1 is back
 
     //swerve sparkmaxes
 
     // speed sparkmaxes
-    public static final int leftSpeed1 = 2;
-    public static final int leftSpeed2 = 4;
-    public static final int rightSpeed1 = 6;
-    public static final int rightSpeed2 = 8;
+    public static final int backLeftDrive = 2;
+    public static final int frontLeftDrive = 4;
+    public static final int backRightDrive = 8;
+    public static final int frontRightDrive = 6;
 
     // angle sparkmaxes
-    public static final int leftAngle1 = 1;
-    public static final int leftAngle2 = 3;
-    public static final int rightAngle1 = 5;
-    public static final int rightAngle2 = 7;
+    public static final int backLeftSteer = 1;
+    public static final int frontLeftSteer = 3;
+    public static final int backRightSteer = 7;
+    public static final int frontRighttSteer = 5;
 
     // launcher sparkmaxes
     public static final int flywheel1 = 10;
@@ -27,9 +27,9 @@ public class Ports {
 
     //climbing 
     public static final int climber1 = 15;
-    public static final int climber2 = 16;
+    public static final int climber2 = 17;
 
     //Intake
-    public static final int roller = 17;
-    public static final int flipper = 18;
+    public static final int roller = 10;
+    public static final int flipper = 16;
 }

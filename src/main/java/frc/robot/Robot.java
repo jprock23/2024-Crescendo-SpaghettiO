@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
     m_chooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    CameraServer.startAutomaticCapture(0);
+    // CameraServer.startAutomaticCapture(0);
     
   }
 
@@ -75,6 +75,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
       CommandScheduler.getInstance().run();
       drivebase.periodic();
+      
       
       // visionTables.putInfoOnDashboard();
       // SmartDashboard.putNumber("Laucnh power", launcher.getPower());
@@ -151,10 +152,17 @@ public class Robot extends TimedRobot {
         intake.setIntakeState(IntakePosition.GROUND);
       } else if (operator.getBButton()){
         intake.setIntakeState(IntakePosition.HANDOFF);
-      } else if (operator.getYButton()){
-        intake.setIntakeState(IntakePosition.RETRACTED);
       }
-  }
+      // } else if (operator.getYButton()){
+      //   intake.setIntakeState(IntakePosition.RETRACTED);
+      // }
+
+      if(operator.getXButton()){
+        intake.setFlipperPower();
+      } if (operator.getYButton()){
+        intake.setFlipperOff();
+      }
+}  
 
   @Override
   public void disabledInit() {}

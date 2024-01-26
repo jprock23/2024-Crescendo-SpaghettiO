@@ -13,12 +13,13 @@ public class Intake {
     private CANSparkMax roller;
     private CANSparkMax flipper;
 
-    private IntakePID control;
+    // private IntakePID control;
 
     private IntakePosition intakePosition = IntakePosition.RETRACTED;
     public static Intake instance;
 
-    private double power = .8;
+    private double power = .5;
+    private double flip = 0.25;
     
     public Intake() {
         roller = new CANSparkMax(Ports.roller, MotorType.kBrushless);
@@ -37,16 +38,14 @@ public class Intake {
         flipper.setInverted(false);
         flipper.burnFlash();
 
-        control = IntakePID.getInstance(flipper);
+        // control = IntakePID.getInstance(flipper);
 
     }
 
     public void periodic(){
         // control.setIntakeSP(intakePosition.position);
-        SmartDashboard.putNumber("Intake Position", control.getFlipperPosition());
+        // SmartDashboard.putNumber("Intake Position", control.getFlipperPosition());
         SmartDashboard.putNumber("Intake Power", power);
-
-        flipper.set(0);
     }
 
      public void setRollerPower(double pow){
@@ -55,6 +54,14 @@ public class Intake {
 
     public void setRollerPower(){
         roller.set(power);
+    }
+
+    public void setFlipperPower(){
+        flipper.set(flip);
+    }
+
+    public void setFlipperOff(){
+        roller.set(0);
     }
 
     public void setRollerOff(){
@@ -73,12 +80,12 @@ public class Intake {
         return roller.getOutputCurrent();
     }
 
-    public boolean hasReachedPose(double tolerance) {
-                if (Math.abs(control.getFlipperPosition() - intakePosition.position) > tolerance) {
-            return true;
-        }
-        return false;
-    }
+    // public boolean hasReachedPose(double tolerance) {
+    //             if (Math.abs(control.getFlipperPosition() - intakePosition.position) > tolerance) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     public void setIntakeState(IntakePosition state) {
         this.intakePosition = state;

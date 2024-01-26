@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.launcher.*;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeStates.IntakePosition;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
 import frc.robot.subsystems.vision.AutoAlign;
@@ -35,35 +36,33 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
-    private Launcher launcher;
+    // private Launcher launcher;
     private Drivebase drivebase;
-    private Climber climber;
+    // private Climber climber;
     private Intake intake;
   
-    private VisionTablesListener visionTables;
-    private AutoAlign visAlign;
+    // private VisionTablesListener visionTables;
+    // private AutoAlign visAlign;
 
-    private static TorqueLogiPro driver;
+    private static XboxController driver;
     private static XboxController operator;
     
-    private boolean manual;
-
     private Command m_autoSelected;
     private SendableChooser<Command> m_chooser;
   
   @Override
   public void robotInit() {
     drivebase = Drivebase.getInstance();
-    launcher = Launcher.getInstance();
-    climber = Climber.getInstance();
+    // launcher = Launcher.getInstance();
+    // climber = Climber.getInstance();
     intake = Intake.getInstance();
     
-    driver = new TorqueLogiPro(0);
+    driver = new XboxController(0);
     operator = new XboxController(1);
     drivebase.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0)));
 
-    visionTables = VisionTablesListener.getInstance();
-    visAlign = AutoAlign.getInstance();
+    // visionTables = VisionTablesListener.getInstance();
+    // visAlign = AutoAlign.getInstance();
 
     m_chooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -77,10 +76,8 @@ public class Robot extends TimedRobot {
       CommandScheduler.getInstance().run();
       drivebase.periodic();
       
-
-      SmartDashboard.putBoolean("Arm Manual:", manual);
-      visionTables.putInfoOnDashboard();
-      SmartDashboard.putNumber("Laucnh power", launcher.getPower());
+      // visionTables.putInfoOnDashboard();
+      // SmartDashboard.putNumber("Laucnh power", launcher.getPower());
       
   }
 
@@ -94,7 +91,7 @@ public class Robot extends TimedRobot {
      }
 
   
-    visionTables.putInfoOnDashboard();
+    // visionTables.putInfoOnDashboard();
   }
 
   @Override
@@ -110,70 +107,52 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-
       boolean fieldRelative = true;
       boolean climbingMode = false;
 
       /* Drive Controls */
-      double 
-      ySpeed = -driver.getRoll();
-      double xSpeed = -driver.getPitch();
+    //   double 
+    //  ySpeed = -driver.getRoll();
+    //   double xSpeed = -driver.getPitch();
 
-      //double ySpeed = driver.getLeftY();
-      //double xSpeed = driver.getLeftX();
-      //double rot = driver.getRightX();
-      double rot = 0;
+      double ySpeed = driver.getLeftY();
+      double xSpeed = driver.getLeftX();
+      double rot = driver.getRightX();
+      // double rot = 0;
 
       SmartDashboard.putNumber("Xspeed", xSpeed);
       SmartDashboard.putNumber("Yspeed", ySpeed);
-      SmartDashboard.putNumber("Vision yPose", visAlign.getY());
+      // SmartDashboard.putNumber("Vision yPose", visAlign.getY());
       SmartDashboard.putNumber("rot", rot);
 
-      if (driver.getTrigger()) {
-          rot = driver.getYaw();
-      }
-      if (driver.getButtonByIndex(10)) {
+      // if (driver.getTrigger()) {
+      //     rot = driver.getYaw();
+      // }
+      if (driver.getXButton()) {
           fieldRelative = ! fieldRelative;
       }
-      if (driver.getButtonByIndex(7)) {
+      if (driver.getBButton()) {
           drivebase.lockWheels();
       }
-      else if (driver.getButtonByIndex(2)) {
+      // else if (driver.getButtonByIndex(2)) {
           //drivebase.drive(0, 0, visAlign.getRotSpeed(), fieldRelative);
-          drivebase.drive(visAlign.getXSpeed(), visAlign.getYSpeed(), visAlign.getRotSpeed(), fieldRelative);
-      } else {
+          // drivebase.drive(visAlign.getXSpeed(), visAlign.getYSpeed(), visAlign.getRotSpeed(), fieldRelative);
+      else {
           drivebase.drive(xSpeed, ySpeed, rot, fieldRelative);
       }
 
-      //swap to climbing mode
-      if(operator.getYButtonPressed())
-        climbingMode = !climbingMode;
-
-      if(operator.getRightBumper()){
-        launcher.increasePower();
+      if (operator.getRightBumper()){
+        intake.setRollerPower();
+      } else if(operator.getLeftBumper()){
+        intake.setRollerOff();
       }
 
-      if(operator.getLeftBumper()){
-        launcher.increasePower();
-      }
-
-      if (operator.getBButton()){
-        launcher.setTest();
-      }
-
-      launcher.setLauncherPower();
-
-      if(climbingMode) {
-        //Controls for climbing for now
-        climber.setClimberPower(operator.getLeftY(), operator.getRightX());
-
-        // if(operator.getRightTriggerAxis() > 0.0){
-        //     climber.setClimberPower(1.0,1.0);
-        // } else if(operator.getLeftTriggerAxis()>0.0){
-        //     climber.setClimberPower(-1.0,-1.0);
-        // }else{
-        //   climber.setClimberPower(0.0,0.0);
-        // }
+      if (operator.getAButton()){
+        intake.setIntakeState(IntakePosition.GROUND);
+      } else if (operator.getBButton()){
+        intake.setIntakeState(IntakePosition.HANDOFF);
+      } else if (operator.getYButton()){
+        intake.setIntakeState(IntakePosition.RETRACTED);
       }
   }
 

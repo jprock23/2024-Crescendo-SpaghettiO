@@ -1,8 +1,10 @@
 package frc.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Ports;
 import frc.robot.subsystems.intake.IntakeStates.*;
 
@@ -15,13 +17,23 @@ public class Intake {
 
     private IntakePosition intakePosition = IntakePosition.RETRACTED;
     public static Intake instance;
+
+    private double power = .8;
     
     public Intake() {
         roller = new CANSparkMax(Ports.roller, MotorType.kBrushless);
+        roller.restoreFactoryDefaults();
+
+        roller.setSmartCurrentLimit(40);
+        roller.setIdleMode(IdleMode.kCoast);
         roller.setInverted(false);
         roller.burnFlash();
         
         flipper = new CANSparkMax(Ports.flipper,MotorType.kBrushless);
+        flipper.restoreFactoryDefaults();
+
+        flipper.setSmartCurrentLimit(70);
+        flipper.setIdleMode(IdleMode.kBrake);
         flipper.setInverted(false);
         flipper.burnFlash();
 
@@ -30,11 +42,31 @@ public class Intake {
     }
 
     public void periodic(){
-        control.setIntakeSP(intakePosition.position);
+        // control.setIntakeSP(intakePosition.position);
+        SmartDashboard.putNumber("Intake Position", control.getFlipperPosition());
+        SmartDashboard.putNumber("Intake Power", power);
+
+        flipper.set(0);
     }
 
-    public void setRollerPower(double power){
+     public void setRollerPower(double pow){
+        roller.set(pow);
+    }
+
+    public void setRollerPower(){
         roller.set(power);
+    }
+
+    public void setRollerOff(){
+        roller.set(0);
+    }
+
+    public void decreaseRoller(){
+        power -= power;
+    }
+
+        public void increaseRoller(){
+        power += power;
     }
 
     public double getRollerCurrent() {

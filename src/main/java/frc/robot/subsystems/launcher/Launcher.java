@@ -2,6 +2,7 @@ package frc.robot.subsystems.launcher;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Ports;
@@ -35,22 +36,42 @@ public class Launcher {
 
     public Launcher() {
         launchMotor1 = new CANSparkMax(Ports.flywheel1, MotorType.kBrushless);
+        launchMotor1.restoreFactoryDefaults();
+
+        launchMotor1.setSmartCurrentLimit(60);
+        launchMotor1.setIdleMode(IdleMode.kCoast);
         launchMotor1.setInverted(false);
         launchMotor1.burnFlash();
 
         launchMotor2 = new CANSparkMax(Ports.flywheel2, MotorType.kBrushless);
+        launchMotor2.restoreFactoryDefaults();
+
+        launchMotor2.setSmartCurrentLimit(60);
+        launchMotor2.setIdleMode(IdleMode.kCoast);
         launchMotor2.setInverted(true);
         launchMotor2.burnFlash();
 
         flicker = new CANSparkMax(Ports.ringPusher, MotorType.kBrushless);
+        flicker.restoreFactoryDefaults();
+
+        flicker.setSmartCurrentLimit(20);
+        flicker.setIdleMode(IdleMode.kBrake);
         flicker.setInverted(false);
         flicker.burnFlash();
 
         launcherAngle1 = new CANSparkMax(Ports.launcherAngle1, MotorType.kBrushless);
+        launcherAngle1.restoreFactoryDefaults();
+
+        launcherAngle1.setSmartCurrentLimit(60);
+        launcherAngle1.setIdleMode(IdleMode.kBrake);
         launcherAngle1.setInverted(false);
         launcherAngle1.burnFlash();
 
         launcherAngle2 = new CANSparkMax(Ports.launcherAngle2, MotorType.kBrushless);
+        launcherAngle2.restoreFactoryDefaults();
+
+        launcherAngle2.setIdleMode(IdleMode.kBrake);
+        launcherAngle2.setSmartCurrentLimit(60);
         launcherAngle2.setInverted(true);
         launcherAngle2.burnFlash();
 

@@ -40,6 +40,10 @@ public class Robot extends TimedRobot {
     private Drivebase drivebase;
     // private Climber climber;
     private Intake intake;
+
+    private Climber climber;
+
+    private Launcher launcher;
   
     // private VisionTablesListener visionTables;
     // private AutoAlign visAlign;
@@ -56,6 +60,8 @@ public class Robot extends TimedRobot {
     // launcher = Launcher.getInstance();
     // climber = Climber.getInstance();
     intake = Intake.getInstance();
+    climber = Climber.getInstance();
+    launcher = Launcher.getInstance();
     
     driver = new XboxController(0);
     operator = new XboxController(1);
@@ -109,7 +115,9 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
       boolean fieldRelative = true;
-      boolean climbingMode = false;
+
+    
+  
 
       /* Drive Controls */
     //   double 
@@ -142,26 +150,61 @@ public class Robot extends TimedRobot {
           drivebase.drive(xSpeed, ySpeed, rot, fieldRelative);
       }
 
-      if (operator.getRightBumper()){
-        intake.setRollerPower();
-      } else if(operator.getLeftBumper()){
-        intake.setRollerOff();
-      }
+    
 
-      if (operator.getAButton()){
-        intake.setIntakeState(IntakePosition.GROUND);
-      } else if (operator.getBButton()){
-        intake.setIntakeState(IntakePosition.HANDOFF);
-      }
+      // if (operator.getAButton()){
+      //   intake.setIntakeState(IntakePosition.GROUND);
+      // } else if (operator.getBButton()){
+      //   intake.setIntakeState(IntakePosition.HANDOFF);
+      // }
       // } else if (operator.getYButton()){
       //   intake.setIntakeState(IntakePosition.RETRACTED);
       // }
+      
 
+      //flipping intake
       if(operator.getXButton()){
         intake.setFlipperPower();
       } if (operator.getYButton()){
         intake.setFlipperOff();
       }
+
+      
+      //rolling intake rollers
+        if (operator.getRightBumper()){
+        intake.setRollerPower();
+      } else if(operator.getLeftBumper()){
+        intake.setRollerOff();
+      }
+
+      //Launcher angles
+      if(operator.getRightTriggerAxis() > 0.0){
+          launcher.setLauncherAngle(operator.getRightTriggerAxis(), operator.getRightTriggerAxis());
+      }else if(operator.getLeftTriggerAxis()> 0.0){
+        launcher.setLauncherAngle(-operator.getLeftTriggerAxis(), -operator.getLeftTriggerAxis());
+      }else{
+        launcher.setAngleStop();
+      }
+
+      //Launching notes
+      if(operator.getAButton()){
+        launcher.setLauncherPower();
+      }else if(operator.getBButton()){
+        launcher.setLaunchZero();
+      }
+
+
+      //climber controls
+      if(driver.getRightTriggerAxis()>0.0){
+        climber.setClimberPower(driver.getRightTriggerAxis(), driver.getRightTriggerAxis());
+      }else if(driver.getLeftTriggerAxis()>0.0){
+        climber.setClimberPower(-driver.getLeftTriggerAxis(), -driver.getLeftTriggerAxis());
+      }else{
+        climber.setClimberStop();
+      }
+
+
+      
 }  
 
   @Override

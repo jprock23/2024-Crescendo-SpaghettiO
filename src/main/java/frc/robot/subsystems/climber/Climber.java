@@ -34,6 +34,13 @@ public class Climber {
         climber2.set(climber2Power);
     }
 
+    
+
+    public void setClimberStop(){
+        climber1.set(0.0);
+        climber2.set(0.0);
+    }
+
     public static Climber getInstance() {
         if(instance == null){
              instance = new Climber();

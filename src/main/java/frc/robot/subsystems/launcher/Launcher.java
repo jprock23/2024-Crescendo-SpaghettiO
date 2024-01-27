@@ -89,9 +89,25 @@ public class Launcher {
         
     }
 
+    public void setLauncherAngle(double angle1, double angle2){
+        launcherAngle1.set(angle1);
+        launcherAngle2.set(angle2);
+
+    }
+
+    public void setAngleStop(){
+        launcherAngle1.set(0.0);
+        launcherAngle2.set(0.0);
+    }
+
     public void setLauncherPower() {
         launchMotor1.set(power);
         launchMotor2.set(power);
+    }
+
+    public void setLaunchZero(){
+        launchMotor1.set(0.0);
+        launchMotor2.set(0.0);
     }
 
     public void increasePower(){

@@ -29,9 +29,18 @@ public class Climber {
         climber2.burnFlash();
     }
 
-    public void setClimberPower(double climber1Power, double climber2Power) {
-        climber1.set(climber1Power);
-        climber2.set(climber2Power);
+    public void setClimberPower(double up, double down) {
+
+        if(up != 0){
+            climber1.set(up);
+            climber2.set(up);
+        } else if(down != 0){
+            climber1.set(down);
+            climber2.set(down);
+        } else {
+            climber1.set(0);
+            climber2.set(0);
+        }
     }
 
     

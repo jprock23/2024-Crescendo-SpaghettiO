@@ -14,9 +14,15 @@ import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeStates.IntakePosition;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import frc.robot.subsystems.swerve.Drivebase;
 import frc.robot.subsystems.vision.AutoAlign;
 import frc.robot.subsystems.vision.VisionTablesListener;
+import edu.wpi.first.hal.AddressableLEDJNI;
+import edu.wpi.first.hal.FRCNetComm.tResourceType;
+
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -44,6 +50,9 @@ public class Robot extends TimedRobot {
     private Climber climber;
 
     private Launcher launcher;
+
+    // private AddressableLED lit;
+    // private AddressableLEDBuffer litBuffer;
   
     // private VisionTablesListener visionTables;
     // private AutoAlign visAlign;
@@ -56,22 +65,29 @@ public class Robot extends TimedRobot {
   
   @Override
   public void robotInit() {
-    drivebase = Drivebase.getInstance();
+    // drivebase = Drivebase.getInstance();
     // launcher = Launcher.getInstance();
     // climber = Climber.getInstance();
     intake = Intake.getInstance();
     climber = Climber.getInstance();
     launcher = Launcher.getInstance();
+
+    // lit = new AddressableLED(9);
+    // litBuffer = new AddressableLEDBuffer(60);
+    // lit.setLength(litBuffer.getLength());
+    // lit.setData(litBuffer);
+    // lit.start();
+
     
     driver = new XboxController(0);
     operator = new XboxController(1);
-    drivebase.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0)));
+    // drivebase.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0)));
 
     // visionTables = VisionTablesListener.getInstance();
     // visAlign = AutoAlign.getInstance();
 
-    m_chooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto choices", m_chooser);
+    // m_chooser = AutoBuilder.buildAutoChooser();
+    // SmartDashboard.putData("Auto choices", m_chooser);
 
     // CameraServer.startAutomaticCapture(0);
     
@@ -80,7 +96,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
       CommandScheduler.getInstance().run();
-      drivebase.periodic();
+      // drivebase.periodic();
+    
       
       
       // visionTables.putInfoOnDashboard();
@@ -124,9 +141,9 @@ public class Robot extends TimedRobot {
     //  ySpeed = -driver.getRoll();
     //   double xSpeed = -driver.getPitch();
 
-      double ySpeed = driver.getLeftY();
-      double xSpeed = driver.getLeftX();
-      double rot = driver.getRightX();
+      double ySpeed = 0;
+      double xSpeed = 0;
+      double rot = 0;
       // double rot = 0;
 
       SmartDashboard.putNumber("Xspeed", xSpeed);
@@ -141,13 +158,13 @@ public class Robot extends TimedRobot {
           fieldRelative = ! fieldRelative;
       }
       if (driver.getBButton()) {
-          drivebase.lockWheels();
+          // drivebase.lockWheels();
       }
       // else if (driver.getButtonByIndex(2)) {
           //drivebase.drive(0, 0, visAlign.getRotSpeed(), fieldRelative);
           // drivebase.drive(visAlign.getXSpeed(), visAlign.getYSpeed(), visAlign.getRotSpeed(), fieldRelative);
       else {
-          drivebase.drive(xSpeed, ySpeed, rot, fieldRelative);
+          // drivebase.drive(xSpeed, ySpeed, rot, fieldRelative);
       }
 
     
@@ -191,16 +208,25 @@ public class Robot extends TimedRobot {
         launcher.setLauncherPower();
       }else if(operator.getBButton()){
         launcher.setLaunchZero();
+      }else if(operator.getLeftStickButton()){
+        launcher.increasePower();
+      }else if(operator.getRightStickButton()){
+        launcher.decreasePower();
+      }else if(operator.getXButton()){
+       launcher.setReverse();
       }
+
+      
+
+      
 
 
       //climber controls
-      if(driver.getRightTriggerAxis()>0.0){
-        climber.setClimberPower(driver.getRightTriggerAxis(), driver.getRightTriggerAxis());
-      }else if(driver.getLeftTriggerAxis()>0.0){
-        climber.setClimberPower(-driver.getLeftTriggerAxis(), -driver.getLeftTriggerAxis());
-      }else{
-        climber.setClimberStop();
+      climber.setClimberPower(driver.getRightTriggerAxis(), -driver.getLeftTriggerAxis());
+
+      //rumbling
+      if(driver.getYButton()){
+        driver.setRumble(RumbleType.kBothRumble, 1);
       }
 
 

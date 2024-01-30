@@ -10,7 +10,7 @@ import frc.robot.subsystems.launcher.LauncherStates.*;
 
 public class Launcher {
 
-    double power = .5;
+    double power = -.5;
 
     private boolean test = true;
 
@@ -22,7 +22,7 @@ public class Launcher {
     private CANSparkMax launcherAngle1;
     private CANSparkMax launcherAngle2;
 
-    private LauncherPID control;
+    // private LauncherPID control;
 
     private AbsoluteEncoder angleEncoder1;
     private AbsoluteEncoder angleEncoder2;
@@ -51,7 +51,7 @@ public class Launcher {
         launchMotor2.setInverted(true);
         launchMotor2.burnFlash();
 
-        flicker = new CANSparkMax(Ports.ringPusher, MotorType.kBrushless);
+        flicker = new CANSparkMax(Ports.flicker, MotorType.kBrushless);
         flicker.restoreFactoryDefaults();
 
         flicker.setSmartCurrentLimit(20);
@@ -59,7 +59,7 @@ public class Launcher {
         flicker.setInverted(false);
         flicker.burnFlash();
 
-        launcherAngle1 = new CANSparkMax(Ports.launcherAngle1, MotorType.kBrushless);
+        launcherAngle1 = new CANSparkMax(Ports.bigFlipper1, MotorType.kBrushless);
         launcherAngle1.restoreFactoryDefaults();
 
         launcherAngle1.setSmartCurrentLimit(60);
@@ -67,7 +67,7 @@ public class Launcher {
         launcherAngle1.setInverted(false);
         launcherAngle1.burnFlash();
 
-        launcherAngle2 = new CANSparkMax(Ports.launcherAngle2, MotorType.kBrushless);
+        launcherAngle2 = new CANSparkMax(Ports.bigFlipper2, MotorType.kBrushless);
         launcherAngle2.restoreFactoryDefaults();
 
         launcherAngle2.setIdleMode(IdleMode.kBrake);
@@ -75,7 +75,7 @@ public class Launcher {
         launcherAngle2.setInverted(true);
         launcherAngle2.burnFlash();
 
-        control = new LauncherPID(launchMotor1, launchMotor2, launcherAngle1, launcherAngle2, flicker);
+        // control = new LauncherPID(launchMotor1, launchMotor2, launcherAngle1, launcherAngle2, flicker);
     }
 
     public void periodic(){
@@ -83,9 +83,9 @@ public class Launcher {
             setLauncherPower();
         }
 
-        control.setAngleSP(launcherState.position);
-        control.setFlickerSP(flickerState.position);
-        control.setVoltageSP(launcherVolts.volts);
+        // control.setAngleSP(launcherState.position);
+        // control.setFlickerSP(flickerState.position);
+        // control.setVoltageSP(launcherVolts.volts);
         
     }
 
@@ -94,6 +94,12 @@ public class Launcher {
         launcherAngle2.set(angle2);
 
     }
+
+    public void setReverse(){
+        launchMotor1.set(-power);
+        launchMotor2.set(-power);
+    }
+    
 
     public void setAngleStop(){
         launcherAngle1.set(0.0);

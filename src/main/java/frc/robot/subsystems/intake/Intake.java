@@ -48,8 +48,10 @@ public class Intake {
         SmartDashboard.putNumber("Intake Power", power);
     }
 
-     public void setRollerPower(double pow){
-        roller.set(pow);
+     
+
+    public void reverse(){
+        flipper.set(-power);
     }
 
     public void setRollerPower(){
@@ -61,7 +63,7 @@ public class Intake {
     }
 
     public void setFlipperOff(){
-        roller.set(0);
+        roller.set(0.0);
     }
 
     public void setRollerOff(){

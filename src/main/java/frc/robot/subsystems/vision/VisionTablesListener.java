@@ -14,9 +14,13 @@ public class VisionTablesListener {
     private IntegerArraySubscriber xCoordsSub;
     private IntegerArraySubscriber yCoordsSub;
     private IntegerArraySubscriber zRotsSub;
+    private IntegerArraySubscriber ringCenterXSub;
+    private IntegerArraySubscriber ringCenterYSub;
     double yPose = 0;
     double xPose = 0;
     double zRot = 0;
+    double ringX = -1;
+    double ringY = -1;
     // private IntegerArraySubscriber xEulerSub;
     // private IntegerArraySubscriber yEulerSub;
     // private IntegerArraySubscriber zEulerSub;
@@ -28,6 +32,8 @@ public class VisionTablesListener {
         xCoordsSub = visionTable.getIntegerArrayTopic("X Coords").subscribe(new long[] {});
         yCoordsSub = visionTable.getIntegerArrayTopic("Y Coords").subscribe(new long[] {});
         zRotsSub = visionTable.getIntegerArrayTopic("Z Euler Angles").subscribe(new long[] {});
+        ringCenterXSub = visionTable.getIntegerArrayTopic("Ring Center X Coords").subscribe(new long[] {});
+        ringCenterYSub = visionTable.getIntegerArrayTopic("Ring Center Y Coords").subscribe(new long[] {});
         // xEulerSub = visionTable.getIntegerArrayTopic("X Euler Angles").subscribe(new
         // long[] {});
         // yEulerSub = visionTable.getIntegerArrayTopic("Y Euler Angles").subscribe(new
@@ -39,7 +45,9 @@ public class VisionTablesListener {
     public void putInfoOnDashboard() {
         double id = 0;
         boolean tagVisible;
-
+        
+        double ringCenterX[];
+        double ringCenterY[];
         double[] xPoses;
         double[] yPoses;
         double[] zRots;
@@ -61,8 +69,8 @@ public class VisionTablesListener {
         if(xPoses.length != 0){
             xPose = xPoses[0];
             yPose = yPoses[0];
-            zRot = zRots[0];
-            
+            zRot = zRots[0];   
+
             // SmartDashboard.putNumberArray("IDs", convertArray(tagIDSub.get()));
             SmartDashboard.putNumber("X Coords", xPose);
             SmartDashboard.putNumber("Y Coords", yPose);
@@ -74,7 +82,20 @@ public class VisionTablesListener {
             // convertArray(yEulerSub.get()));
             // SmartDashboard.putNumberArray("Z Euler Angles",
             // convertArray(zEulerSub.get()));
-    }
+        }
+        
+        if(ringCenterXSub.get().length != 0) {
+            ringCenterX = convertArray(ringCenterXSub.get());
+            ringCenterY = convertArray(ringCenterYSub.get());
+        }
+        else {
+            ringCenterX = new double[]{-1};
+            ringCenterY = new double[]{-1};
+        }
+        ringX = ringCenterX[0];
+        ringY = ringCenterY[0];
+        SmartDashboard.putNumber("Ring X Coord", ringX);
+        SmartDashboard.putNumber("Ring Y Coords", ringY);
     }
 
     // need to convert each value to double individually, can't typecast entire

@@ -4,25 +4,27 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+
 
 import frc.robot.Ports;
 import frc.robot.subsystems.launcher.LauncherStates.*;
 
 public class Launcher {
 
-    double power = -.5;
+    double power = .75;
 
-    private boolean test = true;
+    double anglePower = 0.5;
 
     private CANSparkMax launchMotor1;
     private CANSparkMax launchMotor2;
 
     private CANSparkMax flicker;
 
-    private CANSparkMax launcherAngle1;
-    private CANSparkMax launcherAngle2;
+    private CANSparkMax bigFlipper1;
+    private CANSparkMax bigFlipper2;
 
-    // private LauncherPID control;
+    private LauncherPID control;
 
     private AbsoluteEncoder angleEncoder1;
     private AbsoluteEncoder angleEncoder2;
@@ -59,39 +61,38 @@ public class Launcher {
         flicker.setInverted(false);
         flicker.burnFlash();
 
-        launcherAngle1 = new CANSparkMax(Ports.bigFlipper1, MotorType.kBrushless);
-        launcherAngle1.restoreFactoryDefaults();
+        bigFlipper1 = new CANSparkMax(Ports.bigFlipper1, MotorType.kBrushless);
+        bigFlipper1.restoreFactoryDefaults();
 
-        launcherAngle1.setSmartCurrentLimit(60);
-        launcherAngle1.setIdleMode(IdleMode.kBrake);
-        launcherAngle1.setInverted(false);
-        launcherAngle1.burnFlash();
+        bigFlipper1.setSmartCurrentLimit(60);
+        bigFlipper1.setIdleMode(IdleMode.kBrake);
+        bigFlipper1.setInverted(false);
+        bigFlipper1.setOpenLoopRampRate(1);
+        bigFlipper1.burnFlash();
 
-        launcherAngle2 = new CANSparkMax(Ports.bigFlipper2, MotorType.kBrushless);
-        launcherAngle2.restoreFactoryDefaults();
+        bigFlipper2 = new CANSparkMax(Ports.bigFlipper2, MotorType.kBrushless);
+        bigFlipper2.restoreFactoryDefaults();
 
-        launcherAngle2.setIdleMode(IdleMode.kBrake);
-        launcherAngle2.setSmartCurrentLimit(60);
-        launcherAngle2.setInverted(true);
-        launcherAngle2.burnFlash();
+        bigFlipper2.setIdleMode(IdleMode.kBrake);
+        bigFlipper2.setSmartCurrentLimit(60);
+        bigFlipper2.setInverted(true);
+        bigFlipper2.setOpenLoopRampRate(1);
+        bigFlipper2.burnFlash();
 
-        // control = new LauncherPID(launchMotor1, launchMotor2, launcherAngle1, launcherAngle2, flicker);
+        // control = new LauncherPID(launchMotor1.getPIDController(), launchMotor2.getPIDController(), launchMotor1.getEncoder(), launchMotor2.getEncoder(), 
+        // bigFlipper1.getPIDController(), bigFlipper2.getPIDController(), bigFlipper1.getAbsoluteEncoder(Type.kDutyCycle), bigFlipper2.getAbsoluteEncoder(Type.kDutyCycle),
+        //  flicker.getPIDController(), flicker.getAbsoluteEncoder(Type.kDutyCycle));
     }
 
     public void periodic(){
-        if (test){
-            setLauncherPower();
-        }
-
-        // control.setAngleSP(launcherState.position);
-        // control.setFlickerSP(flickerState.position);
-        // control.setVoltageSP(launcherVolts.volts);
-        
+        control.setAngleSP(launcherState.position);
+        control.setFlickerSP(flickerState.position);
+        control.setVoltageSP(launcherVolts.volts);
     }
 
     public void setLauncherAngle(double angle1, double angle2){
-        launcherAngle1.set(angle1);
-        launcherAngle2.set(angle2);
+        bigFlipper1.set(angle1);
+        bigFlipper2.set(angle2);
 
     }
 
@@ -102,8 +103,8 @@ public class Launcher {
     
 
     public void setAngleStop(){
-        launcherAngle1.set(0.0);
-        launcherAngle2.set(0.0);
+        bigFlipper1.set(0.0);
+        bigFlipper2.set(0.0);
     }
 
     public void setLauncherPower() {
@@ -115,6 +116,30 @@ public class Launcher {
         launchMotor1.set(0.0);
         launchMotor2.set(0.0);
     }
+
+    public void setFlickerOn(){
+        flicker.set(.5);
+    }
+
+    public void setFlickOff(){
+        flicker.set(0);
+    }
+
+    public void setAngle(){
+        bigFlipper1.set(anglePower);
+        bigFlipper2.set(anglePower);
+    }
+
+    public void setReverseAngle(){
+        bigFlipper1.set(-anglePower);
+        bigFlipper2.set(-anglePower);
+    }
+
+     public void setZeroAngle(){
+        bigFlipper1.set(0.0);
+        bigFlipper2.set(0.0);
+    }
+
 
     public void increasePower(){
         power += .1;
@@ -137,10 +162,6 @@ public class Launcher {
             return true;
         }
             return false;
-    }
-
-    public void setTest(){
-        test = !test;
     }
 
     public void setFlickerState(FlickerState state){

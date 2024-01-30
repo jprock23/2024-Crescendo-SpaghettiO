@@ -2,29 +2,31 @@ package frc.robot.subsystems.launcher;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import frc.robot.Constants.LauncherConstants;
 
 public class LauncherPID {
 
-    private SparkMaxPIDController angleController1;
-    private SparkMaxPIDController angleController2;
+    private SparkMaxPIDController bigFlipController1;
+    private SparkMaxPIDController bigFlipController2;
 
     private SparkMaxPIDController voltageController1;
     private SparkMaxPIDController voltageController2;
 
     private SparkMaxPIDController flickerController;
 
-    private AbsoluteEncoder angleEncoder1;
-    private AbsoluteEncoder angleEncoder2;
+    private AbsoluteEncoder bigFlipEncoder1;
+    private AbsoluteEncoder bigFlipEncoder2;
 
     private LauncherPID instance;
 
-    public LauncherPID(CANSparkMax launchMotor1, CANSparkMax launchMotor2, CANSparkMax launcherAngle1, CANSparkMax launcherAngle2, CANSparkMax flicker){
-        voltageController1 = launchMotor1.getPIDController();
-        voltageController2 = launchMotor2.getPIDController();
+    public LauncherPID(SparkMaxPIDController vol1, SparkMaxPIDController vol2, RelativeEncoder volEncoder1, RelativeEncoder volencoder2, 
+    SparkMaxPIDController bigFlip1, SparkMaxPIDController bigFlip2, AbsoluteEncoder flipEncoder1, AbsoluteEncoder flipEncoder2, 
+    SparkMaxPIDController flick, AbsoluteEncoder flickEncoder){
+        voltageController1 = vol1;
+        voltageController2 = vol2;
 
         voltageController1.setP(LauncherConstants.launchPCoefficient);
         voltageController1.setI(LauncherConstants.launchICoefficient);
@@ -34,33 +36,33 @@ public class LauncherPID {
         voltageController2.setI(LauncherConstants.launchICoefficient);
         voltageController2.setD(LauncherConstants.launchDCoefficient);
 
-        voltageController1.setFeedbackDevice(launchMotor1.getEncoder());
-        voltageController2.setFeedbackDevice(launchMotor2.getEncoder());
+        voltageController1.setFeedbackDevice(volEncoder1);
+        voltageController2.setFeedbackDevice(volencoder2);
 
-        angleController1 = launcherAngle1.getPIDController();
-        angleController2 = launcherAngle2.getPIDController();
+        bigFlipController1 = bigFlip1;
+        bigFlipController2 = bigFlip2;
 
-        angleEncoder1 = launcherAngle1.getAbsoluteEncoder(Type.kDutyCycle);
-        angleEncoder2 = launcherAngle2.getAbsoluteEncoder(Type.kDutyCycle);
+        bigFlipEncoder1 = flipEncoder1;
+        bigFlipEncoder2 = flipEncoder2;
 
-        angleController1.setP(LauncherConstants.anglePCoefficient);
-        angleController1.setI(LauncherConstants.angleICoefficient);
-        angleController1.setD(LauncherConstants.angleDCoefficient);
+        bigFlipController1.setP(LauncherConstants.anglePCoefficient);
+        bigFlipController1.setI(LauncherConstants.angleICoefficient);
+        bigFlipController1.setD(LauncherConstants.angleDCoefficient);
 
-        angleController1.setP(LauncherConstants.anglePCoefficient);
-        angleController1.setI(LauncherConstants.angleICoefficient);
-        angleController1.setD(LauncherConstants.angleDCoefficient);
+        bigFlipController1.setP(LauncherConstants.anglePCoefficient);
+        bigFlipController1.setI(LauncherConstants.angleICoefficient);
+        bigFlipController1.setD(LauncherConstants.angleDCoefficient);
 
-        angleController1.setFeedbackDevice(angleEncoder1);
-        angleController2.setFeedbackDevice(angleEncoder2);
+        bigFlipController1.setFeedbackDevice(bigFlipEncoder1);
+        bigFlipController2.setFeedbackDevice(bigFlipEncoder2);
 
-        flickerController = flicker.getPIDController();
+        flickerController = flick;
 
         flickerController.setP(LauncherConstants.anglePCoefficient);
         flickerController.setI(LauncherConstants.angleICoefficient);
         flickerController.setD(LauncherConstants.angleDCoefficient);
 
-        flickerController.setFeedbackDevice(flicker.getEncoder());
+        flickerController.setFeedbackDevice(flickEncoder);
     }
 
     public void setVoltageSP(double setPoint){
@@ -69,8 +71,8 @@ public class LauncherPID {
     }
 
     public void setAngleSP(double setPoint){
-        angleController1.setReference(setPoint, CANSparkMax.ControlType.kPosition);
-        angleController2.setReference(setPoint, CANSparkMax.ControlType.kPosition);
+        bigFlipController1.setReference(setPoint, CANSparkMax.ControlType.kPosition);
+        bigFlipController2.setReference(setPoint, CANSparkMax.ControlType.kPosition);
 
     }
     
@@ -78,9 +80,12 @@ public class LauncherPID {
         flickerController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
     }
 
-    public LauncherPID getInstance(CANSparkMax launchMotor1, CANSparkMax launchMotor2, CANSparkMax launcherAngle1, CANSparkMax launcherAngle2, CANSparkMax flicker){
+    public LauncherPID getInstance(SparkMaxPIDController vol1, SparkMaxPIDController vol2, RelativeEncoder volEncoder1, RelativeEncoder volencoder2, 
+    SparkMaxPIDController bigFlip1, SparkMaxPIDController bigFlip2, AbsoluteEncoder flipEncoder1, AbsoluteEncoder flipEncoder2, 
+    SparkMaxPIDController flick, AbsoluteEncoder flickEncoder){
         if(instance == null){
-            instance = new LauncherPID(launchMotor1, launchMotor2, launcherAngle1, launcherAngle2, flicker);
+            instance = new LauncherPID(vol1, vol2, volEncoder1, volencoder2, 
+     bigFlip1, bigFlip2, flipEncoder1, flipEncoder2, flick, flickEncoder);
         }
 
         return instance;

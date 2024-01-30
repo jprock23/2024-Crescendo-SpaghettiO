@@ -2,8 +2,6 @@ package frc.robot.subsystems.intake;
 
 
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 
@@ -17,9 +15,9 @@ public class IntakePID {
 
     private static IntakePID instance;
     
-public IntakePID(CANSparkMax flipper){
-        flipperController = flipper.getPIDController();
-        encoder = flipper.getAbsoluteEncoder(Type.kDutyCycle);
+public IntakePID(SparkMaxPIDController systemController, AbsoluteEncoder absEncoder){
+        flipperController = systemController;
+        encoder = absEncoder;
 
         flipperController.setFeedbackDevice(encoder);
 
@@ -36,9 +34,9 @@ public IntakePID(CANSparkMax flipper){
         flipperController.setReference(setPoint, ControlType.kPosition);
     }
 
-    public static IntakePID getInstance(CANSparkMax flipper){
+    public static IntakePID getInstance(SparkMaxPIDController systemController, AbsoluteEncoder absEncoder){
         if (instance == null){
-            instance = new IntakePID(flipper);
+            instance = new IntakePID(systemController,absEncoder);
         }
         return instance;
     }

@@ -3,6 +3,7 @@ package frc.robot.subsystems.vision;
 import edu.wpi.first.networktables.IntegerArraySubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StringSubscriber;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionTablesListener {
@@ -16,11 +17,13 @@ public class VisionTablesListener {
     private IntegerArraySubscriber zRotsSub;
     private IntegerArraySubscriber ringCenterXSub;
     private IntegerArraySubscriber ringCenterYSub;
+    private StringSubscriber cam1StreamSub;
     double yPose = 0;
     double xPose = 0;
     double zRot = 0;
     double ringX = -1;
     double ringY = -1;
+    String cam1Stream = null;
     // private IntegerArraySubscriber xEulerSub;
     // private IntegerArraySubscriber yEulerSub;
     // private IntegerArraySubscriber zEulerSub;
@@ -34,6 +37,7 @@ public class VisionTablesListener {
         zRotsSub = visionTable.getIntegerArrayTopic("Z Euler Angles").subscribe(new long[] {});
         ringCenterXSub = visionTable.getIntegerArrayTopic("Ring Center X Coords").subscribe(new long[] {});
         ringCenterYSub = visionTable.getIntegerArrayTopic("Ring Center Y Coords").subscribe(new long[] {});
+        cam1StreamSub = visionTable.getStringTopic("Cam1 Stream").subscribe(new String());
         // xEulerSub = visionTable.getIntegerArrayTopic("X Euler Angles").subscribe(new
         // long[] {});
         // yEulerSub = visionTable.getIntegerArrayTopic("Y Euler Angles").subscribe(new
@@ -92,14 +96,19 @@ public class VisionTablesListener {
             ringCenterX = new double[]{-1};
             ringCenterY = new double[]{-1};
         }
+        
         ringX = ringCenterX[0];
         ringY = ringCenterY[0];
         SmartDashboard.putNumber("Ring X Coord", ringX);
         SmartDashboard.putNumber("Ring Y Coords", ringY);
+        
+        cam1Stream = cam1StreamSub.get();
+        if(cam1Stream != null)
+            SmartDashboard.putString("Cam1 Stream", cam1Stream);
     }
+    
 
-    // need to convert each value to double individually, can't typecast entire
-    // array
+    // need to convert each value to double individually, can't typecast entire array
     private double[] convertArray(long[] arr) {
         double[] newArr = new double[arr.length];
 

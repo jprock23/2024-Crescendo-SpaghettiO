@@ -20,7 +20,7 @@ public class Intake {
     public static Intake instance;
 
     private double power = .5;
-    private double flip = 0.1;
+    private double flip = 0.25;
     
     public Intake() {
         roller = new CANSparkMax(Ports.roller, MotorType.kBrushless);
@@ -39,7 +39,7 @@ public class Intake {
         flipper.setInverted(false);
         flipper.burnFlash();
 
-        control = IntakePID.getInstance(flipper.getPIDController(), flipper.getAbsoluteEncoder(Type.kDutyCycle));
+        // control = IntakePID.getInstance(flipper.getPIDController(), flipper.getAbsoluteEncoder(Type.kDutyCycle));
     }
 
     public void periodic(){
@@ -50,12 +50,16 @@ public class Intake {
 
      
 
-    public void reverse(){
+    public void reverseFlipper(){
         flipper.set(-flip);
     }
 
     public void setRollerPower(){
         roller.set(power);
+    }
+
+    public void setReverseRollerPower(){
+        roller.set(-power);
     }
 
     public void setFlipperPower(){

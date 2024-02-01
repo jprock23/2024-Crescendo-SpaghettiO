@@ -14,7 +14,7 @@ public class Launcher {
 
     double power = .75;
 
-    double anglePower = 0.5;
+    double anglePower = 0.35;
 
     private CANSparkMax launchMotor1;
     private CANSparkMax launchMotor2;
@@ -90,15 +90,22 @@ public class Launcher {
         control.setVoltageSP(launcherVolts.volts);
     }
 
-    public void setLauncherAngle(double angle1, double angle2){
-        bigFlipper1.set(angle1);
-        bigFlipper2.set(angle2);
+    public void setLauncherAngle(){
+        bigFlipper1.set(anglePower);
+        bigFlipper2.set(anglePower);
+
+
+    }
+
+    public void setReverseLauncherAngle(){
+        bigFlipper1.set(-anglePower);
+        bigFlipper2.set(-anglePower);
 
     }
 
     public void setReverse(){
-        launchMotor1.set(-power);
-        launchMotor2.set(-power);
+        launchMotor1.set(-power/2);
+        launchMotor2.set(-power/2);
     }
     
 

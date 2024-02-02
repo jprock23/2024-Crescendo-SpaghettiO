@@ -67,6 +67,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     drivebase.periodic();
+    SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
 
   }
 
@@ -96,6 +97,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
     boolean fieldRelative = true;
+    intake.periodic();
 
     /* DRIVE CONTROLS */
 
@@ -121,14 +123,10 @@ public class Robot extends TimedRobot {
     /*INTAKE CONTROLS */
 
     //flipping intake
-    boolean reverseFlipper = false;
 
-     if(operator.getLeftStickButton()){
-      reverseFlipper = !reverseFlipper;
-    }
-    if(-operator.getLeftY() >= .2 && !reverseFlipper){
+    if(-operator.getLeftY() >= .2){
     intake.setFlipperPower();
-    } else if(-operator.getLeftY() >= .2 && reverseFlipper){
+    } else if(-operator.getLeftY() <= -.2){
     intake.reverseFlipper();
     } else {
     intake.setFlipperOff();
@@ -162,13 +160,13 @@ public class Robot extends TimedRobot {
       reverseBigFlipper = !reverseBigFlipper;
     }
 
-    if(-operator.getRightY() > .2 && !reverseBigFlipper){
-      launcher.setLauncherAngle();
-    } else if (-operator.getRightY() > .2 && reverseBigFlipper){
-      launcher.setReverseLauncherAngle();
-    } else{
+    // if(-operator.getRightY() > .2 && !reverseBigFlipper){
+    //   launcher.setLauncherAngle();
+    // } else if (-operator.getRightY() < .2){
+    //   launcher.setReverseLauncherAngle();
+    // } else{
      launcher.setAngleStop();
-    }
+    // }
 
     //Launching notes
     boolean reverseLauncher = false;

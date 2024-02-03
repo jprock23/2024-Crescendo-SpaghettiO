@@ -6,7 +6,12 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 
+import com.revrobotics.SparkMaxPIDController;
+
+import frc.robot.Constants.LauncherConstants;
 import frc.robot.Ports;
 import frc.robot.subsystems.launcher.LauncherStates.*;
 
@@ -24,11 +29,16 @@ public class Launcher {
     private CANSparkMax bigFlipper1;
     private CANSparkMax bigFlipper2;
 
+    private ArmFeedforward feedforward;
+
     private LauncherPID control;
 
-    private AbsoluteEncoder angleEncoder1;
-    private AbsoluteEncoder angleEncoder2;
+    private AbsoluteEncoder turnEncoder1;
+    private AbsoluteEncoder turnEncoder2;
 
+    private SparkMaxPIDController bigFlipController1;
+    private SparkMaxPIDController bigFlipController2;
+    private PIDController veloController;
 
     private static LauncherState launcherState = LauncherState.RETRACTED;
     private static LauncherVoltage launcherVolts = LauncherVoltage.OFF;
@@ -79,23 +89,40 @@ public class Launcher {
         bigFlipper2.setOpenLoopRampRate(1);
         bigFlipper2.burnFlash();
 
+        // veloController = new PIDController(1, 0, 0);
+
+        // feedforward = new ArmFeedforward(0, 0.25, 0, 0);
+
+        turnEncoder1 = bigFlipper1.getAbsoluteEncoder(Type.kDutyCycle);
+        turnEncoder2 = bigFlipper2.getAbsoluteEncoder(Type.kDutyCycle);
+
+        turnEncoder2.setInverted(true);
+        
+
+        // bigFlipController1 = bigFlipper1.getPIDController();
+        // bigFlipController2 = bigFlipper2.getPIDController();
+
+        // bigFlipController1.setP(LauncherConstants.anglePCoefficient);
+        // bigFlipController1.setI(LauncherConstants.angleICoefficient);
+        // bigFlipController1.setD(LauncherConstants.angleDCoefficient);
+
+        // bigFlipController1.setP(LauncherConstants.anglePCoefficient);
+        // bigFlipController1.setI(LauncherConstants.angleICoefficient);
+        // bigFlipController1.setD(LauncherConstants.angleDCoefficient);
+
+        // bigFlipController1.setFeedbackDevice(turnEncoder1);
+        // bigFlipController2.setFeedbackDevice(turnEncoder2);
+
         // control = new LauncherPID(launchMotor1.getPIDController(), launchMotor2.getPIDController(), launchMotor1.getEncoder(), launchMotor2.getEncoder(), 
         // bigFlipper1.getPIDController(), bigFlipper2.getPIDController(), bigFlipper1.getAbsoluteEncoder(Type.kDutyCycle), bigFlipper2.getAbsoluteEncoder(Type.kDutyCycle),
         //  flicker.getPIDController(), flicker.getAbsoluteEncoder(Type.kDutyCycle));
     }
 
-    public void periodic(){
-        control.setAngleSP(launcherState.position);
-        control.setFlickerSP(flickerState.position);
-        control.setVoltageSP(launcherVolts.volts);
-    }
-
     public void setLauncherAngle(){
         bigFlipper1.set(anglePower);
         bigFlipper2.set(anglePower);
-
-
     }
+    
 
     public void setReverseLauncherAngle(){
         bigFlipper1.set(-anglePower);
@@ -132,22 +159,6 @@ public class Launcher {
         flicker.set(0);
     }
 
-    public void setAngle(){
-        bigFlipper1.set(anglePower);
-        bigFlipper2.set(anglePower);
-    }
-
-    public void setReverseAngle(){
-        bigFlipper1.set(-anglePower);
-        bigFlipper2.set(-anglePower);
-    }
-
-     public void setZeroAngle(){
-        bigFlipper1.set(0.0);
-        bigFlipper2.set(0.0);
-    }
-
-
     public void increasePower(){
         power += .1;
     }
@@ -156,12 +167,22 @@ public class Launcher {
         power -= .1;
     }
 
+    public double getPosition(){
+        return turnEncoder1.getPosition();
+
+    }
+
+    public double getPosition2(){
+        return turnEncoder2.getPosition();
+
+    }
+
     public double getPower(){
         return power;
     }
 
     public double getLauncherPosition() {
-        return (angleEncoder1.getPosition() + angleEncoder2.getPosition())/2;
+        return (turnEncoder1.getPosition() + turnEncoder2.getPosition())/2;
     }
 
     public boolean hasReachedPose(double tolerance) {

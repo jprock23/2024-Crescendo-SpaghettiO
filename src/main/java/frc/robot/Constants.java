@@ -149,9 +149,9 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final double flipperPCoefficient = 25;
+    public static final double flipperPCoefficient = 2.1;
     public static final double flipperICoefficient = 0.0;
-    public static final double flipperDCoefficient = 0.0;
+    public static final double flipperDCoefficient = 0.001;
 
   }
 

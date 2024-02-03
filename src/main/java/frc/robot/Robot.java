@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.launcher.*;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.Intake.IntakePosition;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -67,7 +68,13 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     drivebase.periodic();
+
+    SmartDashboard.putNumber("Flipper Voltage", intake.getFlipperVoltage());
+    SmartDashboard.putNumber("Flipper Power", intake.getFlipPower());
     SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
+    SmartDashboard.putNumber("bigFlipper1", launcher.getPosition());
+    SmartDashboard.putNumber("bigFlipper2", launcher.getPosition2());
+   
 
   }
 
@@ -95,10 +102,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-
-    boolean fieldRelative = true;
     intake.periodic();
 
+    boolean fieldRelative = true;
+    
     /* DRIVE CONTROLS */
 
     double ySpeed = driver.getLeftX();
@@ -124,21 +131,23 @@ public class Robot extends TimedRobot {
 
     //flipping intake
 
-    if(-operator.getLeftY() >= .2){
-    intake.setFlipperPower();
-    } else if(-operator.getLeftY() <= -.2){
-    intake.reverseFlipper();
-    } else {
-    intake.setFlipperOff();
-    }
+    // if(-operator.getLeftY() >= .2){
+    // intake.setFlipperPower();
+    // } else if(-operator.getLeftY() <= -.2){
+    // intake.reverseFlipper();
+    // } else {
+    // intake.setFlipperOff();
+    // }
 
   
     // rolling intake rollers
-    if (operator.getXButton()){
+    if (operator.getYButton()){
     intake.setRollerPower();
-    }else if (operator.getYButton()){
+    intake.setIntakeState(IntakePosition.HANDOFF);
+    }else if (operator.getXButton()){
       intake.setReverseRollerPower();
     }else{
+      intake.setIntakeState(IntakePosition.GROUND);
     intake.setRollerOff();
     }
 
@@ -146,7 +155,7 @@ public class Robot extends TimedRobot {
 
     if (operator.getRightBumper()) {
       climber.setClimbingPower();
-    } else if (driver.getLeftBumper()) {
+    } else if (operator.getLeftBumper()) {
       climber.reverseClimb();
     } else {
       climber.setClimberStop();
@@ -167,6 +176,8 @@ public class Robot extends TimedRobot {
     // } else{
      launcher.setAngleStop();
     // }
+
+    
 
     //Launching notes
     boolean reverseLauncher = false;

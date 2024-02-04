@@ -17,6 +17,19 @@ import frc.robot.subsystems.launcher.LauncherStates.*;
 
 public class Launcher {
 
+    public enum LauncherPosition{
+        SPEAKER(0.0),
+        HANDOFF(0.0),
+        AMP(0.0);
+
+        public double position;
+
+        private LauncherPosition(double position){
+            this.position = position;
+        }
+     }
+    
+
     double power = .75;
 
     double anglePower = 0.35;
@@ -36,15 +49,21 @@ public class Launcher {
     private AbsoluteEncoder turnEncoder1;
     private AbsoluteEncoder turnEncoder2;
 
-    private SparkMaxPIDController bigFlipController1;
-    private SparkMaxPIDController bigFlipController2;
-    private PIDController veloController;
+    private ArmFeedforward pivotFeedforward;
+    private PIDController pivotController;
+
+    private LauncherPosition launcherPosition = LauncherPosition.HANDOFF;
+
 
     private static LauncherState launcherState = LauncherState.RETRACTED;
     private static LauncherVoltage launcherVolts = LauncherVoltage.OFF;
     private static FlickerState flickerState = FlickerState.IN;
 
     public static Launcher instance;
+
+    private double pivotPower;
+
+    private double pivotPosition;
 
     public Launcher() {
         launchMotor1 = new CANSparkMax(Ports.flywheel1, MotorType.kBrushless);
@@ -90,8 +109,10 @@ public class Launcher {
         bigFlipper2.burnFlash();
 
         // veloController = new PIDController(1, 0, 0);
+        pivotController = new PIDController(LauncherConstants.anglePCoefficient, LauncherConstants.angleICoefficient, LauncherConstants.angleDCoefficient);
 
         // feedforward = new ArmFeedforward(0, 0.25, 0, 0);
+        pivotFeedforward = new ArmFeedforward(0.0, 0.0, 0.0, 0.0);
 
         turnEncoder1 = bigFlipper1.getAbsoluteEncoder(Type.kDutyCycle);
         turnEncoder2 = bigFlipper2.getAbsoluteEncoder(Type.kDutyCycle);
@@ -117,6 +138,17 @@ public class Launcher {
         // bigFlipper1.getPIDController(), bigFlipper2.getPIDController(), bigFlipper1.getAbsoluteEncoder(Type.kDutyCycle), bigFlipper2.getAbsoluteEncoder(Type.kDutyCycle),
         //  flicker.getPIDController(), flicker.getAbsoluteEncoder(Type.kDutyCycle));
     }
+
+    public void periodic(){
+        pivotPosition = ((bigFlipper1.getAbsoluteEncoder(Type.kDutyCycle).getPosition()) + (bigFlipper2.getAbsoluteEncoder(Type.kDutyCycle).getPosition()))/2;
+        pivotPower = pivotController.calculate(pivotPosition, launcherPosition.position);
+        pivotPower = Math.signum(pivotPower)*Math.min(pivotPower, 0.25);
+        bigFlipper1.set(pivotPower + pivotFeedforward.calculate(0.0, 0.0));
+        bigFlipper2.set(pivotPower + pivotFeedforward.calculate(0.0, 0.0));
+        
+
+    }
+
 
     public void setLauncherAngle(){
         bigFlipper1.set(anglePower);

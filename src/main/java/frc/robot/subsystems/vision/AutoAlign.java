@@ -58,25 +58,24 @@ public class AutoAlign {
         if (Math.abs(measurment - xSP) < tolerance){
             return true;
         }
-
         return false;
     }
 
-        public boolean reachYPose(double tolerance, double measurment){
+    public boolean reachYPose(double tolerance, double measurment){
         if (Math.abs(measurment - ySP) < tolerance){
             return true;
         }
-         return false;
+        return false;
     }
 
-            public boolean reachRot(double tolerance, double measurment){
+    public boolean reachRot(double tolerance, double measurment){
         if (Math.abs(measurment - rotSP) < tolerance){
             return true;
         }
-         return false;
+        return false;
     }
 
-        public double getY(){
-            return yPose;
-        }
+    public double getY(){
+        return yPose;
+    }
 }

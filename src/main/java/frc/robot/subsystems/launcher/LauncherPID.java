@@ -45,22 +45,22 @@ public class LauncherPID {
         bigFlipEncoder1 = flipEncoder1;
         bigFlipEncoder2 = flipEncoder2;
 
-        bigFlipController1.setP(LauncherConstants.anglePCoefficient);
-        bigFlipController1.setI(LauncherConstants.angleICoefficient);
-        bigFlipController1.setD(LauncherConstants.angleDCoefficient);
+        bigFlipController1.setP(LauncherConstants.pivotPCoefficient);
+        bigFlipController1.setI(LauncherConstants.pivotICoefficient);
+        bigFlipController1.setD(LauncherConstants.pivotDCoefficient);
 
-        bigFlipController1.setP(LauncherConstants.anglePCoefficient);
-        bigFlipController1.setI(LauncherConstants.angleICoefficient);
-        bigFlipController1.setD(LauncherConstants.angleDCoefficient);
+        bigFlipController1.setP(LauncherConstants.pivotPCoefficient);
+        bigFlipController1.setI(LauncherConstants.pivotICoefficient);
+        bigFlipController1.setD(LauncherConstants.pivotDCoefficient);
 
         bigFlipController1.setFeedbackDevice(bigFlipEncoder1);
         bigFlipController2.setFeedbackDevice(bigFlipEncoder2);
 
         flickerController = flick;
 
-        flickerController.setP(LauncherConstants.anglePCoefficient);
-        flickerController.setI(LauncherConstants.angleICoefficient);
-        flickerController.setD(LauncherConstants.angleDCoefficient);
+        flickerController.setP(LauncherConstants.pivotPCoefficient);
+        flickerController.setI(LauncherConstants.pivotICoefficient);
+        flickerController.setD(LauncherConstants.pivotDCoefficient);
 
         flickerController.setFeedbackDevice(flickEncoder);
     }

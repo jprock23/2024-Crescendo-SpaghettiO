@@ -139,9 +139,13 @@ public final class Constants {
     public static final double launchICoefficient = 0.0;
     public static final double launchDCoefficient = 0.0;
 
-    public static final double anglePCoefficient = 0.0;
-    public static final double angleICoefficient = 0.0;
-    public static final double angleDCoefficient = 0.0;                
+    public static final double pivotPCoefficient = 1.2;
+    public static final double pivotICoefficient = 0.0;
+    public static final double pivotDCoefficient = 0.0;      
+    
+    // public static final double pivotPCoefficient = 0.21;
+    // public static final double pivotICoefficient = 0.0;
+    // public static final double pivotDCoefficient = 0.004;                
 
     public static final double flickerPCoefficient = 0.0;
     public static final double flickerICoefficient = 0.0;

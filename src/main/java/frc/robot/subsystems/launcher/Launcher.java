@@ -2,12 +2,14 @@ package frc.robot.subsystems.launcher;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.SparkMaxPIDController;
 
@@ -18,31 +20,33 @@ import frc.robot.subsystems.launcher.LauncherStates.*;
 public class Launcher {
 
     public enum LauncherPosition{
-        SPEAKER(0.0),
-        HANDOFF(0.0),
-        AMP(0.0);
+        SPEAKER(0.0, 0.0),
+        HANDOFF(0.0, 0.0),
+        AMP(0.0, 0.0);
 
-        public double position;
+        public double leftPosition;
+        public double rightPosition;
 
-        private LauncherPosition(double position){
-            this.position = position;
+        private LauncherPosition(double leftPosition, double rightPosition){
+            this.leftPosition = leftPosition;
+            this.rightPosition = rightPosition;
+
         }
      }
     
 
-    double power = .75;
+    double power = 1.0;
 
     double anglePower = 0.35;
+    double veloSP = .1;
 
     private CANSparkMax launchMotor1;
     private CANSparkMax launchMotor2;
 
     private CANSparkMax flicker;
 
-    private CANSparkMax bigFlipper1;
-    private CANSparkMax bigFlipper2;
-
-    private ArmFeedforward feedforward;
+    private CANSparkMax pivotMotor1;
+    private CANSparkMax pivotMotor2;
 
     private LauncherPID control;
 
@@ -50,10 +54,13 @@ public class Launcher {
     private AbsoluteEncoder turnEncoder2;
 
     private ArmFeedforward pivotFeedforward;
-    private PIDController pivotController;
+    private SparkMaxPIDController pivotController1;
+    private SparkMaxPIDController pivotController2;
+
+    private PIDController dumbPivot1;
+    private PIDController dumbPivot2;
 
     private LauncherPosition launcherPosition = LauncherPosition.HANDOFF;
-
 
     private static LauncherState launcherState = LauncherState.RETRACTED;
     private static LauncherVoltage launcherVolts = LauncherVoltage.OFF;
@@ -61,9 +68,7 @@ public class Launcher {
 
     public static Launcher instance;
 
-    private double pivotPower;
-
-    private double pivotPosition;
+    private double reqPower1;
 
     public Launcher() {
         launchMotor1 = new CANSparkMax(Ports.flywheel1, MotorType.kBrushless);
@@ -90,49 +95,61 @@ public class Launcher {
         flicker.setInverted(false);
         flicker.burnFlash();
 
-        bigFlipper1 = new CANSparkMax(Ports.bigFlipper1, MotorType.kBrushless);
-        bigFlipper1.restoreFactoryDefaults();
+        pivotMotor1 = new CANSparkMax(Ports.bigFlipper1, MotorType.kBrushless);
+        pivotMotor1.restoreFactoryDefaults();
 
-        bigFlipper1.setSmartCurrentLimit(60);
-        bigFlipper1.setIdleMode(IdleMode.kBrake);
-        bigFlipper1.setInverted(false);
-        bigFlipper1.setOpenLoopRampRate(1);
-        bigFlipper1.burnFlash();
+        pivotMotor1.setSmartCurrentLimit(60);
+        pivotMotor1.setIdleMode(IdleMode.kBrake);
+        pivotMotor1.setInverted(false);
+        pivotMotor1.setOpenLoopRampRate(1);
+        pivotMotor1.burnFlash();
 
-        bigFlipper2 = new CANSparkMax(Ports.bigFlipper2, MotorType.kBrushless);
-        bigFlipper2.restoreFactoryDefaults();
+        pivotMotor2 = new CANSparkMax(Ports.bigFlipper2, MotorType.kBrushless);
+        pivotMotor2.restoreFactoryDefaults();
 
-        bigFlipper2.setIdleMode(IdleMode.kBrake);
-        bigFlipper2.setSmartCurrentLimit(60);
-        bigFlipper2.setInverted(true);
-        bigFlipper2.setOpenLoopRampRate(1);
-        bigFlipper2.burnFlash();
+        pivotMotor2.setIdleMode(IdleMode.kBrake);
+        pivotMotor2.setSmartCurrentLimit(60);
+        pivotMotor2.setInverted(true);
+        pivotMotor2.setOpenLoopRampRate(1);
+        pivotMotor2.burnFlash();
 
         // veloController = new PIDController(1, 0, 0);
-        pivotController = new PIDController(LauncherConstants.anglePCoefficient, LauncherConstants.angleICoefficient, LauncherConstants.angleDCoefficient);
-
+        pivotController1 = pivotMotor1.getPIDController();
+        pivotController2 = pivotMotor2.getPIDController();
         // feedforward = new ArmFeedforward(0, 0.25, 0, 0);
-        pivotFeedforward = new ArmFeedforward(0.0, 0.0, 0.0, 0.0);
+        pivotFeedforward = new ArmFeedforward(0.0085, .037, 0.0, 0.0);
+        //upper: .045 lower:
 
-        turnEncoder1 = bigFlipper1.getAbsoluteEncoder(Type.kDutyCycle);
-        turnEncoder2 = bigFlipper2.getAbsoluteEncoder(Type.kDutyCycle);
+        turnEncoder1 = pivotMotor1.getAbsoluteEncoder(Type.kDutyCycle);
+        turnEncoder2 = pivotMotor2.getAbsoluteEncoder(Type.kDutyCycle);
+
+        turnEncoder1.setPositionConversionFactor(25);
+        turnEncoder2.setPositionConversionFactor(25);
+        turnEncoder1.setVelocityConversionFactor(25);
+        turnEncoder2.setVelocityConversionFactor(25);
 
         turnEncoder2.setInverted(true);
+
+        dumbPivot1 = new PIDController(LauncherConstants.pivotPCoefficient, LauncherConstants.pivotICoefficient, LauncherConstants.pivotDCoefficient);
+        dumbPivot2 = new PIDController(LauncherConstants.pivotPCoefficient, LauncherConstants.pivotICoefficient, LauncherConstants.pivotDCoefficient);
         
+        // pivotController1 = pivotMotor1.getPIDController();
+        // pivotController2 = pivotMotor2.getPIDController();
 
-        // bigFlipController1 = bigFlipper1.getPIDController();
-        // bigFlipController2 = bigFlipper2.getPIDController();
+        // pivotController1.setP(LauncherConstants.pivotPCoefficient);
+        // pivotController1.setI(LauncherConstants.pivotICoefficient);
+        // pivotController1.setD(LauncherConstants.pivotDCoefficient);
 
-        // bigFlipController1.setP(LauncherConstants.anglePCoefficient);
-        // bigFlipController1.setI(LauncherConstants.angleICoefficient);
-        // bigFlipController1.setD(LauncherConstants.angleDCoefficient);
+        // pivotController2.setP(LauncherConstants.pivotPCoefficient);
+        // pivotController2.setI(LauncherConstants.pivotICoefficient);
+        // pivotController2.setD(LauncherConstants.pivotDCoefficient);
 
-        // bigFlipController1.setP(LauncherConstants.anglePCoefficient);
-        // bigFlipController1.setI(LauncherConstants.angleICoefficient);
-        // bigFlipController1.setD(LauncherConstants.angleDCoefficient);
+        // pivotController1.setFeedbackDevice(turnEncoder1);
+        // pivotController2.setFeedbackDevice(turnEncoder2);
 
-        // bigFlipController1.setFeedbackDevice(turnEncoder1);
-        // bigFlipController2.setFeedbackDevice(turnEncoder2);
+        // pivotController1.setOutputRange(-0.6, 0.6);
+        // pivotController2.setOutputRange(-0.6, 0.6);
+
 
         // control = new LauncherPID(launchMotor1.getPIDController(), launchMotor2.getPIDController(), launchMotor1.getEncoder(), launchMotor2.getEncoder(), 
         // bigFlipper1.getPIDController(), bigFlipper2.getPIDController(), bigFlipper1.getAbsoluteEncoder(Type.kDutyCycle), bigFlipper2.getAbsoluteEncoder(Type.kDutyCycle),
@@ -140,25 +157,35 @@ public class Launcher {
     }
 
     public void periodic(){
-        pivotPosition = ((bigFlipper1.getAbsoluteEncoder(Type.kDutyCycle).getPosition()) + (bigFlipper2.getAbsoluteEncoder(Type.kDutyCycle).getPosition()))/2;
-        pivotPower = pivotController.calculate(pivotPosition, launcherPosition.position);
-        pivotPower = Math.signum(pivotPower)*Math.min(pivotPower, 0.25);
-        bigFlipper1.set(pivotPower + pivotFeedforward.calculate(0.0, 0.0));
-        bigFlipper2.set(pivotPower + pivotFeedforward.calculate(0.0, 0.0));
-        
 
+        double reqPower1 = dumbPivot1.calculate(turnEncoder1.getPosition(), .311);
+        // double reqPower2 = dumbPivot2.calculate(turnEncoder2.getPosition(), .656);
+
+        reqPower1 = Math.signum(reqPower1) * Math.min(Math.abs(reqPower1), .65);
+    
+        // reqPower2 = Math.signum(reqPower2) * Math.min(Math.abs(reqPower2), .65);
+
+        SmartDashboard.putNumber("Pivot1 power", reqPower1 + pivotFeedforward.calculate(.526, veloSP));
+
+        pivotMotor1.set(-reqPower1 - pivotFeedforward.calculate(.311, veloSP));
+        pivotMotor2.set(-reqPower1 - pivotFeedforward.calculate(.311, veloSP));
+
+        // pivotController1.setReference(.53, ControlType.kPosition, 0, pivotFeedforward.calculate(.53, veloSP));
+        // pivotController2.setReference(.21, ControlType.kPosition, 0, pivotFeedforward.calculate(.21, veloSP));
     }
 
+    public double getReqPower1(){
+        return reqPower1;
+    }
 
     public void setLauncherAngle(){
-        bigFlipper1.set(anglePower);
-        bigFlipper2.set(anglePower);
+        pivotMotor1.set(anglePower - pivotFeedforward.calculate(turnEncoder1.getPosition(), veloSP));
+        pivotMotor2.set(anglePower - pivotFeedforward.calculate(turnEncoder1.getPosition(), veloSP));
     }
     
-
     public void setReverseLauncherAngle(){
-        bigFlipper1.set(-anglePower);
-        bigFlipper2.set(-anglePower);
+        pivotMotor1.set(-anglePower - pivotFeedforward.calculate(turnEncoder1.getPosition(), veloSP));
+        pivotMotor2.set(-anglePower - pivotFeedforward.calculate(turnEncoder1.getPosition(), veloSP));
 
     }
 
@@ -169,8 +196,8 @@ public class Launcher {
     
 
     public void setAngleStop(){
-        bigFlipper1.set(0.0);
-        bigFlipper2.set(0.0);
+        pivotMotor1.set(0.0);
+        pivotMotor2.set(0.0);
     }
 
     public void setLauncherPower() {
@@ -185,6 +212,10 @@ public class Launcher {
 
     public void setFlickerOn(){
         flicker.set(.5);
+    }
+
+     public void setFlickerReverse(){
+        flicker.set(-.5);
     }
 
     public void setFlickOff(){
@@ -215,6 +246,14 @@ public class Launcher {
 
     public double getLauncherPosition() {
         return (turnEncoder1.getPosition() + turnEncoder2.getPosition())/2;
+    }
+
+    public double getPivotVelocity(){
+        return (turnEncoder1.getVelocity() + turnEncoder2.getVelocity())/2;
+    }
+
+    public double getPivotVelocitySetPoint(){
+        return veloSP;
     }
 
     public boolean hasReachedPose(double tolerance) {

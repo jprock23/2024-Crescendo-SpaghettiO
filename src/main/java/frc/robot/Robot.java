@@ -6,11 +6,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.launcher.*;
+import frc.robot.subsystems.launcher.Launcher.LauncherPosition;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakePosition;
@@ -44,6 +46,9 @@ public class Robot extends TimedRobot {
   private static XboxController driver;
   private static XboxController operator;
 
+  private double buttonPressed = 0.0;
+  private double poseReached = 0.0;
+
   private Command m_autoSelected;
   private SendableChooser<Command> m_chooser;
 
@@ -69,14 +74,30 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     drivebase.periodic();
-
+   
     SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
-    SmartDashboard.putNumber("bigFlipper1", launcher.getPosition());
-    SmartDashboard.putNumber("bigFlipper2", launcher.getPosition2());
+
+    // SmartDashboard.putNumber("bigFlipper1", launcher.getPosition1());
+    // SmartDashboard.putNumber("bigFlipper2", launcher.getPosition2());
+
+    SmartDashboard.putNumber("Relative Launcher Position1", launcher.getLauncherPosition1());
+    SmartDashboard.putNumber("Relative Launcher Position2", launcher.getLauncherPosition2());
+
+
     SmartDashboard.putNumber("Flipper Velocity", intake.getFlipperVelocity());
     SmartDashboard.putNumber("Flipper Velocity Setpoint", intake.getFlipperVelocitySetpoint());
     SmartDashboard.putString("Intake Position", intake.getIntakeState());
-    SmartDashboard.putNumber("Pivot Velocity", launcher.getPivotVelocity());
+
+    SmartDashboard.putNumber("Pivot Velocity1", launcher.getPivotVelocity1());
+    SmartDashboard.putNumber("Pivot Velocity2", launcher.getPivotVelocity2());
+    SmartDashboard.putNumber("Pivot Acceleration1", launcher.getPivotAcceleration1(buttonPressed, poseReached));
+    SmartDashboard.putNumber("Pivot Accleration2", launcher.getPivotAcceleration2(buttonPressed, poseReached));
+
+    SmartDashboard.putNumber("Pivot Target Velocity", launcher.getPivotTargetVelocity());
+    SmartDashboard.putNumber("Pivot Target Acceleration", launcher.getPivotTargetAcceleration());
+
+    SmartDashboard.putString("Pivot Position", launcher.getPivotPosition());
+
     SmartDashboard.putNumber("Pivot Velocity Setpoint", launcher.getPivotVelocitySetPoint());
     SmartDashboard.putNumber("Pivot1 power", launcher.getReqPower1());
 
@@ -110,12 +131,29 @@ public class Robot extends TimedRobot {
     // launcher.periodic();
 
     boolean fieldRelative = true;
+
+    // if(launcher.hasReachedPose(.001)){
+    //   poseReached = Timer.getFPGATimestamp();
+    // }
+
+    // if (driver.getLeftTriggerAxis() > 0.0){
+    //   launcher.setPivotState(LauncherPosition.TESTDOWN);
+    //   buttonPressed = Timer.getFPGATimestamp();
+    // }
+    // if (driver.getRightTriggerAxis() > 0.0){
+    //    launcher.setPivotState(LauncherPosition.TESTUP);
+    //     buttonPressed = Timer.getFPGATimestamp();
+    // }
     
     /* DRIVE CONTROLS */
 
-    double ySpeed = driver.getLeftX();
-    double xSpeed = -driver.getLeftY();
-    double rot = driver.getRightX();
+    // double ySpeed = driver.getLeftX();
+    // double xSpeed = -driver.getLeftY();
+    // double rot = driver.getRightX();
+
+     double ySpeed = 0;
+    double xSpeed = 0;
+    double rot = 0;
 
 
     SmartDashboard.putNumber("Xspeed", xSpeed);
@@ -172,31 +210,9 @@ public class Robot extends TimedRobot {
 
     /*LAUNCHER CONTROLS*/
 
-    // Launcher angles
-    boolean reverseBigFlipper = false;
-    if(operator.getLeftStickButton()){
-      reverseBigFlipper = !reverseBigFlipper;
-    }
-
-    if(-operator.getRightY() > .2 && !reverseBigFlipper){
-      launcher.setLauncherAngle();
-    } else if (-operator.getRightY() < -.2){
-      launcher.setReverseLauncherAngle();
-    } else{
-     launcher.setAngleStop();
-    }
 
     //Launching notes
     
-
-    // if(operator.getRightTriggerAxis() >= .1 && !reverseLauncher){
-    //   launcher.setLauncherPower();
-    // } else if (operator.getRightTriggerAxis() >= .1 && reverseLauncher){
-    //   launcher.setReverse();
-    // } else {
-    //   launcher.setLaunchZero();
-    // } 
-
     //Flicking
    if (operator.getBButton()){
        launcher.setFlickerOn();

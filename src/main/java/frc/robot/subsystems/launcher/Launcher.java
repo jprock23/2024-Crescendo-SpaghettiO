@@ -9,8 +9,12 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkMaxRelativeEncoder;
 
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.Ports;
@@ -62,6 +66,8 @@ public class Launcher {
     private RelativeEncoder relativeEncoder2;
 
     private LauncherPosition launcherPosition = LauncherPosition.TESTMID;
+
+    private TrapezoidProfile motionProfile;
 
     // private static LauncherState launcherState = LauncherState.RETRACTED;
     // private static LauncherVoltage launcherVolts = LauncherVoltage.OFF;
@@ -131,6 +137,9 @@ public class Launcher {
 
         turnEncoder2.setInverted(true);
 
+        // relativeEncoder1 = pivotMotor1.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 8192);
+        // relativeEncoder2 = pivotMotor2.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 8192);
+
         relativeEncoder1 = pivotMotor1.getEncoder();
         relativeEncoder2 = pivotMotor2.getEncoder();
 
@@ -161,14 +170,23 @@ public class Launcher {
         pivotController1.setSmartMotionMaxAccel(5000, 0);
         pivotController2.setSmartMotionMaxAccel(5000, 0);
 
+        motionProfile = new TrapezoidProfile(new Constraints(0.0, 0.0));
+
+
         // control = new LauncherPID(launchMotor1.getPIDController(), launchMotor2.getPIDController(), launchMotor1.getEncoder(), launchMotor2.getEncoder(), 
         // bigFlipper1.getPIDController(), bigFlipper2.getPIDController(), bigFlipper1.getAbsoluteEncoder(Type.kDutyCycle), bigFlipper2.getAbsoluteEncoder(Type.kDutyCycle),
         //  flicker.getPIDController(), flicker.getAbsoluteEncoder(Type.kDutyCycle));
     }
 
     public void periodic(){
-        pivotController1.setReference(launcherPosition.onePosition, ControlType.kPosition, 0, pivotFeedforward.calculate(launcherPosition.onePosition, veloSP));
-        pivotController2.setReference(launcherPosition.twoPosition, ControlType.kPosition, 0, pivotFeedforward.calculate(launcherPosition.twoPosition, veloSP));
+
+        var desiredState = motionProfile.calculate(0, 
+        new State(relativeEncoder1.getPosition(),  relativeEncoder1.getVelocity()),
+         new State(launcherPosition.onePosition, 0.0));
+
+
+        pivotController1.setReference(launcherPosition.onePosition, ControlType.kPosition, 0, pivotFeedforward.calculate(launcherPosition.onePosition, desiredState.velocity));
+        pivotController2.setReference(launcherPosition.twoPosition, ControlType.kPosition, 0, pivotFeedforward.calculate(launcherPosition.twoPosition, desiredState.velocity));
     }
 
     public double getReqPower1(){

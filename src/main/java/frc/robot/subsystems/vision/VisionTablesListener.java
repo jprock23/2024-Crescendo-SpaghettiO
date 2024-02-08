@@ -23,6 +23,7 @@ public class VisionTablesListener {
     double zRot = 0;
     double ringX = -1;
     double ringY = -1;
+    double ringID = -1;
     String cam1Stream = null;
     // private IntegerArraySubscriber xEulerSub;
     // private IntegerArraySubscriber yEulerSub;
@@ -47,7 +48,6 @@ public class VisionTablesListener {
     }
 
     public void putInfoOnDashboard() {
-        double id = 0;
         boolean tagVisible;
         
         double ringCenterX[];
@@ -57,19 +57,19 @@ public class VisionTablesListener {
         double[] zRots;
 
         if(tagIDSub.get().length != 0){
-            id = convertArray(tagIDSub.get())[0];
+            ringID = convertArray(tagIDSub.get())[0];
             yPoses = convertArray(yCoordsSub.get());
             xPoses = convertArray(xCoordsSub.get());
             zRots = convertArray(zRotsSub.get());
             tagVisible = true;
         } else {
-            id = 0;
+            ringID = -1;
             xPoses = new double[]{-.90}; 
             yPoses = new double[]{-.67}; 
             zRots = new double[]{.5}; 
             tagVisible = false;
         }
-        SmartDashboard.putNumber("IDs", id);
+        SmartDashboard.putNumber("IDs", ringID);
         if(xPoses.length != 0){
             xPose = xPoses[0];
             yPose = yPoses[0];
@@ -132,7 +132,19 @@ public class VisionTablesListener {
         return yPose;
     }
 
-      public double getX() {
+    public double getX() {
         return xPose;
+    }
+    
+    public double getRingX() {
+        return ringX;
+    }
+
+    public double getRingY() {
+        return ringY;
+    }
+
+    public double getBestID() {
+        return ringID;
     }
 }

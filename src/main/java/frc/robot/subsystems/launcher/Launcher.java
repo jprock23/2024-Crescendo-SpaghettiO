@@ -65,7 +65,7 @@ public class Launcher {
     private RelativeEncoder relativeEncoder1;
     private RelativeEncoder relativeEncoder2;
 
-    private LauncherPosition launcherPosition = LauncherPosition.TESTMID;
+    private LauncherPosition launcherPosition = LauncherPosition.HANDOFF;
 
     private TrapezoidProfile motionProfile;
 
@@ -194,19 +194,19 @@ public class Launcher {
     }
 
     public void setLauncherAngle(){
-        pivotMotor1.set(anglePower - pivotFeedforward.calculate(turnEncoder1.getPosition(), veloSP));
+        pivotMotor1.set(anglePower + pivotFeedforward.calculate(turnEncoder1.getPosition(), veloSP));
         pivotMotor2.set(anglePower - pivotFeedforward.calculate(turnEncoder1.getPosition(), veloSP));
     }
     
     public void setReverseLauncherAngle(){
-        pivotMotor1.set(-anglePower - pivotFeedforward.calculate(turnEncoder1.getPosition(), veloSP));
-        pivotMotor2.set(-anglePower - pivotFeedforward.calculate(turnEncoder1.getPosition(), veloSP));
+        pivotMotor1.set(-anglePower + pivotFeedforward.calculate(turnEncoder1.getPosition(), veloSP));
+        pivotMotor2.set(-anglePower + pivotFeedforward.calculate(turnEncoder1.getPosition(), veloSP));
 
     }
 
     public void setReverse(){
-        launchMotor1.set(-power/2);
-        launchMotor2.set(-power/2);
+        launchMotor1.set(-anglePower + pivotFeedforward.calculate(turnEncoder1.getPosition(), veloSP));
+        launchMotor2.set(-anglePower/ + pivotFeedforward.calculate(turnEncoder1.getPosition(), veloSP));
     }
     
 

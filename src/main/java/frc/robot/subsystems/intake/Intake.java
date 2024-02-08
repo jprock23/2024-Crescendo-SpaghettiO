@@ -18,9 +18,8 @@ import frc.robot.Ports;
 public class Intake {
 
      public enum IntakePosition{
-        GROUND(-10),
-        HANDOFF(0.0);
-
+        GROUND(-9.3),
+        HANDOFF(-1.0);
         public double position;
 
         private IntakePosition(double position){
@@ -81,7 +80,7 @@ public class Intake {
 
         flipperController = flipper.getPIDController();
         flipperController.setFeedbackDevice(relativeEncoder);
-        flipperController.setOutputRange(-0.35, 0.35);
+        flipperController.setOutputRange(-0.25, 0.25);
 
         flipperController.setP(IntakeConstants.flipperPCoefficient);
         flipperController.setI(IntakeConstants.flipperICoefficient);
@@ -97,14 +96,14 @@ public class Intake {
 
         // flipper.set(-reqPower + feedforward.calculate(intakePosition.position, veloSP));
 
-        flipperController.setReference(-6.0, ControlType.kPosition, 0,
-         feedforward.calculate(-6.0, veloSP));
+        flipperController.setReference(intakePosition.position, ControlType.kPosition, 0,
+         feedforward.calculate(intakePosition.position, veloSP));
         //.31 works
 
         }
 
     public void reverseFlipper(){
-        flipper.set(-flip);
+        flipper.set(-flip + feedforward.calculate(relativeEncoder.getPosition(), veloSP));
     }
 
     public void setRollerPower(){
@@ -116,7 +115,7 @@ public class Intake {
     }
 
     public void setFlipperPower(){
-        flipper.set(flip);
+        flipper.set(flip + feedforward.calculate(relativeEncoder.getPosition(), veloSP));
     }
 
     public void setFlipperOff(){

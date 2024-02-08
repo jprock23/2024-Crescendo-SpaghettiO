@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.launcher.*;
 import frc.robot.subsystems.launcher.Launcher.LauncherPosition;
+import frc.robot.subsystems.launcher.LauncherStates.LauncherControl;
+import frc.robot.subsystems.launcher.LauncherStates.LauncherState;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakePosition;
@@ -74,7 +76,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     drivebase.periodic();
-   
+
     SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
 
     // SmartDashboard.putNumber("bigFlipper1", launcher.getPosition1());
@@ -82,7 +84,6 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Relative Launcher Position1", launcher.getLauncherPosition1());
     SmartDashboard.putNumber("Relative Launcher Position2", launcher.getLauncherPosition2());
-
 
     SmartDashboard.putNumber("Flipper Velocity", intake.getFlipperVelocity());
     SmartDashboard.putNumber("Flipper Velocity Setpoint", intake.getFlipperVelocitySetpoint());
@@ -128,33 +129,32 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     intake.periodic();
-    // launcher.periodic();
+    launcher.periodic();
 
     boolean fieldRelative = true;
 
     // if(launcher.hasReachedPose(.001)){
-    //   poseReached = Timer.getFPGATimestamp();
+    // poseReached = Timer.getFPGATimestamp();
     // }
 
     // if (driver.getLeftTriggerAxis() > 0.0){
-    //   launcher.setPivotState(LauncherPosition.TESTDOWN);
-    //   buttonPressed = Timer.getFPGATimestamp();
+    // launcher.setPivotState(LauncherPosition.TESTDOWN);
+    // buttonPressed = Timer.getFPGATimestamp();
     // }
     // if (driver.getRightTriggerAxis() > 0.0){
-    //    launcher.setPivotState(LauncherPosition.TESTUP);
-    //     buttonPressed = Timer.getFPGATimestamp();
+    // launcher.setPivotState(LauncherPosition.TESTUP);
+    // buttonPressed = Timer.getFPGATimestamp();
     // }
-    
+
     /* DRIVE CONTROLS */
 
     // double ySpeed = driver.getLeftX();
     // double xSpeed = -driver.getLeftY();
     // double rot = driver.getRightX();
 
-     double ySpeed = 0;
+    double ySpeed = 0;
     double xSpeed = 0;
     double rot = 0;
-
 
     SmartDashboard.putNumber("Xspeed", xSpeed);
     SmartDashboard.putNumber("Yspeed", ySpeed);
@@ -170,29 +170,23 @@ public class Robot extends TimedRobot {
       drivebase.drive(xSpeed, ySpeed, rot, fieldRelative);
     }
 
-    /*INTAKE CONTROLS */
+    /* INTAKE CONTROLS */
 
-    //flipping intake
+    // flipping intake
 
-    // if(-operator.getLeftY() >= .2){
-    // intake.setFlipperPower();
-    // } else if(-operator.getLeftY() <= -.2){
-    // intake.reverseFlipper();
-    // } else {
-    // intake.setFlipperOff();
-    // }
-
-   boolean reverseLauncher = false;
+    boolean reverseLauncher = false;
     // rolling intake rollers
-    if (operator.getYButton()){
-    intake.setRollerPower();
-    intake.setIntakeState(IntakePosition.GROUND);
-    }else if (operator.getXButton()){
+    if (operator.getYButton()) {
+      intake.setIntakeState(IntakePosition.GROUND);
+      intake.setRollerPower();
+    } else if (operator.getXButton()) {
       intake.setReverseRollerPower();
       launcher.setReverse();
-    } else if(operator.getRightTriggerAxis() >= .1){
+    } else if (operator.getAButton()) {
+      intake.setRollerPower();
+    } else if (operator.getRightTriggerAxis() >= .1) {
       launcher.setLauncherPower();
-    } else{
+    } else {
       intake.setIntakeState(IntakePosition.HANDOFF);
       intake.setRollerOff();
       launcher.setLaunchZero();
@@ -208,22 +202,34 @@ public class Robot extends TimedRobot {
       climber.setClimberStop();
     }
 
-    /*LAUNCHER CONTROLS*/
+    /* LAUNCHER CONTROLS */
 
+    if (operator.getLeftStickButton()){
+      launcher.setPivotState(LauncherPosition.AMP);
+    } else if (operator.getRightStickButton()){
+      launcher.setPivotState(LauncherPosition.HANDOFF);
+    }
 
-    //Launching notes
-    
-    //Flicking
-   if (operator.getBButton()){
-       launcher.setFlickerOn();
-     } else if(operator.getLeftTriggerAxis() > .1){
+    // if (-operator.getRightY() > 0) {
+    //   launcher.setLauncherAngle();
+    // } else if (-operator.getRightY() < 0) {
+    //   launcher.setReverseLauncherAngle();
+    // } else {
+    //   launcher.setAngleStop();
+    // }
+
+    // Launching notes
+
+    // Flicking
+    if (operator.getBButton()) {
+      launcher.setFlickerOn();
+    } else if (operator.getLeftTriggerAxis() > .1) {
       launcher.setFlickerReverse();
-     } else {
-       launcher.setFlickOff();
-     }
+    } else {
+      launcher.setFlickOff();
+    }
 
     // launcher.setFlickerOn();
-
 
   }
 

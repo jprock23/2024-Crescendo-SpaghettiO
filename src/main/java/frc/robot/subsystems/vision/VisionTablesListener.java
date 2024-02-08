@@ -132,10 +132,10 @@ public class VisionTablesListener {
         return yPose;
     }
 
-    public double getX() {
+      public double getX() {
         return xPose;
     }
-    
+
     public double getRingX() {
         return ringX;
     }

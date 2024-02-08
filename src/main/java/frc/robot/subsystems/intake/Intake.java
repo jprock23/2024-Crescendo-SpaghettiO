@@ -1,38 +1,35 @@
 package frc.robot.subsystems.intake;
 
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Ports;
 
 public class Intake {
 
-     public enum IntakePosition{
-        GROUND(-9.3),
+    public enum IntakePosition {
+        GROUND(-9.35),
         HANDOFF(-1.0);
+
         public double position;
 
-        private IntakePosition(double position){
+        private IntakePosition(double position) {
             this.position = position;
         }
-     }
-     
+    }
+
     private CANSparkMax roller;
     private CANSparkMax flipper;
 
     // private IntakePID control;
 
-    private IntakePosition intakePosition = IntakePosition.HANDOFF;
+    public IntakePosition intakePosition = IntakePosition.GROUND;
     public static Intake instance;
 
     private double power = .4;
@@ -41,13 +38,13 @@ public class Intake {
 
     private ArmFeedforward feedforward;
     private SparkMaxPIDController flipperController;
-    private PIDController dumbController;
 
-    private AbsoluteEncoder encoder;
     private RelativeEncoder relativeEncoder;
 
-     private double veloSP = .02;
-    
+    private double veloSP = .02;
+    private double startTime = 0.0;
+    private double timeElapsed = 0.0;
+
     public Intake() {
         roller = new CANSparkMax(Ports.roller, MotorType.kBrushless);
         roller.restoreFactoryDefaults();
@@ -56,8 +53,8 @@ public class Intake {
         roller.setIdleMode(IdleMode.kCoast);
         roller.setInverted(false);
         roller.burnFlash();
-        
-        flipper = new CANSparkMax(Ports.flipper,MotorType.kBrushless);
+
+        flipper = new CANSparkMax(Ports.flipper, MotorType.kBrushless);
         flipper.restoreFactoryDefaults();
 
         flipper.setSmartCurrentLimit(70);
@@ -65,16 +62,8 @@ public class Intake {
         flipper.setInverted(true);
         flipper.burnFlash();
 
-        encoder = flipper.getAbsoluteEncoder(Type.kDutyCycle);
-        encoder.setPositionConversionFactor(25);
-        encoder.setVelocityConversionFactor(25);
-
-        encoder.setInverted(true);
-
         feedforward = new ArmFeedforward(0.0125, 0.0345, 0, 0);
-        //low bound: .022 upper bound:.047
-
-        dumbController = new PIDController(IntakeConstants.flipperPCoefficient, IntakeConstants.flipperICoefficient, IntakeConstants.flipperDCoefficient);
+        // low bound: .022 upper bound:.047
 
         relativeEncoder = flipper.getEncoder();
 
@@ -86,43 +75,73 @@ public class Intake {
         flipperController.setI(IntakeConstants.flipperICoefficient);
         flipperController.setD(IntakeConstants.flipperDCoefficient);
 
-        // control = IntakePID.getInstance(flipper.getPIDController(), flipper.getAbsoluteEncoder(Type.kDutyCycle));
+        // control = IntakePID.getInstance(flipper.getPIDController(),
+        // flipper.getAbsoluteEncoder(Type.kDutyCycle));
     }
 
-    public void periodic(){
-
-        // double reqPower = dumbController.calculate(encoder.getPosition(), intakePosition.position);
-        // reqPower = Math.signum(reqPower) * Math.min(Math.abs(reqPower), .15);
-
-        // flipper.set(-reqPower + feedforward.calculate(intakePosition.position, veloSP));
+    public void periodic() {
 
         flipperController.setReference(intakePosition.position, ControlType.kPosition, 0,
-         feedforward.calculate(intakePosition.position, veloSP));
-        //.31 works
+                feedforward.calculate(relativeEncoder.getPosition(), veloSP));
 
-        }
+        // if (intakePosition == IntakePosition.HANDOFF && hasReachedPose(.36)) {
 
-    public void reverseFlipper(){
+        //     // if (Launcher.hasReachedPose(.55)) {
+
+        //     if (startTime == 0.0) {
+        //         startTime = Timer.getFPGATimestamp();
+        //     }
+
+        //     timeElapsed = Timer.getFPGATimestamp() - startTime;
+        //     SmartDashboard.putNumber("Time Elpased", timeElapsed);
+
+        //     if (timeElapsed < .32 && timeElapsed != Timer.getFPGATimestamp()) {
+        //         setRollerPower();
+        //     } else if (timeElapsed  > .32 && timeElapsed < 2 && timeElapsed != Timer.getFPGATimestamp()) {
+        //         setRollerOff();
+        //     } else if ( timeElapsed < 3 && timeElapsed > 2 && timeElapsed != Timer.getFPGATimestamp()) {
+        //         setReverseRollerPower();
+        //     } else if (timeElapsed > 3 && timeElapsed != Timer.getFPGATimestamp()) {
+        //         setRollerOff();
+        //     }
+        // }
+        // .31 works
+
+    }
+
+    public double getStartTime() {
+        return startTime;
+    }
+
+    public double getTimeElapsed(){
+        return timeElapsed;
+    }
+
+    public void resetStartTime(){
+        startTime = 0.0;
+    }
+
+    public void reverseFlipper() {
         flipper.set(-flip + feedforward.calculate(relativeEncoder.getPosition(), veloSP));
     }
 
-    public void setRollerPower(){
+    public void setRollerPower() {
         roller.set(power);
     }
 
-    public void setReverseRollerPower(){
+    public void setReverseRollerPower() {
         roller.set(-power);
     }
 
-    public void setFlipperPower(){
+    public void setFlipperPower() {
         flipper.set(flip + feedforward.calculate(relativeEncoder.getPosition(), veloSP));
     }
 
-    public void setFlipperOff(){
+    public void setFlipperOff() {
         flipper.set(0.0);
     }
 
-    public void setRollerOff(){
+    public void setRollerOff() {
         roller.set(0);
     }
 
@@ -130,39 +149,35 @@ public class Intake {
         return roller.getOutputCurrent();
     }
 
-    public double getFlipperVoltage(){
+    public double getFlipperVoltage() {
         return flipper.getBusVoltage();
     }
 
-    public double getFlipperPosition(){
+    public double getFlipperPosition() {
         return relativeEncoder.getPosition();
     }
 
-    public double getFlipperVelocity(){
-        return encoder.getVelocity();
-    }
-
-    public double getFlipperVelocitySetpoint(){
+    public double getFlipperVelocitySetpoint() {
         return veloSP;
     }
 
-    public String getIntakeState(){
+    public String getIntakeState() {
         return intakePosition.toString();
     }
 
-    // public boolean hasReachedPose(double tolerance) {
-    //             if (Math.abs(control.getFlipperPosition() - intakePosition.position) > tolerance) {
-    //         return true;
-    //     }
-    //     return false;
-    // }
+    public boolean hasReachedPose(double tolerance) {
+        if (Math.abs(relativeEncoder.getPosition() - intakePosition.position) > tolerance) {
+            return false;
+        }
+        return true;
+    }
 
     public void setIntakeState(IntakePosition state) {
-        this.intakePosition = state;
+        intakePosition = state;
     }
-    
+
     public static Intake getInstance() {
-        if(instance == null)
+        if (instance == null)
             instance = new Intake();
         return instance;
     }

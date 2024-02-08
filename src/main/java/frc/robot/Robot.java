@@ -4,22 +4,18 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.launcher.*;
-import frc.robot.subsystems.launcher.Launcher.LauncherPosition;
-import frc.robot.subsystems.launcher.LauncherStates.LauncherControl;
-import frc.robot.subsystems.launcher.LauncherStates.LauncherState;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakePosition;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -43,13 +39,10 @@ public class Robot extends TimedRobot {
   private Climber climber;
   private Intake intake;
 
-  private Launcher launcher;
+  // private Launcher launcher;
 
   private static XboxController driver;
   private static XboxController operator;
-
-  private double buttonPressed = 0.0;
-  private double poseReached = 0.0;
 
   private Command m_autoSelected;
   private SendableChooser<Command> m_chooser;
@@ -57,7 +50,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     drivebase = Drivebase.getInstance();
-    launcher = Launcher.getInstance();
+    // launcher = Launcher.getInstance();
     intake = Intake.getInstance();
     climber = Climber.getInstance();
 
@@ -65,10 +58,13 @@ public class Robot extends TimedRobot {
     operator = new XboxController(1);
     drivebase.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0)));
 
-    // m_chooser = AutoBuilder.buildAutoChooser();
+    m_chooser = AutoBuilder.buildAutoChooser();
     // SmartDashboard.putData("Auto choices", m_chooser);
+    // m_chooser.addOption("DriveCommand", new PathPlannerAuto("TestAutov2"));
+    // m_chooser.addOption("Straight Auto", new PathPlannerAuto("Straight"));
+    SmartDashboard.putData("Auto choices", m_chooser);
 
-    // CameraServer.startAutomaticCapture(0);
+    // CameraServer.startAutomaticCapture(0);  
 
   }
 
@@ -79,28 +75,14 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
 
-    // SmartDashboard.putNumber("bigFlipper1", launcher.getPosition1());
-    // SmartDashboard.putNumber("bigFlipper2", launcher.getPosition2());
+    // SmartDashboard.putNumber("Relative Launcher Position1", Launcher.getLauncherPosition1());
+    // SmartDashboard.putNumber("Relative Launcher Position2", Launcher.getLauncherPosition2());
 
-    SmartDashboard.putNumber("Relative Launcher Position1", launcher.getLauncherPosition1());
-    SmartDashboard.putNumber("Relative Launcher Position2", launcher.getLauncherPosition2());
+    SmartDashboard.putString("Intake State", intake.getIntakeState());
 
-    SmartDashboard.putNumber("Flipper Velocity", intake.getFlipperVelocity());
-    SmartDashboard.putNumber("Flipper Velocity Setpoint", intake.getFlipperVelocitySetpoint());
-    SmartDashboard.putString("Intake Position", intake.getIntakeState());
+    // SmartDashboard.putString("Pivot Position", launcher.getPivotPosition());
 
-    SmartDashboard.putNumber("Pivot Velocity1", launcher.getPivotVelocity1());
-    SmartDashboard.putNumber("Pivot Velocity2", launcher.getPivotVelocity2());
-    SmartDashboard.putNumber("Pivot Acceleration1", launcher.getPivotAcceleration1(buttonPressed, poseReached));
-    SmartDashboard.putNumber("Pivot Accleration2", launcher.getPivotAcceleration2(buttonPressed, poseReached));
-
-    SmartDashboard.putNumber("Pivot Target Velocity", launcher.getPivotTargetVelocity());
-    SmartDashboard.putNumber("Pivot Target Acceleration", launcher.getPivotTargetAcceleration());
-
-    SmartDashboard.putString("Pivot Position", launcher.getPivotPosition());
-
-    SmartDashboard.putNumber("Pivot Velocity Setpoint", launcher.getPivotVelocitySetPoint());
-    SmartDashboard.putNumber("Pivot1 power", launcher.getReqPower1());
+    SmartDashboard.putNumber("Start Time", intake.getStartTime());
 
   }
 
@@ -121,40 +103,23 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    // if (m_autoSelected != null) {
-    // m_autoSelected.cancel();
-    // }
+    if (m_autoSelected != null) {
+    m_autoSelected.cancel();
+    }
   }
 
   @Override
   public void teleopPeriodic() {
     intake.periodic();
-    launcher.periodic();
+    // launcher.periodic();
 
     boolean fieldRelative = true;
 
-    // if(launcher.hasReachedPose(.001)){
-    // poseReached = Timer.getFPGATimestamp();
-    // }
-
-    // if (driver.getLeftTriggerAxis() > 0.0){
-    // launcher.setPivotState(LauncherPosition.TESTDOWN);
-    // buttonPressed = Timer.getFPGATimestamp();
-    // }
-    // if (driver.getRightTriggerAxis() > 0.0){
-    // launcher.setPivotState(LauncherPosition.TESTUP);
-    // buttonPressed = Timer.getFPGATimestamp();
-    // }
-
     /* DRIVE CONTROLS */
 
-    // double ySpeed = driver.getLeftX();
-    // double xSpeed = -driver.getLeftY();
-    // double rot = driver.getRightX();
-
-    double ySpeed = 0;
-    double xSpeed = 0;
-    double rot = 0;
+    double ySpeed = driver.getLeftX();
+    double xSpeed = -driver.getLeftY();
+    double rot = driver.getRightX();
 
     SmartDashboard.putNumber("Xspeed", xSpeed);
     SmartDashboard.putNumber("Yspeed", ySpeed);
@@ -174,22 +139,27 @@ public class Robot extends TimedRobot {
 
     // flipping intake
 
-    boolean reverseLauncher = false;
     // rolling intake rollers
     if (operator.getYButton()) {
-      intake.setIntakeState(IntakePosition.GROUND);
+      // intake.setIntakeState(IntakePosition.GROUND);
       intake.setRollerPower();
     } else if (operator.getXButton()) {
       intake.setReverseRollerPower();
-      launcher.setReverse();
+      // launcher.setReverse();
     } else if (operator.getAButton()) {
       intake.setRollerPower();
     } else if (operator.getRightTriggerAxis() >= .1) {
-      launcher.setLauncherPower();
-    } else {
-      intake.setIntakeState(IntakePosition.HANDOFF);
+      // launcher.setLauncherPower();
+    }
+    // else if (operator.getRightTriggerAxis() >= .1) {
+    // launcher.setLauncherPower();
+    // intake.setRollerOff();
+    // launcher.setLaunchZero();
+    // }
+    else {
+      // intake.setIntakeState(IntakePosition.HANDOFF);
       intake.setRollerOff();
-      launcher.setLaunchZero();
+      // launcher.setLaunchZero();
     }
 
     // *CLIMBER CONTROLS */
@@ -204,11 +174,20 @@ public class Robot extends TimedRobot {
 
     /* LAUNCHER CONTROLS */
 
-    if (operator.getLeftStickButton()){
-      launcher.setPivotState(LauncherPosition.AMP);
-    } else if (operator.getRightStickButton()){
-      launcher.setPivotState(LauncherPosition.HANDOFF);
+    if (operator.getLeftStickButton()) {
+      // launcher.setPivotState(LauncherPosition.HANDOFF);
+      intake.setIntakeState(IntakePosition.HANDOFF);
+      intake.resetStartTime();
+    } else if (operator.getRightStickButton()) {
+      // launcher.setPivotState(LauncherPosition.AMP);
+      intake.setIntakeState(IntakePosition.GROUND);
     }
+
+    // if (operator.getLeftStickButton()){
+    // launcher.setPivotState(LauncherPosition.AMP);
+    // } else if (operator.getRightStickButton()){
+    // launcher.setPivotState(LauncherPosition.HANDOFF);
+    // }
 
     // if (-operator.getRightY() > 0) {
     //   launcher.setLauncherAngle();
@@ -222,11 +201,11 @@ public class Robot extends TimedRobot {
 
     // Flicking
     if (operator.getBButton()) {
-      launcher.setFlickerOn();
+      // launcher.setFlickerOn();
     } else if (operator.getLeftTriggerAxis() > .1) {
-      launcher.setFlickerReverse();
+      // launcher.setFlickerReverse();
     } else {
-      launcher.setFlickOff();
+      // launcher.setFlickOff();
     }
 
     // launcher.setFlickerOn();

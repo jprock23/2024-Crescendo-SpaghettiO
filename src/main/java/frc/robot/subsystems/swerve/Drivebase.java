@@ -1,5 +1,7 @@
 package frc.robot.subsystems.swerve;
 
+import java.util.function.BooleanSupplier;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.*;
@@ -29,18 +31,16 @@ public class Drivebase extends SubsystemBase {
   private HolonomicPathFollowerConfig config;
 
   private static AHRS gyro;
-  // Slew rate filter variables for controlling lateral acceleration
   private double currentRotation = 0.0;
+  private boolean flipPath;
 
-  // Odometry class for tracking robot pose
   SwerveDriveOdometry odometry;
 
   Field2d fieldmap = new Field2d();
 
-  /** Creates a new DriveSubsystem. */
   public Drivebase() {
 
-    // Swerve modules
+    //Swerve modules
 
     frontLeft = new SwerveModule(Ports.frontLeftDrive, Ports.frontLeftSteer, DriveConstants.kFrontLeftChassisAngularOffset);
     backLeft = new SwerveModule(Ports.backLeftDrive, Ports.backLeftSteer, DriveConstants.kBackLeftChassisAngularOffset);
@@ -48,7 +48,6 @@ public class Drivebase extends SubsystemBase {
     frontRight = new SwerveModule(Ports.frontRightDrive, Ports.frontRightSteer, DriveConstants.kFrontRightChassisAngularOffset);
     backRight = new SwerveModule(Ports.backRightDrive, Ports.backRightSteer, DriveConstants.kBackRightChassisAngularOffset);
 
-    // gyro
     gyro = new AHRS(SPI.Port.kMXP);
 
   gyro.setAngleAdjustment(90);
@@ -71,7 +70,7 @@ public class Drivebase extends SubsystemBase {
 
     SmartDashboard.putData("FIELD", fieldmap);
 
-        AutoBuilder.configureHolonomic(this::getPose, this::resetPose, this::getSpeeds, this::setChassisSpeed, config, this);
+    AutoBuilder.configureHolonomic(this::getPose, this::resetPose, this::getSpeeds, this::setChassisSpeed, config, shouldFlipPath(), this);
 
   }
 
@@ -179,8 +178,6 @@ public class Drivebase extends SubsystemBase {
     //odometry.resetPosition(gyro.getRotation2d(), getPositions(), pose);
   }
 
-
-
   public void lockWheels() {
     frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
@@ -214,6 +211,15 @@ public class Drivebase extends SubsystemBase {
   // Returns the heading of the robot(=180 to 180)
   public double getHeading() {
     return Rotation2d.fromDegrees(-gyro.getAngle()).getDegrees();
+  }
+
+  public BooleanSupplier shouldFlipPath(){
+    return new BooleanSupplier() {
+      @Override
+      public boolean getAsBoolean() {
+          return flipPath;
+      }
+    };
   }
 
   // Returns the turn rate of the robot

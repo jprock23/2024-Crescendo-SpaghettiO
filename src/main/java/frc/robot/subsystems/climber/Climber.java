@@ -23,7 +23,7 @@ public class Climber {
         climber1.setInverted(false);
         climber1.burnFlash();
 
-        climber2 = new CANSparkMax(Ports.climber2,MotorType.kBrushless);
+        climber2 = new CANSparkMax(Ports.climber2, MotorType.kBrushless);
         climber2.restoreFactoryDefaults();
         
         climber2.setSmartCurrentLimit(60);

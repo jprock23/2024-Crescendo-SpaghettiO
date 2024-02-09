@@ -1,7 +1,6 @@
 package frc.robot.subsystems.launcher;
 
 public class LauncherStates {
-    
 
     public enum LauncherVoltage {
         AMP(0.0),
@@ -35,7 +34,7 @@ public class LauncherStates {
 
         public double position;
 
-        private FlickerState(double position){
+        private FlickerState(double position) {
             this.position = position;
         }
     }

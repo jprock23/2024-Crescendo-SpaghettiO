@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -64,7 +66,7 @@ public class Robot extends TimedRobot {
     // m_chooser.addOption("Straight Auto", new PathPlannerAuto("Straight"));
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    // CameraServer.startAutomaticCapture(0);  
+    // CameraServer.startAutomaticCapture(0);
 
   }
 
@@ -75,8 +77,10 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
 
-    // SmartDashboard.putNumber("Relative Launcher Position1", Launcher.getLauncherPosition1());
-    // SmartDashboard.putNumber("Relative Launcher Position2", Launcher.getLauncherPosition2());
+    // SmartDashboard.putNumber("Relative Launcher Position1",
+    // Launcher.getLauncherPosition1());
+    // SmartDashboard.putNumber("Relative Launcher Position2",
+    // Launcher.getLauncherPosition2());
 
     SmartDashboard.putString("Intake State", intake.getIntakeState());
 
@@ -104,7 +108,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     if (m_autoSelected != null) {
-    m_autoSelected.cancel();
+      m_autoSelected.cancel();
     }
   }
 
@@ -190,11 +194,11 @@ public class Robot extends TimedRobot {
     // }
 
     // if (-operator.getRightY() > 0) {
-    //   launcher.setLauncherAngle();
+    // launcher.setLauncherAngle();
     // } else if (-operator.getRightY() < 0) {
-    //   launcher.setReverseLauncherAngle();
+    // launcher.setReverseLauncherAngle();
     // } else {
-    //   launcher.setAngleStop();
+    // launcher.setAngleStop();
     // }
 
     // Launching notes

@@ -22,16 +22,18 @@ public class LauncherPID {
 
     private LauncherPID instance;
 
-    public LauncherPID(SparkMaxPIDController vol1, SparkMaxPIDController vol2, RelativeEncoder volEncoder1, RelativeEncoder volencoder2, 
-    SparkMaxPIDController bigFlip1, SparkMaxPIDController bigFlip2, AbsoluteEncoder flipEncoder1, AbsoluteEncoder flipEncoder2, 
-    SparkMaxPIDController flick, AbsoluteEncoder flickEncoder){
+    public LauncherPID(SparkMaxPIDController vol1, SparkMaxPIDController vol2, RelativeEncoder volEncoder1,
+            RelativeEncoder volencoder2,
+            SparkMaxPIDController bigFlip1, SparkMaxPIDController bigFlip2, AbsoluteEncoder flipEncoder1,
+            AbsoluteEncoder flipEncoder2,
+            SparkMaxPIDController flick, AbsoluteEncoder flickEncoder) {
         voltageController1 = vol1;
         voltageController2 = vol2;
 
         voltageController1.setP(LauncherConstants.launchPCoefficient);
         voltageController1.setI(LauncherConstants.launchICoefficient);
         voltageController1.setD(LauncherConstants.launchDCoefficient);
-         
+
         voltageController2.setP(LauncherConstants.launchPCoefficient);
         voltageController2.setI(LauncherConstants.launchICoefficient);
         voltageController2.setD(LauncherConstants.launchDCoefficient);
@@ -65,27 +67,29 @@ public class LauncherPID {
         flickerController.setFeedbackDevice(flickEncoder);
     }
 
-    public void setVoltageSP(double setPoint){
+    public void setVoltageSP(double setPoint) {
         voltageController1.setReference(setPoint, CANSparkMax.ControlType.kVoltage);
         voltageController2.setReference(setPoint, CANSparkMax.ControlType.kVoltage);
     }
 
-    public void setAngleSP(double setPoint){
+    public void setAngleSP(double setPoint) {
         bigFlipController1.setReference(setPoint, CANSparkMax.ControlType.kPosition);
         bigFlipController2.setReference(setPoint, CANSparkMax.ControlType.kPosition);
 
     }
-    
-    public void setFlickerSP(double setPoint){
+
+    public void setFlickerSP(double setPoint) {
         flickerController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
     }
 
-    public LauncherPID getInstance(SparkMaxPIDController vol1, SparkMaxPIDController vol2, RelativeEncoder volEncoder1, RelativeEncoder volencoder2, 
-    SparkMaxPIDController bigFlip1, SparkMaxPIDController bigFlip2, AbsoluteEncoder flipEncoder1, AbsoluteEncoder flipEncoder2, 
-    SparkMaxPIDController flick, AbsoluteEncoder flickEncoder){
-        if(instance == null){
-            instance = new LauncherPID(vol1, vol2, volEncoder1, volencoder2, 
-     bigFlip1, bigFlip2, flipEncoder1, flipEncoder2, flick, flickEncoder);
+    public LauncherPID getInstance(SparkMaxPIDController vol1, SparkMaxPIDController vol2, RelativeEncoder volEncoder1,
+            RelativeEncoder volencoder2,
+            SparkMaxPIDController bigFlip1, SparkMaxPIDController bigFlip2, AbsoluteEncoder flipEncoder1,
+            AbsoluteEncoder flipEncoder2,
+            SparkMaxPIDController flick, AbsoluteEncoder flickEncoder) {
+        if (instance == null) {
+            instance = new LauncherPID(vol1, vol2, volEncoder1, volencoder2,
+                    bigFlip1, bigFlip2, flipEncoder1, flipEncoder2, flick, flickEncoder);
         }
 
         return instance;

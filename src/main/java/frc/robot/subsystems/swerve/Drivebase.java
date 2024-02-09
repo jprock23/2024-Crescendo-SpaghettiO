@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,7 +33,6 @@ public class Drivebase extends SubsystemBase {
 
   private static AHRS gyro;
   private double currentRotation = 0.0;
-  private boolean flipPath;
 
   SwerveDriveOdometry odometry;
 
@@ -40,18 +40,21 @@ public class Drivebase extends SubsystemBase {
 
   public Drivebase() {
 
-    //Swerve modules
+    // Swerve modules
 
-    frontLeft = new SwerveModule(Ports.frontLeftDrive, Ports.frontLeftSteer, DriveConstants.kFrontLeftChassisAngularOffset);
+    frontLeft = new SwerveModule(Ports.frontLeftDrive, Ports.frontLeftSteer,
+        DriveConstants.kFrontLeftChassisAngularOffset);
     backLeft = new SwerveModule(Ports.backLeftDrive, Ports.backLeftSteer, DriveConstants.kBackLeftChassisAngularOffset);
 
-    frontRight = new SwerveModule(Ports.frontRightDrive, Ports.frontRightSteer, DriveConstants.kFrontRightChassisAngularOffset);
-    backRight = new SwerveModule(Ports.backRightDrive, Ports.backRightSteer, DriveConstants.kBackRightChassisAngularOffset);
+    frontRight = new SwerveModule(Ports.frontRightDrive, Ports.frontRightSteer,
+        DriveConstants.kFrontRightChassisAngularOffset);
+    backRight = new SwerveModule(Ports.backRightDrive, Ports.backRightSteer,
+        DriveConstants.kBackRightChassisAngularOffset);
 
     gyro = new AHRS(SPI.Port.kMXP);
 
-  gyro.setAngleAdjustment(90);
-  gyro.zeroYaw();
+    gyro.setAngleAdjustment(90);
+    gyro.zeroYaw();
 
     odometry = new SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
@@ -63,14 +66,15 @@ public class Drivebase extends SubsystemBase {
         });
 
     config = new HolonomicPathFollowerConfig(new PIDConstants(1, 0, 0),
-    new PIDConstants(1, 0, 0),
-    2, Math.sqrt(Math.pow(DriveConstants.kTrackWidth / 2, 2) +
-    Math.pow(DriveConstants.kWheelBase / 2, 2)),
-    new ReplanningConfig());
+        new PIDConstants(1, 0, 0),
+        2, Math.sqrt(Math.pow(DriveConstants.kTrackWidth / 2, 2) +
+            Math.pow(DriveConstants.kWheelBase / 2, 2)),
+        new ReplanningConfig());
 
     SmartDashboard.putData("FIELD", fieldmap);
 
-    AutoBuilder.configureHolonomic(this::getPose, this::resetPose, this::getSpeeds, this::setChassisSpeed, config, shouldFlipPath(), this);
+    AutoBuilder.configureHolonomic(this::getPose, this::resetPose, this::getSpeeds, this::setChassisSpeed, config,
+        shouldFlipPath(), this);
 
   }
 
@@ -89,14 +93,16 @@ public class Drivebase extends SubsystemBase {
         new SwerveModulePosition[] { frontLeft.getPosition(), backLeft.getPosition(), frontRight.getPosition(),
             backRight.getPosition() });
 
-    fieldmap.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(), odometry.getPoseMeters().getRotation());
+    fieldmap.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(),
+        odometry.getPoseMeters().getRotation());
   }
 
   // Returns the currently-estimated pose of the robot
   public Pose2d getPose() {
     return odometry.getPoseMeters();
-    // return new Pose2d(-odometry.getPoseMeters().getY(), odometry.getPoseMeters().getX(),
-    //     odometry.getPoseMeters().getRotation());
+    // return new Pose2d(-odometry.getPoseMeters().getY(),
+    // odometry.getPoseMeters().getX(),
+    // odometry.getPoseMeters().getRotation());
   }
 
   // Resets the odometry to the specified pose
@@ -153,20 +159,20 @@ public class Drivebase extends SubsystemBase {
   }
 
   public SwerveModulePosition[] getPositions() {
-    return new SwerveModulePosition[] { 
-      frontLeft.getPosition(),
-      frontRight.getPosition(),
-      backLeft.getPosition(),
-      backRight.getPosition()
+    return new SwerveModulePosition[] {
+        frontLeft.getPosition(),
+        frontRight.getPosition(),
+        backLeft.getPosition(),
+        backRight.getPosition()
     };
   }
 
   public SwerveModuleState[] getModuleStates() {
     return new SwerveModuleState[] {
-      frontLeft.getState(),
-      frontRight.getState(),
-      backLeft.getState(),
-      backRight.getState()
+        frontLeft.getState(),
+        frontRight.getState(),
+        backLeft.getState(),
+        backRight.getState()
     };
   }
 
@@ -175,7 +181,7 @@ public class Drivebase extends SubsystemBase {
   }
 
   public void resetPose(final Pose2d pose) {
-    //odometry.resetPosition(gyro.getRotation2d(), getPositions(), pose);
+    // odometry.resetPosition(gyro.getRotation2d(), getPositions(), pose);
   }
 
   public void lockWheels() {
@@ -213,11 +219,15 @@ public class Drivebase extends SubsystemBase {
     return Rotation2d.fromDegrees(-gyro.getAngle()).getDegrees();
   }
 
-  public BooleanSupplier shouldFlipPath(){
+  public BooleanSupplier shouldFlipPath() {
     return new BooleanSupplier() {
       @Override
       public boolean getAsBoolean() {
-          return flipPath;
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+          return alliance.get() == DriverStation.Alliance.Red;
+        }
+        return false;
       }
     };
   }

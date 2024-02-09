@@ -45,12 +45,11 @@ public final class Constants {
         new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
         new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
-        
     // Angular offsets of the modules relative to the chassis in radians
-    public static final double kFrontLeftChassisAngularOffset = Math.PI/2;
+    public static final double kFrontLeftChassisAngularOffset = Math.PI / 2;
     public static final double kFrontRightChassisAngularOffset = Math.PI;
     public static final double kBackLeftChassisAngularOffset = 0;
-    public static final double kBackRightChassisAngularOffset = -Math.PI/2;
+    public static final double kBackRightChassisAngularOffset = -Math.PI / 2;
 
     public static final boolean kGyroReversed = false;
   }
@@ -141,11 +140,11 @@ public final class Constants {
 
     public static final double pivotPCoefficient = .1;
     public static final double pivotICoefficient = 0.0;
-    public static final double pivotDCoefficient = 0.0;      
-    
+    public static final double pivotDCoefficient = 0.0;
+
     // public static final double pivotPCoefficient = 0.21;
     // public static final double pivotICoefficient = 0.0;
-    // public static final double pivotDCoefficient = 0.004;                
+    // public static final double pivotDCoefficient = 0.004;
 
     public static final double flickerPCoefficient = 0.0;
     public static final double flickerICoefficient = 0.0;

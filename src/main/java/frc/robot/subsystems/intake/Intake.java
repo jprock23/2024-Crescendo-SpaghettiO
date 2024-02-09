@@ -8,10 +8,11 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Ports;
 
-public class Intake {
+public class Intake extends SubsystemBase{
 
     public enum IntakePosition {
         GROUND(-9.35),
@@ -86,24 +87,26 @@ public class Intake {
 
         // if (intakePosition == IntakePosition.HANDOFF && hasReachedPose(.36)) {
 
-        //     // if (Launcher.hasReachedPose(.55)) {
+        // // if (Launcher.hasReachedPose(.55)) {
 
-        //     if (startTime == 0.0) {
-        //         startTime = Timer.getFPGATimestamp();
-        //     }
+        // if (startTime == 0.0) {
+        // startTime = Timer.getFPGATimestamp();
+        // }
 
-        //     timeElapsed = Timer.getFPGATimestamp() - startTime;
-        //     SmartDashboard.putNumber("Time Elpased", timeElapsed);
+        // timeElapsed = Timer.getFPGATimestamp() - startTime;
+        // SmartDashboard.putNumber("Time Elpased", timeElapsed);
 
-        //     if (timeElapsed < .32 && timeElapsed != Timer.getFPGATimestamp()) {
-        //         setRollerPower();
-        //     } else if (timeElapsed  > .32 && timeElapsed < 2 && timeElapsed != Timer.getFPGATimestamp()) {
-        //         setRollerOff();
-        //     } else if ( timeElapsed < 3 && timeElapsed > 2 && timeElapsed != Timer.getFPGATimestamp()) {
-        //         setReverseRollerPower();
-        //     } else if (timeElapsed > 3 && timeElapsed != Timer.getFPGATimestamp()) {
-        //         setRollerOff();
-        //     }
+        // if (timeElapsed < .32 && timeElapsed != Timer.getFPGATimestamp()) {
+        // setRollerPower();
+        // } else if (timeElapsed > .32 && timeElapsed < 2 && timeElapsed !=
+        // Timer.getFPGATimestamp()) {
+        // setRollerOff();
+        // } else if ( timeElapsed < 3 && timeElapsed > 2 && timeElapsed !=
+        // Timer.getFPGATimestamp()) {
+        // setReverseRollerPower();
+        // } else if (timeElapsed > 3 && timeElapsed != Timer.getFPGATimestamp()) {
+        // setRollerOff();
+        // }
         // }
         // .31 works
 
@@ -113,11 +116,11 @@ public class Intake {
         return startTime;
     }
 
-    public double getTimeElapsed(){
+    public double getTimeElapsed() {
         return timeElapsed;
     }
 
-    public void resetStartTime(){
+    public void resetStartTime() {
         startTime = 0.0;
     }
 

@@ -12,11 +12,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakePosition;
+import frc.robot.subsystems.launcher.Launcher;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
   private Climber climber;
   private Intake intake;
 
-  // private Launcher launcher;
+  private Launcher launcher;
 
   private static XboxController driver;
   private static XboxController operator;
@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     drivebase = Drivebase.getInstance();
-    // launcher = Launcher.getInstance();
+    launcher = Launcher.getInstance();
     intake = Intake.getInstance();
     climber = Climber.getInstance();
 
@@ -60,11 +60,11 @@ public class Robot extends TimedRobot {
     operator = new XboxController(1);
     drivebase.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0)));
 
-    m_chooser = AutoBuilder.buildAutoChooser();
+    // m_chooser = AutoBuilder.buildAutoChooser();
     // SmartDashboard.putData("Auto choices", m_chooser);
     // m_chooser.addOption("DriveCommand", new PathPlannerAuto("TestAutov2"));
     // m_chooser.addOption("Straight Auto", new PathPlannerAuto("Straight"));
-    SmartDashboard.putData("Auto choices", m_chooser);
+    // SmartDashboard.putData("Auto choices", m_chooser);
 
     // CameraServer.startAutomaticCapture(0);
 
@@ -92,11 +92,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
+    // m_autoSelected = m_chooser.getSelected();
 
-    if (m_autoSelected != null) {
-      m_autoSelected.schedule();
-    }
+    // if (m_autoSelected != null) {
+    //   m_autoSelected.schedule();
+    // }
 
     // visionTables.putInfoOnDashboard();
   }
@@ -107,14 +107,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    if (m_autoSelected != null) {
-      m_autoSelected.cancel();
-    }
+    // if (m_autoSelected != null) {
+    //   m_autoSelected.cancel();
+    // }
   }
 
   @Override
   public void teleopPeriodic() {
-    intake.periodic();
+    // intake.periodic();
     // launcher.periodic();
 
     boolean fieldRelative = true;
@@ -143,48 +143,56 @@ public class Robot extends TimedRobot {
 
     // flipping intake
 
-    // rolling intake rollers
-    if (operator.getYButton()) {
-      // intake.setIntakeState(IntakePosition.GROUND);
-      intake.setRollerPower();
-    } else if (operator.getXButton()) {
-      intake.setReverseRollerPower();
-      // launcher.setReverse();
-    } else if (operator.getAButton()) {
-      intake.setRollerPower();
-    } else if (operator.getRightTriggerAxis() >= .1) {
-      // launcher.setLauncherPower();
-    }
-    // else if (operator.getRightTriggerAxis() >= .1) {
-    // launcher.setLauncherPower();
-    // intake.setRollerOff();
-    // launcher.setLaunchZero();
+    // // rolling intake rollers
+    // if (operator.getYButton()) {
+    //   // intake.setIntakeState(IntakePosition.GROUND);
+    //   intake.setRollerPower();
+    // } else if (operator.getXButton()) {
+    //   intake.setReverseRollerPower();
+    //   // launcher.setReverse();
+    // } else if (operator.getAButton()) {
+    //   intake.setRollerPower();
+    // } else if (operator.getRightTriggerAxis() >= .1) {
+    //   // launcher.setLauncherPower();
     // }
-    else {
-      // intake.setIntakeState(IntakePosition.HANDOFF);
-      intake.setRollerOff();
-      // launcher.setLaunchZero();
-    }
+    // // else if (operator.getRightTriggerAxis() >= .1) {
+    // // launcher.setLauncherPower();
+    // // intake.setRollerOff();
+    // // launcher.setLaunchZero();
+    // // }
+    // else {
+    //   // intake.setIntakeState(IntakePosition.HANDOFF);
+    //   intake.setRollerOff();
+    //   // launcher.setLaunchZero();
+    // }
 
     // *CLIMBER CONTROLS */
 
-    if (operator.getRightBumper()) {
-      climber.setClimbingPower();
-    } else if (operator.getLeftBumper()) {
-      climber.reverseClimb();
-    } else {
-      climber.setClimberStop();
-    }
+    // if (operator.getRightBumper()) {
+    //   climber.setClimbingPower();
+    // } else if (operator.getLeftBumper()) {
+    //   climber.reverseClimb();
+    // } else {
+    //   climber.setClimberStop();
+    // }
 
     /* LAUNCHER CONTROLS */
 
-    if (operator.getLeftStickButton()) {
-      // launcher.setPivotState(LauncherPosition.HANDOFF);
-      intake.setIntakeState(IntakePosition.HANDOFF);
-      intake.resetStartTime();
-    } else if (operator.getRightStickButton()) {
-      // launcher.setPivotState(LauncherPosition.AMP);
-      intake.setIntakeState(IntakePosition.GROUND);
+    // if (operator.getLeftStickButton()) {
+    //   // launcher.setPivotState(LauncherPosition.HANDOFF);
+    //   intake.setIntakeState(IntakePosition.HANDOFF);
+    //   intake.resetStartTime();
+    // } else if (operator.getRightStickButton()) {
+    //   // launcher.setPivotState(LauncherPosition.AMP);
+    //   intake.setIntakeState(IntakePosition.GROUND);
+    // }
+
+    if(operator.getRightTriggerAxis() > 0){
+      launcher.setLauncherPower();
+    } else if (operator.getLeftTriggerAxis() > 0) {
+      launcher.setReverseLaunch();
+    } else {
+      launcher.setLauncherOff();
     }
 
     // if (operator.getLeftStickButton()){
@@ -205,14 +213,12 @@ public class Robot extends TimedRobot {
 
     // Flicking
     if (operator.getBButton()) {
-      // launcher.setFlickerOn();
-    } else if (operator.getLeftTriggerAxis() > .1) {
-      // launcher.setFlickerReverse();
+      launcher.setFlickerOn();
+    } else if (operator.getLeftTriggerAxis()>0) {
+      launcher.setFlickerReverse();
     } else {
-      // launcher.setFlickOff();
+      launcher.setFlickOff();
     }
-
-    // launcher.setFlickerOn();
 
   }
 

@@ -4,10 +4,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 
-public class Climber extends SubsystemBase{
+public class Climber {
 
     private CANSparkMax climber1;
     private CANSparkMax climber2;

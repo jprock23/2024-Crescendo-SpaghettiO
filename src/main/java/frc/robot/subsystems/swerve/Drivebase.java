@@ -19,9 +19,8 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Ports;
 import frc.robot.Constants.DriveConstants;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Drivebase extends SubsystemBase {
+public class Drivebase {
   private static Drivebase instance;
 
   public SwerveModule frontLeft;
@@ -73,8 +72,8 @@ public class Drivebase extends SubsystemBase {
 
     SmartDashboard.putData("FIELD", fieldmap);
 
-    AutoBuilder.configureHolonomic(this::getPose, this::resetPose, this::getSpeeds, this::setChassisSpeed, config,
-        shouldFlipPath(), this);
+    // AutoBuilder.configureHolonomic(this::getPose, this::resetPose, this::getSpeeds, this::setChassisSpeed, config,
+    //     shouldFlipPath(), this);
 
   }
 
@@ -82,7 +81,6 @@ public class Drivebase extends SubsystemBase {
     this.resetOdometry(pose);
   }
 
-  @Override
   public void periodic() {
     SmartDashboard.putNumber("Gyro Angle:", gyro.getRotation2d().getDegrees());
     SmartDashboard.putNumber("X-coordinate", getPose().getX());

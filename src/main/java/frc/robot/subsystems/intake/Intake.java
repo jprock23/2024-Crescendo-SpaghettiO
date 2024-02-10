@@ -8,11 +8,10 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Ports;
 
-public class Intake extends SubsystemBase{
+public class Intake {
 
     public enum IntakePosition {
         GROUND(-9.35),

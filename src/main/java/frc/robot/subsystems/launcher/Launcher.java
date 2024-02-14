@@ -5,7 +5,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -15,7 +14,7 @@ import frc.robot.Constants.LauncherConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.Ports;
 
-public class Launcher extends SubsystemBase{
+public class Launcher {
 
     public enum PivotPosition {
         AMP(22.857, 23.857),
@@ -76,7 +75,7 @@ public class Launcher extends SubsystemBase{
 
         shootMotor2.setSmartCurrentLimit(60);
         shootMotor2.setIdleMode(IdleMode.kCoast);
-        shootMotor2.setInverted(true);
+        shootMotor2.setInverted(false);
         shootMotor2.burnFlash();
 
         flicker = new CANSparkMax(Ports.flicker, MotorType.kBrushless);
@@ -155,10 +154,10 @@ public class Launcher extends SubsystemBase{
         // }
         // } else {
 
-        // pivotController1.setReference(pivotPosition.onePosition, ControlType.kPosition, 0,
-        //         feedForward.calculate(pivotPosition.onePosition, veloSP));
-        // pivotController2.setReference(pivotPosition.twoPosition, ControlType.kPosition, 0,
-        //         feedForward.calculate(pivotPosition.twoPosition, veloSP));
+        pivotController1.setReference(pivotPosition.onePosition, ControlType.kPosition, 0,
+                feedForward.calculate(pivotPosition.onePosition, veloSP));
+        pivotController2.setReference(pivotPosition.twoPosition, ControlType.kPosition, 0,
+                feedForward.calculate(pivotPosition.twoPosition, veloSP));
     }
 
     public double getReqPower1() {
@@ -176,11 +175,6 @@ public class Launcher extends SubsystemBase{
 
     }
 
-    public void setReverse() {
-        shootMotor1.set(-power + feedForward.calculate(relativeEncoder1.getPosition(), veloSP));
-        shootMotor2.set(-power + feedForward.calculate(relativeEncoder2.getPosition(), veloSP));
-    }
-
     public void setAngleStop() {
         pivotMotor1.set(0.0);
         pivotMotor2.set(0.0);
@@ -191,7 +185,12 @@ public class Launcher extends SubsystemBase{
         shootMotor2.set(power);
     }
 
-    public void setLaunchZero() {
+     public void setReverseLaunch() {
+        shootMotor1.set(-power*0.5);
+        shootMotor2.set(-power*0.5);
+    }
+
+    public void setLauncherOff() {
         shootMotor1.set(0.0);
         shootMotor2.set(0.0);
     }

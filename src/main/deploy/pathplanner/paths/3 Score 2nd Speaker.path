@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.517828881811611,
+        "y": 4.09478126648561
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.7911138899200891,
+        "y": 4.4795920361071495
+      },
+      "isLocked": false,
+      "linkedName": "3 Intake 2nd"
+    },
+    {
+      "anchor": {
+        "x": 0.761513061487663,
+        "y": 4.361188722377445
+      },
+      "prevControl": {
+        "x": 0.7516461186768542,
+        "y": 4.242785408647741
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "3 Score 2nd Speaker"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 120.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}

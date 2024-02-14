@@ -17,11 +17,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 import frc.robot.Constants.DriveConstants;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Drivebase extends SubsystemBase {
+public class Drivebase extends SubsystemBase{
   private static Drivebase instance;
 
   public SwerveModule frontLeft;
@@ -82,7 +82,6 @@ public class Drivebase extends SubsystemBase {
     this.resetOdometry(pose);
   }
 
-  @Override
   public void periodic() {
     SmartDashboard.putNumber("Gyro Angle:", gyro.getRotation2d().getDegrees());
     SmartDashboard.putNumber("X-coordinate", getPose().getX());

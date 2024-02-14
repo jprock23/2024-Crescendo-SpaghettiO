@@ -17,10 +17,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 import frc.robot.Constants.DriveConstants;
 
-public class Drivebase {
+public class Drivebase extends SubsystemBase{
   private static Drivebase instance;
 
   public SwerveModule frontLeft;
@@ -72,8 +73,8 @@ public class Drivebase {
 
     SmartDashboard.putData("FIELD", fieldmap);
 
-    // AutoBuilder.configureHolonomic(this::getPose, this::resetPose, this::getSpeeds, this::setChassisSpeed, config,
-    //     shouldFlipPath(), this);
+    AutoBuilder.configureHolonomic(this::getPose, this::resetPose, this::getSpeeds, this::setChassisSpeed, config,
+        shouldFlipPath(), this);
 
   }
 

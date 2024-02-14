@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.4733924503512332,
+        "y": 6.9679477447399965
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.3698247396494807,
+        "y": 7.1239327094038805
+      },
+      "isLocked": false,
+      "linkedName": "1 Intake 2nd Ring End"
+    },
+    {
+      "anchor": {
+        "x": 1.8058747672416873,
+        "y": 7.623754591303762
+      },
+      "prevControl": {
+        "x": 1.7614870406692409,
+        "y": 7.890080950738441
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "1 Score 2nd Amp"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}

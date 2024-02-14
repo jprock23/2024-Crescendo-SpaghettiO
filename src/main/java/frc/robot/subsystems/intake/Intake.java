@@ -29,7 +29,7 @@ public class Intake {
 
     // private IntakePID control;
 
-    public IntakePosition intakePosition = IntakePosition.GROUND;
+    public IntakePosition intakePosition = IntakePosition.HANDOFF;
     public static Intake instance;
 
     private double power = .4;

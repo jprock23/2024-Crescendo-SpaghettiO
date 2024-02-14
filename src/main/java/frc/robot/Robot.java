@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.auton.test.Boopbop;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakePosition;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -38,10 +40,10 @@ public class Robot extends TimedRobot {
    */
 
   private Drivebase drivebase;
-  private Climber climber;
+  // private Climber climber;
   private Intake intake;
 
-  private Launcher launcher;
+  // private Launcher launcher;
 
   private static XboxController driver;
   private static XboxController operator;
@@ -52,19 +54,18 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     drivebase = Drivebase.getInstance();
-    launcher = Launcher.getInstance();
+    // launcher = Launcher.getInstance();
     intake = Intake.getInstance();
-    climber = Climber.getInstance();
+    // climber = Climber.getInstance();
 
     driver = new XboxController(0);
     operator = new XboxController(1);
     drivebase.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0)));
 
-    // m_chooser = AutoBuilder.buildAutoChooser();
-    // SmartDashboard.putData("Auto choices", m_chooser);
-    // m_chooser.addOption("DriveCommand", new PathPlannerAuto("TestAutov2"));
-    // m_chooser.addOption("Straight Auto", new PathPlannerAuto("Straight"));
-    // SmartDashboard.putData("Auto choices", m_chooser);
+    m_chooser = AutoBuilder.buildAutoChooser();
+    m_chooser.addOption("Bop", new PathPlannerAuto("Bop"));
+    m_chooser.addOption("Boobbop", new Boopbop());
+    SmartDashboard.putData("Auto choices", m_chooser);
 
     // CameraServer.startAutomaticCapture(0);
 
@@ -75,41 +76,44 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     drivebase.periodic();
 
-    SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
+    SmartDashboard.putString("intake state", intake.getIntakeState());
+
+    // SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
 
     // SmartDashboard.putNumber("Relative Launcher Position1",
     // Launcher.getLauncherPosition1());
     // SmartDashboard.putNumber("Relative Launcher Position2",
     // Launcher.getLauncherPosition2());
 
-    SmartDashboard.putString("Intake State", intake.getIntakeState());
+    // SmartDashboard.putString("Intake State", intake.getIntakeState());
 
     // SmartDashboard.putString("Pivot Position", launcher.getPivotPosition());
 
-    SmartDashboard.putNumber("Start Time", intake.getStartTime());
+    // SmartDashboard.putNumber("Start Time", intake.getStartTime());
 
   }
 
   @Override
   public void autonomousInit() {
-    // m_autoSelected = m_chooser.getSelected();
+    m_autoSelected = m_chooser.getSelected();
 
-    // if (m_autoSelected != null) {
-    //   m_autoSelected.schedule();
-    // }
+    if (m_autoSelected != null) {
+      m_autoSelected.schedule();
+    }
 
     // visionTables.putInfoOnDashboard();
   }
 
   @Override
   public void autonomousPeriodic() {
+    intake.periodic();
   }
 
   @Override
   public void teleopInit() {
-    // if (m_autoSelected != null) {
-    //   m_autoSelected.cancel();
-    // }
+    if (m_autoSelected != null) {
+      m_autoSelected.cancel();
+    }
   }
 
   @Override
@@ -187,13 +191,13 @@ public class Robot extends TimedRobot {
     //   intake.setIntakeState(IntakePosition.GROUND);
     // }
 
-    if(operator.getRightTriggerAxis() > 0){
-      launcher.setLauncherPower();
-    } else if (operator.getLeftTriggerAxis() > 0) {
-      launcher.setReverseLaunch();
-    } else {
-      launcher.setLauncherOff();
-    }
+    // if(operator.getRightTriggerAxis() > 0){
+    //   launcher.setLauncherPower();
+    // } else if (operator.getLeftTriggerAxis() > 0) {
+    //   launcher.setReverseLaunch();
+    // } else {
+    //   launcher.setLauncherOff();
+    // }
 
     // if (operator.getLeftStickButton()){
     // launcher.setPivotState(LauncherPosition.AMP);
@@ -212,14 +216,13 @@ public class Robot extends TimedRobot {
     // Launching notes
 
     // Flicking
-    if (operator.getBButton()) {
-      launcher.setFlickerOn();
-    } else if (operator.getLeftTriggerAxis()>0) {
-      launcher.setFlickerReverse();
-    } else {
-      launcher.setFlickOff();
-    }
-
+    // if (operator.getBButton()) {
+    //   launcher.setFlickerOn();
+    // } else if (operator.getLeftTriggerAxis()>0) {
+    //   launcher.setFlickerReverse();
+    // } else {
+    //   launcher.setFlickOff();
+    // }
   }
 
   @Override

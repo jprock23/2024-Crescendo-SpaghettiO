@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start 2 1st Speaker Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2 Score 2nd Speaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2 Intake 3rd 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2 Score 3rd Speaker"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

@@ -126,18 +126,10 @@ public class Launcher {
         pivotController1.setFeedbackDevice(relativeEncoder1);
         pivotController2.setFeedbackDevice(relativeEncoder2);
 
-        pivotController1.setOutputRange(-0.6, 0.6);
-        pivotController2.setOutputRange(-0.6, 0.6);
+        pivotController1.setOutputRange(-0.2, 0.2);
+        pivotController2.setOutputRange(-0.2, 0.2);
 
         intake = Intake.getInstance();
-
-        // control = new LauncherPID(launchMotor1.getPIDController(),
-        // launchMotor2.getPIDController(), launchMotor1.getEncoder(),
-        // launchMotor2.getEncoder(),
-        // bigFlipper1.getPIDController(), bigFlipper2.getPIDController(),
-        // bigFlipper1.getAbsoluteEncoder(Type.kDutyCycle),
-        // bigFlipper2.getAbsoluteEncoder(Type.kDutyCycle),
-        // flicker.getPIDController(), flicker.getAbsoluteEncoder(Type.kDutyCycle));
     }
 
     public void periodic() {
@@ -246,7 +238,7 @@ public class Launcher {
         return veloSP;
     }
 
-    public static boolean hasReachedPose(double tolerance) {
+    public boolean hasReachedPose(double tolerance) {
         if (Math.abs(getLauncherPosition1() - pivotPosition.onePosition) > tolerance) {
             return true;
         }

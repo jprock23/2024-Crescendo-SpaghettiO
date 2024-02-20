@@ -69,14 +69,11 @@ public class Intake {
 
         flipperController = flipper.getPIDController();
         flipperController.setFeedbackDevice(relativeEncoder);
-        flipperController.setOutputRange(-0.25, 0.25);
+        flipperController.setOutputRange(-0.1, 0.1);
 
         flipperController.setP(IntakeConstants.flipperPCoefficient);
         flipperController.setI(IntakeConstants.flipperICoefficient);
         flipperController.setD(IntakeConstants.flipperDCoefficient);
-
-        // control = IntakePID.getInstance(flipper.getPIDController(),
-        // flipper.getAbsoluteEncoder(Type.kDutyCycle));
     }
 
     public void periodic() {

@@ -147,6 +147,20 @@ public class Robot extends TimedRobot {
 
     // flipping intake
 
+    if(-operator.getLeftY() > 0){
+      intake.setFlipperPower();
+    } else if (-operator.getLeftY() < 0){
+      intake.setReverseFlipperPower();
+    } else (
+      intake.setFlipperOff();
+    )
+
+    if(operator.getAButton()){
+      intake.setRollerPower();
+    } else if (operator.getBButton()){
+      intake.setReverseRollerPower();
+    }
+
     // // rolling intake rollers
     // if (operator.getYButton()) {
     //   // intake.setIntakeState(IntakePosition.GROUND);

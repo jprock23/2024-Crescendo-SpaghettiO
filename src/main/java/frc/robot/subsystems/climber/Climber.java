@@ -35,41 +35,26 @@ public class Climber {
         climber2.burnFlash();
     }
 
-    // public void setClimberPower(double up, double down) {
-
-    // if(up != 0){
-    // climber1.set(up);
-    // climber2.set(up);
-    // } else if(down != 0){
-    // climber1.set(down);
-    // climber2.set(down);
-    // } else {
-    // climber1.set(0);
-    // climber2.set(0);
-    // }
-    // }
-
     public void setClimbingPower() {
         climber1.set(pow);
         climber2.set(pow);
     }
 
-    public void reverseClimb() {
+    public void setReverseClimberPower() {
         climber1.set(-pow);
         climber2.set(-pow);
     }
 
-    public void setClimberStop() {
+    public void setClimberOff() {
         climber1.set(0.0);
         climber2.set(0.0);
     }
 
-    public double getAmpClimber1() {
+    public double getClimber1Current() {
         return climber1.getOutputCurrent();
-
     }
 
-    public double getAmpClimber2() {
+    public double getClimber2() {
         return climber2.getOutputCurrent();
     }
 

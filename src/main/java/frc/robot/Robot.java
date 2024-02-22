@@ -14,9 +14,6 @@ import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakePosition;
 import frc.robot.subsystems.launcher.Launcher;
-import frc.robot.subsystems.launcher.Launcher.PivotPosition;
-import frc.robot.subsystems.launcher.LauncherStates.LauncherControl;
-import frc.robot.subsystems.launcher.LauncherStates.LauncherState;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
 
@@ -104,15 +101,14 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
 
-    SmartDashboard.putNumber(" Launcher Position",
-        launcher.getLauncherPosition());
+    SmartDashboard.putNumber(" Launcher Position", launcher.getPosition());
 
     // SmartDashboard.putNumber("Relative Launcher Position2",
     // Launcher.getLauncherPosition2());
 
     // SmartDashboard.putString("Intake State", intake.getIntakeState());
 
-    SmartDashboard.putString("Pivot Position", launcher.getPivotPosition());
+    SmartDashboard.putString("Pivot Position", launcher.getLaunchState());
 
     // SmartDashboard.putNumber("Start Time", intake.getStartTime());
 
@@ -195,9 +191,9 @@ public class Robot extends TimedRobot {
     }
 
     if (operator.getRightTriggerAxis() > 0) {
-      launcher.setLauncherPower();
+      launcher.setLauncherOn();
     } else if (operator.getLeftTriggerAxis() > 0) {
-      launcher.setReverseLaunch();
+      launcher.setReverseLauncherOn();
       launcher.setFlickerReverse();
     } else {
       launcher.setLauncherOff();
@@ -237,9 +233,9 @@ public class Robot extends TimedRobot {
     if (driver.getRightBumper()) {
       climber.setClimbingPower();
     } else if (driver.getLeftBumper()) {
-      climber.reverseClimb();
+      climber.setReverseClimberPower();
     } else {
-      climber.setClimberStop();
+      climber.setClimberOff();
     }
 
     /* LAUNCHER CONTROLS */
@@ -260,11 +256,11 @@ public class Robot extends TimedRobot {
     // }
 
     if (-operator.getRightY() > 0) {
-      launcher.setLauncherAngle();
+      launcher.setPivotPower();
     } else if (-operator.getRightY() < 0) {
-      launcher.setReverseLauncherAngle();
+      launcher.setReversePivotPower();
     } else {
-      launcher.setAngleStop();
+      launcher.setPivotOff();
     }
 
     // if(operator.getAButton()){

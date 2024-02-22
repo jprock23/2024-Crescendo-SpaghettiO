@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakePosition;
 import frc.robot.subsystems.launcher.*;
-import frc.robot.subsystems.launcher.Launcher.PivotPosition;
+import frc.robot.subsystems.launcher.Launcher.LauncherState;
 
 public class Handoff extends Command {
 
@@ -65,7 +65,7 @@ public class Handoff extends Command {
 
     if (hasRing) {
       intake.setIntakeState(IntakePosition.HANDOFF);
-      launcher.setPivotState(PivotPosition.HANDOFF);
+      launcher.setPivotState(LauncherState.HANDOFF);
     }
 
     if (hasRing && intake.hasReachedPose(2.0) && launcher.hasReachedPose(2.0)) {

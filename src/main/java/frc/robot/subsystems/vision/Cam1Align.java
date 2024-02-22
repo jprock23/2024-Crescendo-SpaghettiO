@@ -11,35 +11,16 @@ public class Cam1Align {
     private double zRot;
     private double[] bestTagAbsPos;
 
+    private PIDController[] controllers = {
+        new PIDController(3.0, 0, 0),
+        new PIDController(3.0, 0, 0),
+        new PIDController(1.2, 0, 0)
+    };
 
-    //adjust all PID stuff while testing
-    private double xSP = -.90;
-    private double ySP = -.67;
-    private double rotSP = 0;
-
-    //speaker
-    private PIDController speakerYController = new PIDController(3.0, 0, 0);
-    private PIDController speakerXController = new PIDController(3.0, 0, 0);
-    private PIDController speakerRotController = new PIDController(1.2, 0, 0);
-    private PIDController[] speakerControllers = {speakerXController, speakerYController, speakerRotController};
-
-    //amp
-    private PIDController ampXController = new PIDController(0, 0, 0);
-    private PIDController ampYController = new PIDController(0, 0, 0);
-    private PIDController ampRotController = new PIDController(0, 0, 0);
-    private PIDController[] ampControllers = {ampXController, ampYController, ampRotController};
-
-    //source
-    private PIDController sourceXController = new PIDController(0, 0, 0);
-    private PIDController sourceYController = new PIDController(0, 0, 0);
-    private PIDController sourceRotController = new PIDController(0, 0, 0);
-    private PIDController[] sourceControllers = {sourceXController, sourceYController, sourceRotController};
-
-    //stage
-    private PIDController stageXController = new PIDController(0, 0, 0);
-    private PIDController stageYController = new PIDController(0, 0, 0);
-    private PIDController stageRotController = new PIDController(0, 0, 0);
-    private PIDController[] stageControllers = {stageXController, stageYController, stageRotController};
+    private double[] speakerXYRotSP = {-0.90, 0.67, 0};
+    private double[] ampXYRotSP = {-0.90, 0.9, 0};
+    private double[] sourceXYRotSP = {-0.90, 0.8, 0};
+    private double[] stageXYRotSP = {-0.90, 0.7, 0};
 
     public Cam1Align() {
         vListener = VisionTablesListener.getInstance();
@@ -52,17 +33,17 @@ public class Cam1Align {
         return instance;
     }
 
-    public PIDController[] getControllers() {
+    public double[] getAlignmentPos() {
         int id = (int)vListener.getBestID();
         
         if(id == 3 || id == 4 || id == 7 || id == 8) {
-            return speakerControllers;
+            return speakerXYRotSP;
         } else if (id == 5 || id == 6) {
-            return ampControllers;
+            return ampXYRotSP;
         } else if(id == 1 || id == 2 || id == 9 || id == 10) {
-            return sourceControllers;
+            return sourceXYRotSP;
         } else {
-            return stageControllers;
+            return stageXYRotSP;
         }
     }
     
@@ -144,50 +125,53 @@ public class Cam1Align {
 
     public double getYSpeed(PIDController controller){
         yPose = vListener.getY();
-        PIDController yPoseController = getControllers()[0];
+        double[] SP = getAlignmentPos();
 
         if(!reachYPose(0.05, yPose)) {
-            return yPoseController.calculate(yPose, ySP);
+            return controllers[1].calculate(yPose, SP[1]);
         } 
         return 0;
     }
 
     public double getXSpeed(PIDController controller){
         xPose = vListener.getX();
-        PIDController xPoseController = getControllers()[1];
+        double[] SP = getAlignmentPos();
 
         if(!reachYPose(0.05, xPose)) {
-            return xPoseController.calculate(xPose, xSP);
+            return controllers[0].calculate(xPose, SP[0]);
         }
         return 0;
 
     }
     public double getRotSpeed(PIDController controller){
         zRot = vListener.getRot();
-        PIDController rotController = getControllers()[2];
+        double[] SP = getAlignmentPos();
 
         if(!reachYPose(0.05, zRot)) {
-            return rotController. calculate(zRot, rotSP);
+            return controllers[2].calculate(zRot, SP[2]);
         }
         return 0;
     }
 
     public boolean reachXPose(double tolerance, double measurment){
-        if (Math.abs(measurment - xSP) < tolerance){
+        double[] SP = getAlignmentPos();
+        if (Math.abs(measurment - SP[0]) < tolerance){
             return true;
         }
         return false;
     }
 
     public boolean reachYPose(double tolerance, double measurment){
-        if (Math.abs(measurment - ySP) < tolerance){
+        double[] SP = getAlignmentPos();
+        if (Math.abs(measurment - SP[1]) < tolerance){
             return true;
         }
         return false;
     }
 
     public boolean reachRot(double tolerance, double measurment){
-        if (Math.abs(measurment - rotSP) < tolerance){
+        double[] SP = getAlignmentPos();
+        if (Math.abs(measurment - SP[2]) < tolerance){
             return true;
         }
         return false;

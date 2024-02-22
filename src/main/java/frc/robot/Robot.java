@@ -14,6 +14,9 @@ import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakePosition;
 import frc.robot.subsystems.launcher.Launcher;
+import frc.robot.subsystems.launcher.Launcher.PivotPosition;
+import frc.robot.subsystems.launcher.LauncherStates.LauncherControl;
+import frc.robot.subsystems.launcher.LauncherStates.LauncherState;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
 
@@ -40,10 +43,9 @@ public class Robot extends TimedRobot {
    */
 
   private Drivebase drivebase;
-  // private Climber climber;
+  private Climber climber;
   private Intake intake;
-
-  // private Launcher launcher;
+  private Launcher launcher;
 
   private static XboxController driver;
   private static XboxController operator;
@@ -54,9 +56,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     drivebase = Drivebase.getInstance();
-    // launcher = Launcher.getInstance();
+    launcher = Launcher.getInstance();
     intake = Intake.getInstance();
-    // climber = Climber.getInstance();
+    climber = Climber.getInstance();
 
     driver = new XboxController(0);
     operator = new XboxController(1);
@@ -76,18 +78,41 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     drivebase.periodic();
 
+    launcher.launcherConnections();
+    intake.intakeConnections();
+    climber.climberConnections();
+
+    launcher.printConnections();
+    intake.printConnections();
+    climber.printConnections();
+
+    SmartDashboard.putNumber("Flipper Current", intake.getFlipperCurrent());
+    SmartDashboard.putNumber("Pivot Current", launcher.getPivotCurrent());
+
+    // intake.setRollerOff();
+    // intake.setFlipperOff();
+
+    // launcher.setFlickOff();
+    // launcher.setAngleStop();
+    // launcher.setLauncherOff();
+
+    // climber.setClimberStop();
+
+    SmartDashboard.putNumber("Roller Current", intake.getRollerCurrent());
+
     SmartDashboard.putString("intake state", intake.getIntakeState());
 
-    // SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
+    SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
 
-    // SmartDashboard.putNumber("Relative Launcher Position1",
-    // Launcher.getLauncherPosition1());
+    SmartDashboard.putNumber(" Launcher Position",
+        launcher.getLauncherPosition());
+
     // SmartDashboard.putNumber("Relative Launcher Position2",
     // Launcher.getLauncherPosition2());
 
     // SmartDashboard.putString("Intake State", intake.getIntakeState());
 
-    // SmartDashboard.putString("Pivot Position", launcher.getPivotPosition());
+    SmartDashboard.putString("Pivot Position", launcher.getPivotPosition());
 
     // SmartDashboard.putNumber("Start Time", intake.getStartTime());
 
@@ -118,7 +143,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    // intake.periodic();
+    intake.periodic();
     // launcher.periodic();
 
     boolean fieldRelative = true;
@@ -147,17 +172,54 @@ public class Robot extends TimedRobot {
 
     // flipping intake
 
+    if (operator.getXButton()) {
+      intake.setIntakeState(IntakePosition.GROUND);
+    } else if (operator.getYButton()) {
+      intake.setIntakeState(IntakePosition.HANDOFF);
+    } else if (operator.getLeftBumper()) {
+      intake.setIntakeState(IntakePosition.STOP);
+    }
+
+    // if(operator.getXButton()){
+    // intake.setFlipperPower();
+    // } else if(operator.getYButton()){
+    // intake.setReverseFlipperPower();
+    // } else {
+    // intake.setFlipperOff();
+    // }
+
+    if (operator.getRightBumper()) {
+      intake.setRollerPower();
+    } else {
+      intake.setRollerOff();
+    }
+
+    if (operator.getRightTriggerAxis() > 0) {
+      launcher.setLauncherPower();
+    } else if (operator.getLeftTriggerAxis() > 0) {
+      launcher.setReverseLaunch();
+      launcher.setFlickerReverse();
+    } else {
+      launcher.setLauncherOff();
+    }
+
+    if (operator.getLeftStickButton()) {
+      launcher.setFlickerOn();
+    } else if (!(operator.getLeftTriggerAxis() > 0)) {
+      launcher.setFlickOff();
+    }
+
     // // rolling intake rollers
     // if (operator.getYButton()) {
-    //   // intake.setIntakeState(IntakePosition.GROUND);
-    //   intake.setRollerPower();
+    // // intake.setIntakeState(IntakePosition.GROUND);
+    // intake.setRollerPower();
     // } else if (operator.getXButton()) {
-    //   intake.setReverseRollerPower();
-    //   // launcher.setReverse();
+    // intake.setReverseRollerPower();
+    // // launcher.setReverse();
     // } else if (operator.getAButton()) {
-    //   intake.setRollerPower();
+    // intake.setRollerPower();
     // } else if (operator.getRightTriggerAxis() >= .1) {
-    //   // launcher.setLauncherPower();
+    // // launcher.setLauncherPower();
     // }
     // // else if (operator.getRightTriggerAxis() >= .1) {
     // // launcher.setLauncherPower();
@@ -165,38 +227,30 @@ public class Robot extends TimedRobot {
     // // launcher.setLaunchZero();
     // // }
     // else {
-    //   // intake.setIntakeState(IntakePosition.HANDOFF);
-    //   intake.setRollerOff();
-    //   // launcher.setLaunchZero();
+    // // intake.setIntakeState(IntakePosition.HANDOFF);
+    // intake.setRollerOff();
+    // // launcher.setLaunchZero();
     // }
 
     // *CLIMBER CONTROLS */
 
-    // if (operator.getRightBumper()) {
-    //   climber.setClimbingPower();
-    // } else if (operator.getLeftBumper()) {
-    //   climber.reverseClimb();
-    // } else {
-    //   climber.setClimberStop();
-    // }
+    if (driver.getRightBumper()) {
+      climber.setClimbingPower();
+    } else if (driver.getLeftBumper()) {
+      climber.reverseClimb();
+    } else {
+      climber.setClimberStop();
+    }
 
     /* LAUNCHER CONTROLS */
 
     // if (operator.getLeftStickButton()) {
-    //   // launcher.setPivotState(LauncherPosition.HANDOFF);
-    //   intake.setIntakeState(IntakePosition.HANDOFF);
-    //   intake.resetStartTime();
+    // // launcher.setPivotState(LauncherPosition.HANDOFF);
+    // intake.setIntakeState(IntakePosition.HANDOFF);
+    // intake.resetStartTime();
     // } else if (operator.getRightStickButton()) {
-    //   // launcher.setPivotState(LauncherPosition.AMP);
-    //   intake.setIntakeState(IntakePosition.GROUND);
-    // }
-
-    // if(operator.getRightTriggerAxis() > 0){
-    //   launcher.setLauncherPower();
-    // } else if (operator.getLeftTriggerAxis() > 0) {
-    //   launcher.setReverseLaunch();
-    // } else {
-    //   launcher.setLauncherOff();
+    // // launcher.setPivotState(LauncherPosition.AMP);
+    // intake.setIntakeState(IntakePosition.GROUND);
     // }
 
     // if (operator.getLeftStickButton()){
@@ -205,23 +259,29 @@ public class Robot extends TimedRobot {
     // launcher.setPivotState(LauncherPosition.HANDOFF);
     // }
 
-    // if (-operator.getRightY() > 0) {
-    // launcher.setLauncherAngle();
-    // } else if (-operator.getRightY() < 0) {
-    // launcher.setReverseLauncherAngle();
-    // } else {
-    // launcher.setAngleStop();
+    if (-operator.getRightY() > 0) {
+      launcher.setLauncherAngle();
+    } else if (-operator.getRightY() < 0) {
+      launcher.setReverseLauncherAngle();
+    } else {
+      launcher.setAngleStop();
+    }
+
+    // if(operator.getAButton()){
+    // launcher.setPivotState(PivotPosition.HANDOFF);
+    // } else if(operator.getBButton()){
+    // launcher.setPivotState(PivotPosition.SPEAKER);
     // }
 
     // Launching notes
 
     // Flicking
     // if (operator.getBButton()) {
-    //   launcher.setFlickerOn();
+    // launcher.setFlickerOn();
     // } else if (operator.getLeftTriggerAxis()>0) {
-    //   launcher.setFlickerReverse();
+    // launcher.setFlickerReverse();
     // } else {
-    //   launcher.setFlickOff();
+    // launcher.setFlickOff();
     // }
   }
 

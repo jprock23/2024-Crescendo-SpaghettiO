@@ -3,19 +3,22 @@ package frc.robot.subsystems.intake;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Ports;
 
 public class Intake {
 
     public enum IntakePosition {
-        GROUND(-9.35),
-        HANDOFF(-1.0);
+        STOP(0.0),
+        GROUND(-9.00039100646973),
+        TRAP(0.0),
+        HANDOFF(-3.999995708465576);
 
         public double position;
 
@@ -29,7 +32,7 @@ public class Intake {
 
     // private IntakePID control;
 
-    public IntakePosition intakePosition = IntakePosition.HANDOFF;
+    public IntakePosition intakePosition = IntakePosition.STOP;
     public static Intake instance;
 
     private double power = .4;
@@ -39,7 +42,11 @@ public class Intake {
     private ArmFeedforward feedforward;
     private SparkMaxPIDController flipperController;
 
+    private PIDController dumbyController;
+
     private RelativeEncoder relativeEncoder;
+
+    private boolean[] connections = new boolean[4];
 
     private double veloSP = .02;
     private double startTime = 0.0;
@@ -62,27 +69,31 @@ public class Intake {
         flipper.setInverted(true);
         flipper.burnFlash();
 
-        feedforward = new ArmFeedforward(0.0125, 0.0345, 0, 0);
-        // low bound: .022 upper bound:.047
+        feedforward = new ArmFeedforward(0.037, 0.05, 0, 0);
+        //.037
+
+        // prototype numbers
+        // low bound: .022 upper bound:.047 ks: .0125 kg: .0345
 
         relativeEncoder = flipper.getEncoder();
 
         flipperController = flipper.getPIDController();
         flipperController.setFeedbackDevice(relativeEncoder);
-        flipperController.setOutputRange(-0.25, 0.25);
+        flipperController.setOutputRange(-1.0, 1.0);
 
         flipperController.setP(IntakeConstants.flipperPCoefficient);
         flipperController.setI(IntakeConstants.flipperICoefficient);
         flipperController.setD(IntakeConstants.flipperDCoefficient);
 
-        // control = IntakePID.getInstance(flipper.getPIDController(),
-        // flipper.getAbsoluteEncoder(Type.kDutyCycle));
+        dumbyController = new PIDController(.08, 0, 0);
     }
 
     public void periodic() {
 
-        flipperController.setReference(intakePosition.position, ControlType.kPosition, 0,
-                feedforward.calculate(relativeEncoder.getPosition(), veloSP));
+        flipper.set(dumbyController.calculate(relativeEncoder.getPosition(), intakePosition.position) + feedforward.calculate(0, veloSP));
+
+        // flipperController.setReference(intakePosition.position, ControlType.kPosition, 0,
+        //         feedforward.calculate(relativeEncoder.getPosition(), veloSP));
 
         // if (intakePosition == IntakePosition.HANDOFF && hasReachedPose(.36)) {
 
@@ -136,7 +147,13 @@ public class Intake {
     }
 
     public void setFlipperPower() {
-        flipper.set(flip + feedforward.calculate(relativeEncoder.getPosition(), veloSP));
+        flipper.set(flip);
+        // flipper.set(flip + feedforward.calculate(relativeEncoder.getPosition(),
+        // veloSP));
+    }
+
+    public void setReverseFlipperPower() {
+        flipper.set(-flip);
     }
 
     public void setFlipperOff() {
@@ -153,6 +170,10 @@ public class Intake {
 
     public double getFlipperVoltage() {
         return flipper.getBusVoltage();
+    }
+
+    public double getFlipperCurrent(){
+        return flipper.getOutputCurrent();
     }
 
     public double getFlipperPosition() {
@@ -176,6 +197,42 @@ public class Intake {
 
     public void setIntakeState(IntakePosition state) {
         intakePosition = state;
+    }
+
+    public boolean[] intakeConnections() {
+        if (roller.getBusVoltage() != 0) {
+            connections[0] = true;
+        } else {
+            connections[0] = false;
+        }
+
+        if (roller.getOutputCurrent() != 0) {
+            connections[1] = true;
+        } else {
+            connections[1] = false;
+        }
+
+        if (flipper.getBusVoltage() != 0) {
+            connections[2] = true;
+        } else {
+            connections[2] = false;
+        }
+
+        if (flipper.getOutputCurrent() != 0) {
+            connections[3] = true;
+        } else {
+            connections[3] = false;
+        }
+
+        return connections;
+    }
+
+    public void printConnections() {
+        SmartDashboard.putBoolean("roller Voltage", connections[0]);
+        SmartDashboard.putBoolean("roller Current", connections[1]);
+
+        SmartDashboard.putBoolean("flipper Voltage", connections[2]);
+        SmartDashboard.putBoolean("flipper Current", connections[3]);
     }
 
     public static Intake getInstance() {

@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Ports;
 
 public class Climber {
@@ -12,10 +13,12 @@ public class Climber {
     private CANSparkMax climber2;
     public static Climber instance;
 
+    private boolean[] connections = new boolean[4];
+
     private double pow = 0.25;
 
     public Climber() {
-        climber1 = new CANSparkMax(Ports.climber1,MotorType.kBrushless);
+        climber1 = new CANSparkMax(Ports.climber1, MotorType.kBrushless);
         climber1.restoreFactoryDefaults();
 
         climber1.setSmartCurrentLimit(60);
@@ -25,7 +28,7 @@ public class Climber {
 
         climber2 = new CANSparkMax(Ports.climber2, MotorType.kBrushless);
         climber2.restoreFactoryDefaults();
-        
+
         climber2.setSmartCurrentLimit(60);
         climber2.setInverted(true);
         climber2.setIdleMode(IdleMode.kBrake);
@@ -34,49 +37,82 @@ public class Climber {
 
     // public void setClimberPower(double up, double down) {
 
-    //     if(up != 0){
-    //         climber1.set(up);
-    //         climber2.set(up);
-    //     } else if(down != 0){
-    //         climber1.set(down);
-    //         climber2.set(down);
-    //     } else {
-    //         climber1.set(0);
-    //         climber2.set(0);
-    //     }
+    // if(up != 0){
+    // climber1.set(up);
+    // climber2.set(up);
+    // } else if(down != 0){
+    // climber1.set(down);
+    // climber2.set(down);
+    // } else {
+    // climber1.set(0);
+    // climber2.set(0);
+    // }
     // }
 
-    public void setClimbingPower(){
+    public void setClimbingPower() {
         climber1.set(pow);
         climber2.set(pow);
     }
 
-    public void reverseClimb(){
+    public void reverseClimb() {
         climber1.set(-pow);
         climber2.set(-pow);
     }
 
-    public void setClimberStop(){
+    public void setClimberStop() {
         climber1.set(0.0);
         climber2.set(0.0);
     }
 
-    public double getAmpClimber1(){
+    public double getAmpClimber1() {
         return climber1.getOutputCurrent();
 
     }
 
-    public double getAmpClimber2(){
+    public double getAmpClimber2() {
         return climber2.getOutputCurrent();
+    }
 
+    public boolean[] climberConnections() {
+        if (climber1.getBusVoltage() != 0) {
+            connections[0] = true;
+        } else {
+            connections[0] = false;
+        }
+
+        if (climber1.getOutputCurrent() != 0) {
+            connections[1] = true;
+        } else {
+            connections[1] = false;
+        }
+
+        if (climber2.getBusVoltage() != 0) {
+            connections[2] = true;
+        } else {
+            connections[2] = false;
+        }
+
+        if (climber2.getOutputCurrent() != 0) {
+            connections[3] = true;
+        } else {
+            connections[3] = false;
+        }
+
+        return connections;
+    }
+
+    public void printConnections() {
+        SmartDashboard.putBoolean("Climber1 Voltage", connections[0]);
+        SmartDashboard.putBoolean("Climber1 Current", connections[1]);
+        SmartDashboard.putBoolean("Climber2 Voltage", connections[2]);
+        SmartDashboard.putBoolean("Climber2 Current", connections[3]);
     }
 
     public static Climber getInstance() {
-        if(instance == null){
-             instance = new Climber();
+        if (instance == null) {
+            instance = new Climber();
         }
         return instance;
     }
-
 
 }

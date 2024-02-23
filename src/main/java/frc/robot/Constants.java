@@ -138,7 +138,7 @@ public final class Constants {
     public static final double launchICoefficient = 0.0;
     public static final double launchDCoefficient = 0.0;
 
-    public static final double pivotPCoefficient = 0.0;
+    public static final double pivotPCoefficient = .11;
     public static final double pivotICoefficient = 0.0;
     public static final double pivotDCoefficient = 0.0;
 
@@ -151,7 +151,7 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final double flipperPCoefficient = 1;
+    public static final double flipperPCoefficient = 0.06;
     public static final double flipperICoefficient = 0.0;
     public static final double flipperDCoefficient = 0.0;
 

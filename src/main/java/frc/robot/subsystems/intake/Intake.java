@@ -18,7 +18,7 @@ public class Intake {
         STOP(0.0),
         GROUND(-9.00039100646973),
         TRAP(0.0),
-        HANDOFF(-3.999995708465576);
+        HANDOFF(-1.999995708465576);
 
         public double position;
 
@@ -33,7 +33,7 @@ public class Intake {
     public IntakePosition intakePosition = IntakePosition.STOP;
     public static Intake instance;
 
-    private double power = .4;
+    private double power = 0.8;
 
     private double flip = 0.25;
 
@@ -63,9 +63,8 @@ public class Intake {
         flipper.setSmartCurrentLimit(70);
         flipper.setIdleMode(IdleMode.kBrake);
         flipper.setInverted(true);
-        flipper.burnFlash();
 
-        feedforward = new ArmFeedforward(0.037, 0.05, 0, 0);
+        feedforward = new ArmFeedforward(0.04, 0.05, 0, 0);
         // .037
 
         // prototype numbers
@@ -82,16 +81,18 @@ public class Intake {
         flipperController.setD(IntakeConstants.flipperDCoefficient);
 
         dumbyController = new PIDController(.08, 0, 0);
+        flipper.burnFlash();
+
     }
 
     public void periodic() {
 
-        flipper.set(dumbyController.calculate(encoder.getPosition(), intakePosition.position)
-                + feedforward.calculate(0, veloSP));
+        // flipper.set(dumbyController.calculate(encoder.getPosition(), intakePosition.position)
+        //         + feedforward.calculate(0, veloSP));
 
-        // flipperController.setReference(intakePosition.position,
-        // ControlType.kPosition, 0,
-        // feedforward.calculate(relativeEncoder.getPosition(), veloSP));
+        flipperController.setReference(intakePosition.position,
+        CANSparkMax.ControlType.kPosition, 0,
+        feedforward.calculate(encoder.getPosition(), veloSP));
     }
 
     public void setRollerPower() {

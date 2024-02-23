@@ -6,6 +6,8 @@ import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax.ControlType;
@@ -20,10 +22,10 @@ public class Launcher {
 
     public enum LauncherState {
         AMP(0, 1.0),
-        STOP(-2.809524536132812, 0.0),
+        STOP(-1.809524536132812, 0.0),
         HOLD(-18.714231491088867, 0.0),
         TRAP(-74.04991149902344, 0.6),
-        HANDOFF(14.92857551574707, 0.5),
+        HANDOFF(14.92857551574707, 0.25),
         SPEAKER(-71.74016571044922, 1.0);
 
         public double position;
@@ -36,7 +38,6 @@ public class Launcher {
     }
 
     double anglePower = 0.25;
-    double veloSP = 0.0;
 
     private CANSparkMax shootMotor1;
     private CANSparkMax shootMotor2;
@@ -49,6 +50,13 @@ public class Launcher {
     private SparkMaxPIDController pivotController1;
 
     private PIDController dumbyController;
+
+    private TrapezoidProfile motionProfile;
+    private TrapezoidProfile.State goal = new TrapezoidProfile.State();
+    private TrapezoidProfile.State setPoint = new TrapezoidProfile.State(LauncherState.STOP.position, 0);
+
+    private double veloSP = 4000;
+    private double maxAccel = 3000;
 
     private static RelativeEncoder encoder;
 
@@ -91,11 +99,9 @@ public class Launcher {
         pivotMotor.setIdleMode(IdleMode.kBrake);
         pivotMotor.setInverted(true);
         pivotMotor.setOpenLoopRampRate(1);
-        pivotMotor.burnFlash();
 
-        pivotController1 = pivotMotor.getPIDController();
-
-        feedForward = new ArmFeedforward(0.01, 0.02, 0.0, 0.0);
+        feedForward = new ArmFeedforward(0.01, 0.02, 0.1, 0.0);
+        motionProfile = new TrapezoidProfile(new Constraints(veloSP, maxAccel));
 
         // Prototype numbers
         // upper: .045 lower: .0285 ks:.0085 kg:.037
@@ -110,21 +116,32 @@ public class Launcher {
 
         pivotController1.setFeedbackDevice(encoder);
 
-        pivotController1.setOutputRange(-0.25, 0.25);
+        pivotController1.setOutputRange(-1, 1);
 
         dumbyController = new PIDController(0.02, 0, 0.0);
+
+        pivotMotor.burnFlash();
+
 
         intake = Intake.getInstance();
     }
 
     public void periodic() {
+      
+        setPoint = motionProfile.calculate(0.02, setPoint, goal);
 
-        // pivotMotor.set(dumbyController.calculate(encoder.getPosition(),
-        // pivotPosition.position) + feedForward.calculate(encoder.getPosition(),
-        // veloSP));
+    //  pivotMotor.set(dumbyController.calculate(encoder.getPosition(), launchState.position)
+    //     + feedForward.calculate(encoder.getPosition(), 0));
 
-        pivotController1.setReference(launchState.position, ControlType.kPosition, 0,
-                feedForward.calculate(launchState.position, veloSP));
+        // pivotMotor.set(dumbyController.calculate(encoder.getPosition(), setPoint.position) 
+        // + feedForward.calculate(setPoint.position, setPoint.velocity));
+
+        pivotController1.setReference(launchState.position, CANSparkMax.ControlType.kPosition, 0, feedForward.calculate(encoder.getPosition(), 0));
+
+    }
+
+    public double[] getConstants(){
+        return new double[]{pivotController1.getP(), pivotController1.getI(), pivotController1.getD()};
     }
 
     public void setPivotPower() {
@@ -188,6 +205,15 @@ public class Launcher {
 
     public void setPivotState(LauncherState state) {
         launchState = state;
+        goal = new TrapezoidProfile.State(launchState.position, 0);
+    }
+
+    public double getVelocity(){
+        return encoder.getVelocity();
+    }
+
+    public double getVelocityGoal(){
+        return setPoint.velocity;
     }
 
     public boolean[] launcherConnections() {

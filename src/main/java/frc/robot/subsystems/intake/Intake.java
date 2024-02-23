@@ -17,7 +17,7 @@ public class Intake {
         STOP(0.0),
         GROUND(-9.00039100646973),
         TRAP(0.0),
-        HANDOFF(-1.999995708465576);
+        HANDOFF(-0.999995708465576);
 
         public double position;
 
@@ -32,7 +32,7 @@ public class Intake {
     public IntakePosition intakePosition = IntakePosition.STOP;
     public static Intake instance;
 
-    private double power = 0.8;
+    private double power = 0.7;
 
     private double flip = 0.25;
 

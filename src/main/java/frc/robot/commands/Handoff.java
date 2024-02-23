@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.intake.Intake;
@@ -39,6 +40,7 @@ public class Handoff extends Command {
     launcher = Launcher.getInstance();
     intake = Intake.getInstance();
     startTime = Timer.getFPGATimestamp();
+    startTime2 = 0;
 
     intake.setIntakeState(IntakePosition.GROUND);
     launcher.setPivotState(LauncherState.HANDOFF);
@@ -69,10 +71,11 @@ public class Handoff extends Command {
     if (hasRing) {
       intake.setIntakeState(IntakePosition.HANDOFF);
       launcher.setReverseLauncherOn();
-    }
-
-    if (hasRing && intake.hasReachedPose(0.75)) {
       launcher.setFlickerReverse();
+    }
+       SmartDashboard.putNumber("StartTime2", startTime2);
+       SmartDashboard.putNumber("timeElapsed2", timeElapsed2);
+    if (hasRing && intake.hasReachedPose(2.3)) {
       intake.setRollerPower();
 
       if (!beganHandoff) {
@@ -82,9 +85,16 @@ public class Handoff extends Command {
 
       timeElapsed2 = Timer.getFPGATimestamp() - startTime2;
 
-      if (timeElapsed2 > .5) {
+      if (timeElapsed2 > .25) {
+        System.out.println("ANSHANSHANSHANSHANSHANSH");
+        launcher.setFlickOff();
+        launcher.setLauncherOff();
+        intake.setRollerOff();
         ended = true;
       }
+      // if(ended){
+      // end(true);
+      // }
     }
   }
 

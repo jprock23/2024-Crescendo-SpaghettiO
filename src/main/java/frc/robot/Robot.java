@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AutoShoot;
 import frc.robot.commands.Handoff;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
@@ -50,6 +51,7 @@ public class Robot extends TimedRobot {
 
   private Command m_autoSelected;
   private Handoff handoff;
+  private AutoShoot autoShoot;
   private SendableChooser<Command> m_chooser;
 
   @Override
@@ -67,11 +69,12 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("Position 1 1 Piece", new PathPlannerAuto("Position 1 1 Piece"));
     m_chooser.addOption("Position 2 1 Piece", new PathPlannerAuto("Position 2 1 Piece"));
     m_chooser.addOption("Position 3 1 Piece", new PathPlannerAuto("Position 3 1 Piece"));
+    m_chooser.addOption("BeepBoop", new PathPlannerAuto("BeepBoop"));
 
     SmartDashboard.putData("Auto choices", m_chooser);
 
     handoff = new Handoff();
-
+    autoShoot = new AutoShoot();
     // CameraServer.startAutomaticCapture(0);
   }
 
@@ -96,14 +99,18 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber(" Launcher Position", launcher.getPosition());
 
     SmartDashboard.putString("Intake State", intake.getIntakeState());
-    SmartDashboard.putString("Launcher State", launcher.getLaunchState());
+    SmartDashboard.putString("Launcher State", launcher.getLaunchState().toString());
+    SmartDashboard.putBoolean("Done? ", handoff.isFinished());
+
+    SmartDashboard.putNumber("X-Coordinate", drivebase.getPose().getX());
+    SmartDashboard.putNumber("Y-Coordinate", drivebase.getPose().getY());
+
   }
 
   @Override
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
 
-    //ask justus if this makes any sense for setting the bot's intial position
     drivebase.resetPose(PathPlannerAuto.getStaringPoseFromAutoFile(m_chooser.getSelected().getName()));
 
     if (m_autoSelected != null) {
@@ -153,11 +160,13 @@ public class Robot extends TimedRobot {
     }
 
     if (operator.getXButton()) {
-      intake.setIntakeState(IntakePosition.GROUND);
+      launcher.setPivotState(LauncherState.AMP);
     } else if (operator.getYButton()) {
-      intake.setIntakeState(IntakePosition.HANDOFF);
+      launcher.setPivotState(LauncherState.TRAP);
     } else if (operator.getLeftBumper()) {
       intake.setIntakeState(IntakePosition.STOP);
+    } else if (operator.getLeftStickButton()) {
+      intake.setIntakeState(IntakePosition.GROUND);
     }
 
     // if(operator.getXButton()){
@@ -187,19 +196,24 @@ public class Robot extends TimedRobot {
     // } else {
     // launcher.setPivotOff();
     // }
-    
-    if (operator.getRightTriggerAxis() > 0) {
-      launcher.setLauncherOn();
-    } else if (operator.getLeftTriggerAxis() > 0) {
-      launcher.setReverseLauncherOn();
-      launcher.setFlickerReverse();
-    }
 
-    if (operator.getLeftStickButton()) {
-      launcher.setFlickerOn();
-    } else if (!(operator.getLeftTriggerAxis() > 0)) {
+    if (operator.getRightTriggerAxis() > 0) {
+      // launcher.setLauncherOn();
+      // launcher.setFlickOff();
+      autoShoot.initialize();
+      autoShoot.schedule();
+    } else if (operator.getLeftTriggerAxis() > 0) {
+      // launcher.setReverseLauncherOn();
+      // launcher.setFlickerReverse();
+      launcher.setLauncherOff();
       launcher.setFlickOff();
     }
+
+    // if (operator.getLeftStickButton()) {
+    // launcher.setFlickerOn();
+    // } else if (!(operator.getLeftTriggerAxis() > 0)) {
+    // launcher.setFlickOff();
+    // }
 
     if (operator.getAButton()) {
       launcher.setPivotState(LauncherState.HANDOFF);

@@ -65,8 +65,8 @@ public class Drivebase extends SubsystemBase{
             backRight.getPosition()
         });
 
-    config = new HolonomicPathFollowerConfig(new PIDConstants(1, 0, 0),
-        new PIDConstants(1, 0, 0),
+    config = new HolonomicPathFollowerConfig(new PIDConstants(.8, 0, 0),
+        new PIDConstants(.43, 0, 0),
         2, Math.sqrt(Math.pow(DriveConstants.kTrackWidth / 2, 2) +
             Math.pow(DriveConstants.kWheelBase / 2, 2)),
         new ReplanningConfig());

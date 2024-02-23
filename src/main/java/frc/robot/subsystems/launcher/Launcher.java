@@ -19,12 +19,12 @@ import frc.robot.Ports;
 public class Launcher {
 
     public enum LauncherState {
-        AMP(0, 1.0),
+        AMP(-65, 0.25),
         STOP(-1.809524536132812, 0.0),
         HOLD(-18.714231491088867, 0.0),
         TRAP(-74.04991149902344, 0.6),
         HANDOFF(14.92857551574707, 0.25),
-        SPEAKER(-71.74016571044922, 1.0);
+        SPEAKER(-67.0, 1.0);
 
         public double position;
         public double launchSpeed;
@@ -176,8 +176,8 @@ public class Launcher {
         return encoder.getPosition();
     }
 
-    public String getLaunchState() {
-        return launchState.toString();
+    public LauncherState getLaunchState() {
+        return launchState;
     }
 
     public double getPivotCurrent() {

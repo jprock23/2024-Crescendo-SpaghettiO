@@ -33,14 +33,9 @@ public class AutoAmp extends Command {
   public void execute() {
     double elapsedTime = Timer.getFPGATimestamp() - startTime;
 
-    // runs the flywheels for some time before running the flicker, tweak windup as
-    // needed
     if (elapsedTime > windup) {
       launcher.setFlickerOn();
     }
-
-    // turns off the launcher after the ring has been shot out, tweak duration as
-    // needed
     if (elapsedTime > duration) {
       ended = true;
     }

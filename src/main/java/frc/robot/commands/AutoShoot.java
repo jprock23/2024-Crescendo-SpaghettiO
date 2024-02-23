@@ -14,7 +14,7 @@ public class AutoShoot extends Command {
   private double startTime;
   // these are somewhat random numbers so change however you like
   private double windup = .25;
-  private double duration = .5;
+  private double duration = .75;
 
   public AutoShoot() {
     launcher = Launcher.getInstance();
@@ -23,7 +23,7 @@ public class AutoShoot extends Command {
   @Override
   public void initialize() {
     ended = false;
-    
+
     launcher.setPivotState(LauncherState.SPEAKER);
     startTime = Timer.getFPGATimestamp();
     launcher.setLauncherOn();
@@ -31,19 +31,15 @@ public class AutoShoot extends Command {
 
   @Override
   public void execute() {
-    double elapsedTime = Timer.getFPGATimestamp() - startTime;
+      double elapsedTime = Timer.getFPGATimestamp() - startTime;
 
-    // runs the flywheels for some time before running the flicker, tweak windup as
-    // needed
-    if (elapsedTime > windup) {
-      launcher.setFlickerOn();
-    }
+      if (elapsedTime > windup) {
+        launcher.setFlickerOn();
+      }
 
-    // turns off the launcher after the ring has been shot out, tweak duration as
-    // needed
-    if (elapsedTime > duration) {
-      ended = true;
-    }
+      if (elapsedTime > duration) {
+        ended = true;
+      }
   }
 
   @Override

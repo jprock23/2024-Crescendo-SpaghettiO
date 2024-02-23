@@ -7,7 +7,6 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Ports;
@@ -39,8 +38,6 @@ public class Intake {
 
     private ArmFeedforward feedforward;
     private SparkMaxPIDController flipperController;
-
-    private PIDController dumbyController;
 
     private RelativeEncoder encoder;
 
@@ -80,16 +77,11 @@ public class Intake {
         flipperController.setI(IntakeConstants.flipperICoefficient);
         flipperController.setD(IntakeConstants.flipperDCoefficient);
 
-        dumbyController = new PIDController(.08, 0, 0);
         flipper.burnFlash();
 
     }
 
     public void periodic() {
-
-        // flipper.set(dumbyController.calculate(encoder.getPosition(), intakePosition.position)
-        //         + feedforward.calculate(0, veloSP));
-
         flipperController.setReference(intakePosition.position,
         CANSparkMax.ControlType.kPosition, 0,
         feedforward.calculate(encoder.getPosition(), veloSP));

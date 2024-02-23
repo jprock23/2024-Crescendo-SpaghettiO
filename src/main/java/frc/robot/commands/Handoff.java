@@ -17,11 +17,14 @@ public class Handoff extends Command {
   private Launcher launcher;
   private Intake intake;
 
-  private double threshold = 40.0;
+  private double threshold = 25.0;
 
   private double startTime = 0.0;
   private double timeElapsed = 0.0;
-  private double duration = 0.25;
+  private double duration = 1.0;
+
+  private double startTime2 = 0.0;
+  private double timeElapsed2 = 0.0;
 
   private boolean beganIntaking;
   private boolean hasRing;
@@ -33,9 +36,12 @@ public class Handoff extends Command {
 
   @Override
   public void initialize() {
-    launcher = new Launcher();
-    intake = new Intake();
+    launcher = Launcher.getInstance();
+    intake = Intake.getInstance();
     startTime = Timer.getFPGATimestamp();
+
+    intake.setIntakeState(IntakePosition.GROUND);
+    launcher.setPivotState(LauncherState.HANDOFF);
 
     beganIntaking = false;
     hasRing = false;
@@ -45,9 +51,6 @@ public class Handoff extends Command {
 
   @Override
   public void execute() {
-    launcher.periodic();
-    intake.periodic();
-
     intake.setRollerPower();
 
     if (intake.getRollerCurrent() > threshold) {
@@ -65,31 +68,31 @@ public class Handoff extends Command {
 
     if (hasRing) {
       intake.setIntakeState(IntakePosition.HANDOFF);
-      launcher.setPivotState(LauncherState.HANDOFF);
+      launcher.setReverseLauncherOn();
     }
 
-    if (hasRing && intake.hasReachedPose(2.0) && launcher.hasReachedPose(2.0)) {
+    if (hasRing && intake.hasReachedPose(0.75)) {
       launcher.setFlickerReverse();
-      intake.setReverseRollerPower();
+      intake.setRollerPower();
 
       if (!beganHandoff) {
-        startTime = Timer.getFPGATimestamp();
+        startTime2 = Timer.getFPGATimestamp();
         beganHandoff = true;
       }
 
-      timeElapsed = Timer.getFPGATimestamp() - startTime;
+      timeElapsed2 = Timer.getFPGATimestamp() - startTime2;
 
-      if (timeElapsed > duration) {
-        launcher.setFlickOff();
-        intake.setRollerOff();
+      if (timeElapsed2 > .5) {
         ended = true;
       }
-
     }
   }
 
   @Override
   public void end(boolean interrupted) {
+    launcher.setFlickOff();
+    launcher.setLauncherOff();
+    intake.setRollerOff();
   }
 
   @Override

@@ -5,12 +5,10 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -48,8 +46,6 @@ public class Launcher {
 
     private ArmFeedforward feedForward;
     private SparkMaxPIDController pivotController1;
-
-    private PIDController dumbyController;
 
     private TrapezoidProfile motionProfile;
     private TrapezoidProfile.State goal = new TrapezoidProfile.State();
@@ -118,8 +114,6 @@ public class Launcher {
 
         pivotController1.setOutputRange(-1, 1);
 
-        dumbyController = new PIDController(0.02, 0, 0.0);
-
         pivotMotor.burnFlash();
 
 
@@ -129,12 +123,6 @@ public class Launcher {
     public void periodic() {
       
         setPoint = motionProfile.calculate(0.02, setPoint, goal);
-
-    //  pivotMotor.set(dumbyController.calculate(encoder.getPosition(), launchState.position)
-    //     + feedForward.calculate(encoder.getPosition(), 0));
-
-        // pivotMotor.set(dumbyController.calculate(encoder.getPosition(), setPoint.position) 
-        // + feedForward.calculate(setPoint.position, setPoint.velocity));
 
         pivotController1.setReference(launchState.position, CANSparkMax.ControlType.kPosition, 0, feedForward.calculate(encoder.getPosition(), 0));
 

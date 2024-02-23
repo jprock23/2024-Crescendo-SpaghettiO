@@ -99,9 +99,6 @@ public class Drivebase extends SubsystemBase{
   // Returns the currently-estimated pose of the robot
   public Pose2d getPose() {
     return odometry.getPoseMeters();
-    // return new Pose2d(-odometry.getPoseMeters().getY(),
-    // odometry.getPoseMeters().getX(),
-    // odometry.getPoseMeters().getRotation());
   }
 
   // Resets the odometry to the specified pose
@@ -180,7 +177,7 @@ public class Drivebase extends SubsystemBase{
   }
 
   public void resetPose(final Pose2d pose) {
-    // odometry.resetPosition(gyro.getRotation2d(), getPositions(), pose);
+    odometry.resetPosition(gyro.getRotation2d(), getPositions(), pose);
   }
 
   public void lockWheels() {

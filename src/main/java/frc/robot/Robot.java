@@ -181,27 +181,31 @@ public class Robot extends TimedRobot {
       launcher.setLauncherState(LauncherState.TRAP);
     }
     if (operator.getPOV() == 270) {
+      launcher.setLauncherState(LauncherState.LONG);
+    }
+
+    if (operator.getAButton()) {
       launcher.setLauncherState(LauncherState.HOLD);
     }
 
-    if(operator.getLeftBumper()){
+    if (operator.getLeftBumper()) {
       intake.setIntakeState(IntakeState.STOP);
     }
 
     // if (operator.getXButton()) {
-    //   launcher.setLauncherState(LauncherState.AMP);
+    // launcher.setLauncherState(LauncherState.AMP);
     // } else if (operator.getYButton()) {
-    //   launcher.setLauncherState(LauncherState.TRAP);
+    // launcher.setLauncherState(LauncherState.TRAP);
     // } else if (operator.getLeftBumper()) {
-    //   intake.setIntakeState(IntakePosition.STOP);
+    // intake.setIntakeState(IntakePosition.STOP);
     // } else if (operator.getLeftStickButton()) {
-    //   intake.setIntakeState(IntakePosition.GROUND);
+    // intake.setIntakeState(IntakePosition.GROUND);
     // }
     //
     // if (operator.getAButton()) {
-    //   launcher.setLauncherState(LauncherState.HANDOFF);
+    // launcher.setLauncherState(LauncherState.HANDOFF);
     // } else if (operator.getBButton()) {
-    //   launcher.setLauncherState(LauncherState.SPEAKER);
+    // launcher.setLauncherState(LauncherState.SPEAKER);
     // }
 
     // *CLIMBER CONTROLS */
@@ -225,11 +229,22 @@ public class Robot extends TimedRobot {
     // }
 
     if (operator.getRightTriggerAxis() > 0) {
+      // if(operator.getAButton()){
+      handoffCommand.cancel();
+      intake.setRollerOff();
+      if (launcher.getLaunchState() != LauncherState.LONG) {
+        intake.setIntakeState(IntakeState.STOP);
+      }
+      // autoSpeaker.initialize();
+      // autoSpeaker.schedule();
       shootCommand.initialize();
       shootCommand.schedule();
     } else if (operator.getLeftTriggerAxis() > 0) {
       launcher.setLauncherOff();
       launcher.setFlickOff();
+      intake.setRollerOff();
+      handoffCommand.cancel();
+      shootCommand.cancel();
     }
 
   }

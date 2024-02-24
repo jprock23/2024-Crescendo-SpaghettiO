@@ -31,7 +31,7 @@ public class AutoAmp extends Command {
 
   @Override
   public void execute() {
-    if (launcher.hasReachedPose(2.0)) {
+    if (launcher.hasReachedPose(8.0)) {
       double elapsedTime = Timer.getFPGATimestamp() - startTime;
 
       if (elapsedTime > windup) {

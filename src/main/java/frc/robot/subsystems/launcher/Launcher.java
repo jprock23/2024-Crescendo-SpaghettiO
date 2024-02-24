@@ -19,11 +19,12 @@ import frc.robot.Ports;
 public class Launcher {
 
     public enum LauncherState {
-        AMP(-65, 0.25),
+        AMP(-65, 0.225),
         START(-1.809524536132812, 0.0),
-        HOLD(-18.714231491088867, 0.0),
-        TRAP(-74.04991149902344, 0.6),
-        HANDOFF(14.92857551574707, 0.25),
+        HOLD(-6.714231491088867, 0.0),
+        TRAP(-70.04991149902344, 0.8),
+        LONG(-15, 1),
+        HANDOFF(11.92857551574707, 0.25),
         SPEAKER(-67.0, 1.0);
 
         public double position;
@@ -116,20 +117,20 @@ public class Launcher {
 
         pivotMotor.burnFlash();
 
-
         intake = Intake.getInstance();
     }
 
     public void updatePose() {
-      
+
         setPoint = motionProfile.calculate(0.02, setPoint, goal);
 
-        pivotController1.setReference(launchState.position, CANSparkMax.ControlType.kPosition, 0, feedForward.calculate(encoder.getPosition(), 0));
+        pivotController1.setReference(launchState.position, CANSparkMax.ControlType.kPosition, 0,
+                feedForward.calculate(encoder.getPosition(), 0));
 
     }
 
-    public double[] getConstants(){
-        return new double[]{pivotController1.getP(), pivotController1.getI(), pivotController1.getD()};
+    public double[] getConstants() {
+        return new double[] { pivotController1.getP(), pivotController1.getI(), pivotController1.getD() };
     }
 
     public void setPivotPower() {
@@ -185,10 +186,10 @@ public class Launcher {
     }
 
     public boolean hasReachedPose(double tolerance) {
-        if (Math.abs(getPosition() - launchState.position) > tolerance) {
-            return true;
+        if (Math.abs(getPosition() - launchState.position) >= tolerance) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public void setLauncherState(LauncherState state) {
@@ -196,11 +197,11 @@ public class Launcher {
         goal = new TrapezoidProfile.State(launchState.position, 0);
     }
 
-    public double getVelocity(){
+    public double getVelocity() {
         return encoder.getVelocity();
     }
 
-    public double getVelocityGoal(){
+    public double getVelocityGoal() {
         return setPoint.velocity;
     }
 

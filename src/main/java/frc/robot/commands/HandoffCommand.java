@@ -18,11 +18,11 @@ public class HandoffCommand extends Command {
   private Launcher launcher;
   private Intake intake;
 
-  private double threshold = 25.0;
+  private double threshold = 18.0;
 
   private double startTime = 0.0;
   private double timeElapsed = 0.0;
-  private double duration = 1.0;
+  private double duration = 0.8;
 
   private double startTime2 = 0.0;
   private double timeElapsed2 = 0.0;
@@ -45,6 +45,7 @@ public class HandoffCommand extends Command {
 
     intake.setIntakeState(IntakeState.GROUND);
     launcher.setLauncherState(LauncherState.HANDOFF);
+    launcher.updatePose();
 
     beganIntaking = false;
     hasRing = false;

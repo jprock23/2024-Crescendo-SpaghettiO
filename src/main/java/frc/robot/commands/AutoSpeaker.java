@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.spi.TimeZoneNameProvider;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.launcher.Launcher;
@@ -32,8 +34,9 @@ public class AutoSpeaker extends Command {
   @Override
   public void execute() {
 
-    if(launcher.hasReachedPose(2.0)){
+    if(launcher.hasReachedPose(20.0)){
       double elapsedTime = Timer.getFPGATimestamp() - startTime;
+      System.out.println("anshanshanshanshansh");
 
       if (elapsedTime > windup) {
         launcher.setFlickerOn();
@@ -47,7 +50,7 @@ public class AutoSpeaker extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    launcher.setFlickOff();
+    // launcher.setFlickOff();
     launcher.setLauncherOff();
   }
 

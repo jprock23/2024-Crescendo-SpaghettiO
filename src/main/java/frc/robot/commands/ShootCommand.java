@@ -11,9 +11,8 @@ public class ShootCommand extends Command {
   private boolean ended;
 
   private double startTime;
-  // these are somewhat random numbers so change however you like
   private double windup = .25;
-  private double duration = windup + .5;
+  private double duration = windup +.5;
 
   public ShootCommand() {
     launcher = Launcher.getInstance();
@@ -26,12 +25,12 @@ public class ShootCommand extends Command {
     launcher.updatePose();
     startTime = Timer.getFPGATimestamp();
     launcher.setLauncherOn();
+
   }
 
   @Override
   public void execute() {
 
-    if(launcher.hasReachedPose(2.0)){
       double elapsedTime = Timer.getFPGATimestamp() - startTime;
 
       if (elapsedTime > windup) {
@@ -41,7 +40,6 @@ public class ShootCommand extends Command {
       if (elapsedTime > duration) {
         ended = true;
       }
-    }
   }
 
   @Override

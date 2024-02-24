@@ -53,7 +53,7 @@ public class Drivebase extends SubsystemBase{
 
     gyro = new AHRS(SPI.Port.kMXP);
 
-    gyro.setAngleAdjustment(90);
+    // gyro.setAngleAdjustment(90);
     gyro.zeroYaw();
 
     odometry = new SwerveDriveOdometry(

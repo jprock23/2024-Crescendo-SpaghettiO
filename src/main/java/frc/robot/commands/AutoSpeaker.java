@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.launcher.Launcher;
 import frc.robot.subsystems.launcher.Launcher.LauncherState;
 
-public class AutoShoot extends Command {
+public class AutoSpeaker extends Command {
 
   private Launcher launcher;
 
@@ -14,9 +14,9 @@ public class AutoShoot extends Command {
   private double startTime;
   // these are somewhat random numbers so change however you like
   private double windup = .25;
-  private double duration = .75;
+  private double duration = windup + .5;
 
-  public AutoShoot() {
+  public AutoSpeaker() {
     launcher = Launcher.getInstance();
   }
 
@@ -24,13 +24,15 @@ public class AutoShoot extends Command {
   public void initialize() {
     ended = false;
 
-    launcher.setPivotState(LauncherState.SPEAKER);
+    launcher.setLauncherState(LauncherState.SPEAKER);
     startTime = Timer.getFPGATimestamp();
     launcher.setLauncherOn();
   }
 
   @Override
   public void execute() {
+
+    if(launcher.hasReachedPose(2.0)){
       double elapsedTime = Timer.getFPGATimestamp() - startTime;
 
       if (elapsedTime > windup) {
@@ -40,6 +42,7 @@ public class AutoShoot extends Command {
       if (elapsedTime > duration) {
         ended = true;
       }
+    }
   }
 
   @Override

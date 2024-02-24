@@ -9,17 +9,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.AutoShoot;
-import frc.robot.commands.Handoff;
+import frc.robot.commands.AutoAmp;
+import frc.robot.commands.AutoSpeaker;
+import frc.robot.commands.ShootCommand;
+import frc.robot.commands.HandoffCommand;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.Intake.IntakePosition;
+import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.launcher.Launcher;
 import frc.robot.subsystems.launcher.Launcher.LauncherState;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -50,8 +53,12 @@ public class Robot extends TimedRobot {
   private static XboxController operator;
 
   private Command m_autoSelected;
-  private Handoff handoff;
-  private AutoShoot autoShoot;
+
+  private HandoffCommand handoffCommand;
+  private ShootCommand shootCommand;
+  private AutoSpeaker autoSpeaker;
+  private AutoAmp autoAmp;
+
   private SendableChooser<Command> m_chooser;
 
   @Override
@@ -65,6 +72,15 @@ public class Robot extends TimedRobot {
     operator = new XboxController(1);
     drivebase.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0)));
 
+    handoffCommand = new HandoffCommand();
+    shootCommand = new ShootCommand();
+    autoSpeaker = new AutoSpeaker();
+    autoAmp = new AutoAmp();
+
+    NamedCommands.registerCommand("AutoAmp", autoAmp);
+    NamedCommands.registerCommand("AutoSpeaker", autoSpeaker);
+    NamedCommands.registerCommand("Handoff", handoffCommand);
+
     m_chooser = AutoBuilder.buildAutoChooser();
     m_chooser.addOption("Position 1 1 Piece", new PathPlannerAuto("Position 1 1 Piece"));
     m_chooser.addOption("Position 2 1 Piece", new PathPlannerAuto("Position 2 1 Piece"));
@@ -73,8 +89,6 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    handoff = new Handoff();
-    autoShoot = new AutoShoot();
     // CameraServer.startAutomaticCapture(0);
   }
 
@@ -100,7 +114,7 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putString("Intake State", intake.getIntakeState());
     SmartDashboard.putString("Launcher State", launcher.getLaunchState().toString());
-    SmartDashboard.putBoolean("Done? ", handoff.isFinished());
+    SmartDashboard.putBoolean("Handoff Done", handoffCommand.isFinished());
 
     SmartDashboard.putNumber("X-Coordinate", drivebase.getPose().getX());
     SmartDashboard.putNumber("Y-Coordinate", drivebase.getPose().getY());
@@ -120,8 +134,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    intake.periodic();
-    launcher.periodic();
+    intake.updatePose();
   }
 
   @Override
@@ -133,8 +146,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    intake.periodic();
-    launcher.periodic();
+    intake.updatePose();
 
     boolean fieldRelative = true;
 
@@ -156,25 +168,40 @@ public class Robot extends TimedRobot {
     /* INTAKE CONTROLS */
 
     if (operator.getRightBumper()) {
-      handoff.schedule();
+      handoffCommand.schedule();
     }
 
-    if (operator.getXButton()) {
-      launcher.setPivotState(LauncherState.AMP);
-    } else if (operator.getYButton()) {
-      launcher.setPivotState(LauncherState.TRAP);
-    } else if (operator.getLeftBumper()) {
-      intake.setIntakeState(IntakePosition.STOP);
-    } else if (operator.getLeftStickButton()) {
-      intake.setIntakeState(IntakePosition.GROUND);
+    if (operator.getPOV() == 0) {
+      launcher.setLauncherState(LauncherState.SPEAKER);
+    }
+    if (operator.getPOV() == 90) {
+      launcher.setLauncherState(LauncherState.AMP);
+    }
+    if (operator.getPOV() == 180) {
+      launcher.setLauncherState(LauncherState.TRAP);
+    }
+    if (operator.getPOV() == 270) {
+      launcher.setLauncherState(LauncherState.HOLD);
     }
 
-    // if(operator.getXButton()){
-    // intake.setFlipperPower();
-    // } else if(operator.getYButton()){
-    // intake.setReverseFlipperPower();
-    // } else {
-    // intake.setFlipperOff();
+    if(operator.getLeftBumper()){
+      intake.setIntakeState(IntakeState.STOP);
+    }
+
+    // if (operator.getXButton()) {
+    //   launcher.setLauncherState(LauncherState.AMP);
+    // } else if (operator.getYButton()) {
+    //   launcher.setLauncherState(LauncherState.TRAP);
+    // } else if (operator.getLeftBumper()) {
+    //   intake.setIntakeState(IntakePosition.STOP);
+    // } else if (operator.getLeftStickButton()) {
+    //   intake.setIntakeState(IntakePosition.GROUND);
+    // }
+    //
+    // if (operator.getAButton()) {
+    //   launcher.setLauncherState(LauncherState.HANDOFF);
+    // } else if (operator.getBButton()) {
+    //   launcher.setLauncherState(LauncherState.SPEAKER);
     // }
 
     // *CLIMBER CONTROLS */
@@ -198,28 +225,13 @@ public class Robot extends TimedRobot {
     // }
 
     if (operator.getRightTriggerAxis() > 0) {
-      // launcher.setLauncherOn();
-      // launcher.setFlickOff();
-      autoShoot.initialize();
-      autoShoot.schedule();
+      shootCommand.initialize();
+      shootCommand.schedule();
     } else if (operator.getLeftTriggerAxis() > 0) {
-      // launcher.setReverseLauncherOn();
-      // launcher.setFlickerReverse();
       launcher.setLauncherOff();
       launcher.setFlickOff();
     }
 
-    // if (operator.getLeftStickButton()) {
-    // launcher.setFlickerOn();
-    // } else if (!(operator.getLeftTriggerAxis() > 0)) {
-    // launcher.setFlickOff();
-    // }
-
-    if (operator.getAButton()) {
-      launcher.setPivotState(LauncherState.HANDOFF);
-    } else if (operator.getBButton()) {
-      launcher.setPivotState(LauncherState.SPEAKER);
-    }
   }
 
   @Override

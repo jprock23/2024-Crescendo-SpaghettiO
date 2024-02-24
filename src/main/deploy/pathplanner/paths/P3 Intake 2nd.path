@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.0,
-        "y": 1.0
+        "x": 0.8263427261804908,
+        "y": 4.534892769206057
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9977538734741421,
-        "y": 1.9999974774546332
+        "x": 1.5092705990531716,
+        "y": 4.254892341328861
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "LeftSpeakerScore"
     },
     {
       "anchor": {
-        "x": 1.0,
-        "y": 2.0
+        "x": 2.35,
+        "y": 4.12
       },
       "prevControl": {
-        "x": 1.0209035623682583,
-        "y": 1.0002185033316948
+        "x": 1.5092705990531716,
+        "y": 4.248063062600113
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "LeftRingFront"
     }
   ],
   "rotationTargets": [],
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Test",
+  "folder": "V2",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

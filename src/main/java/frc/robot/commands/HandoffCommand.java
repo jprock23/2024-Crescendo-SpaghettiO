@@ -9,11 +9,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.Intake.IntakePosition;
+import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.launcher.*;
 import frc.robot.subsystems.launcher.Launcher.LauncherState;
 
-public class Handoff extends Command {
+public class HandoffCommand extends Command {
 
   private Launcher launcher;
   private Intake intake;
@@ -32,18 +32,19 @@ public class Handoff extends Command {
   private boolean beganHandoff;
   private boolean ended;
 
-  public Handoff() {
+  public HandoffCommand() {
+    launcher = Launcher.getInstance();
+    intake = Intake.getInstance();
   }
 
   @Override
   public void initialize() {
-    launcher = Launcher.getInstance();
-    intake = Intake.getInstance();
-    startTime = Timer.getFPGATimestamp();
+
+    startTime = 0;
     startTime2 = 0;
 
-    intake.setIntakeState(IntakePosition.GROUND);
-    launcher.setPivotState(LauncherState.HANDOFF);
+    intake.setIntakeState(IntakeState.GROUND);
+    launcher.setLauncherState(LauncherState.HANDOFF);
 
     beganIntaking = false;
     hasRing = false;
@@ -69,12 +70,12 @@ public class Handoff extends Command {
     }
 
     if (hasRing) {
-      intake.setIntakeState(IntakePosition.HANDOFF);
+      intake.setIntakeState(IntakeState.HANDOFF);
       launcher.setReverseLauncherOn();
       launcher.setFlickerReverse();
     }
-       SmartDashboard.putNumber("StartTime2", startTime2);
-       SmartDashboard.putNumber("timeElapsed2", timeElapsed2);
+    SmartDashboard.putNumber("StartTime2", startTime2);
+    SmartDashboard.putNumber("timeElapsed2", timeElapsed2);
     if (hasRing && intake.hasReachedPose(2.3)) {
       intake.setRollerPower();
 
@@ -86,15 +87,11 @@ public class Handoff extends Command {
       timeElapsed2 = Timer.getFPGATimestamp() - startTime2;
 
       if (timeElapsed2 > .25) {
-        System.out.println("ANSHANSHANSHANSHANSHANSH");
-        launcher.setFlickOff();
-        launcher.setLauncherOff();
-        intake.setRollerOff();
+        // launcher.setFlickOff();
+        // launcher.setLauncherOff();
+        // intake.setRollerOff();
         ended = true;
       }
-      // if(ended){
-      // end(true);
-      // }
     }
   }
 

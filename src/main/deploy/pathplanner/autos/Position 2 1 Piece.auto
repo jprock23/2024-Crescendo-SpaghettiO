@@ -8,7 +8,7 @@
         {
           "type": "named",
           "data": {
-            "name": "AutoShoot"
+            "name": "AutoSpeaker"
           }
         },
         {
@@ -26,6 +26,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "V1",
   "choreoAuto": false
 }

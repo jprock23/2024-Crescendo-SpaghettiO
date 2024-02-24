@@ -8,30 +8,42 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start 2 1st Speaker Score"
+            "pathName": "P2 Start"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoSpeaker"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2 Score 2nd Speaker"
+            "pathName": "P2 Intake 2nd"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Handoff"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2 Intake 3rd 1"
+            "pathName": "P2 Score 2nd"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "2 Score 3rd Speaker"
+            "name": "AutoSpeaker"
           }
         }
       ]
     }
   },
-  "folder": "V1",
+  "folder": "V2",
   "choreoAuto": false
 }

@@ -3,9 +3,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.launcher.Launcher;
-import frc.robot.subsystems.launcher.Launcher.LauncherState;
 
-public class AutoAmp extends Command {
+public class ShootCommand extends Command {
 
   private Launcher launcher;
 
@@ -14,9 +13,9 @@ public class AutoAmp extends Command {
   private double startTime;
   // these are somewhat random numbers so change however you like
   private double windup = .25;
-  private double duration = .5;
+  private double duration = windup + .5;
 
-  public AutoAmp() {
+  public ShootCommand() {
     launcher = Launcher.getInstance();
   }
 
@@ -24,14 +23,15 @@ public class AutoAmp extends Command {
   public void initialize() {
     ended = false;
 
-    launcher.setLauncherState(LauncherState.AMP);
+    launcher.updatePose();
     startTime = Timer.getFPGATimestamp();
     launcher.setLauncherOn();
   }
 
   @Override
   public void execute() {
-    if (launcher.hasReachedPose(2.0)) {
+
+    if(launcher.hasReachedPose(2.0)){
       double elapsedTime = Timer.getFPGATimestamp() - startTime;
 
       if (elapsedTime > windup) {

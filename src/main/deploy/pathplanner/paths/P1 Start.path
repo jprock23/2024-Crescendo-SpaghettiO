@@ -1,0 +1,64 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.7,
+        "y": 7.0
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.8943941666601796,
+        "y": 7.0
+      },
+      "isLocked": false,
+      "linkedName": "Position 1 Start"
+    },
+    {
+      "anchor": {
+        "x": 0.826342726183308,
+        "y": 6.5631885516500645
+      },
+      "prevControl": {
+        "x": 0.9432952704197534,
+        "y": 6.813994092136322
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "RightSpeakerShootPose"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 0.25,
+        "maxAngularVelocity": 180.0,
+        "maxAngularAcceleration": 180.0
+      }
+    }
+  ],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 1.0,
+    "maxAcceleration": 0.25,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 180.0
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": -115.0,
+    "rotateFast": true
+  },
+  "reversed": false,
+  "folder": "V2",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

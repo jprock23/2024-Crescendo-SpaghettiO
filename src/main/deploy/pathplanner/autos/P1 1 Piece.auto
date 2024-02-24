@@ -8,18 +8,18 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start 2 1st Speaker Score"
+            "pathName": "P1 Start"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "2 Score 2nd Speaker"
+            "name": "AutoSpeaker"
           }
         }
       ]
     }
   },
-  "folder": "V1",
+  "folder": "V2",
   "choreoAuto": false
 }

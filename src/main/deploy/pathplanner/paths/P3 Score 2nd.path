@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.0,
-        "y": 1.0
+        "x": 2.35,
+        "y": 4.12
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9977538734741421,
-        "y": 1.9999974774546332
+        "x": 2.123905684640436,
+        "y": 5.019771558948568
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "LeftRingFront"
     },
     {
       "anchor": {
-        "x": 1.0,
-        "y": 2.0
+        "x": 1.32488007337905,
+        "y": 5.531967463603175
       },
       "prevControl": {
-        "x": 1.0209035623682583,
-        "y": 1.0002185033316948
+        "x": 2.1102471271829413,
+        "y": 5.019771558948568
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "MiddleSpeakerScore"
     }
   ],
   "rotationTargets": [],
@@ -39,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Test",
+  "folder": "V2",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

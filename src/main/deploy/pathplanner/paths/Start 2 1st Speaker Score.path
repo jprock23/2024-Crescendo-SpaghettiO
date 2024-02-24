@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3337957445145674,
-        "y": 5.555088802485298
+        "x": 0.44390311736857985,
+        "y": 3.89294056870525
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5089979255392123,
-        "y": 5.555088802485298
+        "x": 1.6191052983932248,
+        "y": 3.89294056870525
       },
       "isLocked": false,
       "linkedName": "Position 2 Start"
@@ -41,7 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Speaker"
+                "name": null
               }
             }
           ]
@@ -61,7 +61,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "V1",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0

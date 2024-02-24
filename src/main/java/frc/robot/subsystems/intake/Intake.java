@@ -13,15 +13,14 @@ import frc.robot.Ports;
 
 public class Intake {
 
-    public enum IntakePosition {
+    public enum IntakeState {
         STOP(0.0),
         GROUND(-9.00039100646973),
-        TRAP(0.0),
         HANDOFF(-0.999995708465576);
 
         public double position;
 
-        private IntakePosition(double position) {
+        private IntakeState(double position) {
             this.position = position;
         }
     }
@@ -29,7 +28,7 @@ public class Intake {
     private CANSparkMax roller;
     private CANSparkMax flipper;
 
-    public IntakePosition intakePosition = IntakePosition.STOP;
+    public IntakeState intakeState = IntakeState.STOP;
     public static Intake instance;
 
     private double power = 0.7;
@@ -81,8 +80,8 @@ public class Intake {
 
     }
 
-    public void periodic() {
-        flipperController.setReference(intakePosition.position,
+    public void updatePose() {
+        flipperController.setReference(intakeState.position,
         CANSparkMax.ControlType.kPosition, 0,
         feedforward.calculate(encoder.getPosition(), veloSP));
     }
@@ -133,18 +132,18 @@ public class Intake {
     }
 
     public String getIntakeState() {
-        return intakePosition.toString();
+        return intakeState.toString();
     }
 
     public boolean hasReachedPose(double tolerance) {
-        if (Math.abs(encoder.getPosition() - intakePosition.position) > tolerance) {
+        if (Math.abs(encoder.getPosition() - intakeState.position) > tolerance) {
             return false;
         }
         return true;
     }
 
-    public void setIntakeState(IntakePosition state) {
-        intakePosition = state;
+    public void setIntakeState(IntakeState state) {
+        intakeState = state;
     }
 
     public boolean[] intakeConnections() {

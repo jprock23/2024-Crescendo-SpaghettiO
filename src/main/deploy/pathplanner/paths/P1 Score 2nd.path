@@ -3,49 +3,49 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.761513061487663,
-        "y": 4.361188722377445
+        "x": 2.3424426039603525,
+        "y": 6.993433111556562
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6495379144604458,
-        "y": 4.124382094918037
+        "x": 1.7756124694791944,
+        "y": 6.850018258257454
       },
       "isLocked": false,
-      "linkedName": "3 Score 1st Speaker"
+      "linkedName": "RightRingFront"
     },
     {
       "anchor": {
-        "x": 2.517828881811611,
-        "y": 4.09478126648561
+        "x": 0.826342726183308,
+        "y": 6.5631885516500645
       },
       "prevControl": {
-        "x": 1.8962114847306633,
-        "y": 4.213184580215315
+        "x": 1.809758863122931,
+        "y": 6.856847536986201
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "3 Intake 2nd"
+      "linkedName": "RightSpeakerShootPose"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxVelocity": 1.0,
+    "maxAcceleration": 0.25,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 180.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": -115.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "V1",
+  "folder": "V2",
   "previewStartingState": {
-    "rotation": 120.0,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": false

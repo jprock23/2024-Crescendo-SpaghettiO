@@ -20,7 +20,7 @@ public class Launcher {
 
     public enum LauncherState {
         AMP(-65, 0.25),
-        STOP(-1.809524536132812, 0.0),
+        START(-1.809524536132812, 0.0),
         HOLD(-18.714231491088867, 0.0),
         TRAP(-74.04991149902344, 0.6),
         HANDOFF(14.92857551574707, 0.25),
@@ -49,7 +49,7 @@ public class Launcher {
 
     private TrapezoidProfile motionProfile;
     private TrapezoidProfile.State goal = new TrapezoidProfile.State();
-    private TrapezoidProfile.State setPoint = new TrapezoidProfile.State(LauncherState.STOP.position, 0);
+    private TrapezoidProfile.State setPoint = new TrapezoidProfile.State(LauncherState.START.position, 0);
 
     private double veloSP = 4000;
     private double maxAccel = 3000;
@@ -58,7 +58,7 @@ public class Launcher {
 
     private boolean[] connections = new boolean[8];
 
-    private static LauncherState launchState = LauncherState.STOP;
+    private static LauncherState launchState = LauncherState.START;
 
     public static Launcher instance;
     public static Intake intake;
@@ -120,7 +120,7 @@ public class Launcher {
         intake = Intake.getInstance();
     }
 
-    public void periodic() {
+    public void updatePose() {
       
         setPoint = motionProfile.calculate(0.02, setPoint, goal);
 
@@ -191,7 +191,7 @@ public class Launcher {
         return false;
     }
 
-    public void setPivotState(LauncherState state) {
+    public void setLauncherState(LauncherState state) {
         launchState = state;
         goal = new TrapezoidProfile.State(launchState.position, 0);
     }

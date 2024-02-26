@@ -27,8 +27,10 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 5;
-    public static final double kMaxAngularSpeed = Math.PI * 2; // radians per second
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    // competition 5 m/s
+    public static final double kMaxAngularSpeed = Math.PI; // radians per second
+    // competition 2pi
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
     public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
@@ -95,7 +97,7 @@ public final class Constants {
     public static final double kDrivingMinOutput = -1;
     public static final double kDrivingMaxOutput = 1;
 
-    public static final double kTurningP = 1;
+    public static final double kTurningP = 1.0;
     public static final double kTurningI = 0;
     public static final double kTurningD = 0;
     public static final double kTurningFF = 0;
@@ -138,12 +140,13 @@ public final class Constants {
     public static final double launchICoefficient = 0.0;
     public static final double launchDCoefficient = 0.0;
 
-    public static final double pivotPCoefficient = .11;
+    public static final double pivotPCoefficient = 0.08;
+    // .02
     public static final double pivotICoefficient = 0.0;
     public static final double pivotDCoefficient = 0.0;
 
-    //prototype numbers:
-    //P: .1 I: 0 D: 0
+    // prototype numbers:
+    // P: .1 I: 0 D: 0
 
     public static final double flickerPCoefficient = 0.0;
     public static final double flickerICoefficient = 0.0;
@@ -155,8 +158,8 @@ public final class Constants {
     public static final double flipperICoefficient = 0.0;
     public static final double flipperDCoefficient = 0.0;
 
-    //prototype numbers:
-    //P: .1 I: 0 D: 0
+    // prototype numbers:
+    // P: .1 I: 0 D: 0
 
   }
 

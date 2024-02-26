@@ -22,7 +22,7 @@ public class HandoffCommand extends Command {
 
   private double startTime = 0.0;
   private double timeElapsed = 0.0;
-  private double duration = 0.8;
+  private double duration = 1.15;
 
   private double startTime2 = 0.0;
   private double timeElapsed2 = 0.0;
@@ -87,7 +87,7 @@ public class HandoffCommand extends Command {
 
       timeElapsed2 = Timer.getFPGATimestamp() - startTime2;
 
-      if (timeElapsed2 > .25) {
+      if (timeElapsed2 > 5) {
         // launcher.setFlickOff();
         // launcher.setLauncherOff();
         // intake.setRollerOff();

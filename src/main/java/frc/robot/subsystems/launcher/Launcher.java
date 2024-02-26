@@ -24,11 +24,12 @@ public class Launcher {
         HOLD(-6.714231491088867, 0.0),
         TRAP(-70.04991149902344, 0.8),
         LONG(-15, 1),
-        HANDOFF(11.92857551574707, 0.25),
+        HANDOFF(8.92857551574707, 0.25),
         SPEAKER(-67.0, 1.0);
 
         public double position;
         public double launchSpeed;
+
 
         private LauncherState(double position, double launchSpeed) {
             this.position = position;
@@ -97,7 +98,9 @@ public class Launcher {
         pivotMotor.setInverted(true);
         pivotMotor.setOpenLoopRampRate(1);
 
-        feedForward = new ArmFeedforward(0.01, 0.02, 0.1, 0.0);
+        feedForward = new ArmFeedforward(0.0, 0.4
+
+        , 0.1, 0.0);
         motionProfile = new TrapezoidProfile(new Constraints(veloSP, maxAccel));
 
         // Prototype numbers
@@ -187,9 +190,9 @@ public class Launcher {
 
     public boolean hasReachedPose(double tolerance) {
         if (Math.abs(getPosition() - launchState.position) >= tolerance) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     public void setLauncherState(LauncherState state) {

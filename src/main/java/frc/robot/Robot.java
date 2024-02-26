@@ -86,6 +86,7 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("Position 2 1 Piece", new PathPlannerAuto("Position 2 1 Piece"));
     m_chooser.addOption("Position 3 1 Piece", new PathPlannerAuto("Position 3 1 Piece"));
     m_chooser.addOption("BeepBoop", new PathPlannerAuto("BeepBoop"));
+    m_chooser.addOption("3LittlePigs", new  PathPlannerAuto("3LittlePigs"));
 
     SmartDashboard.putData("Auto choices", m_chooser);
 
@@ -119,6 +120,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("X-Coordinate", drivebase.getPose().getX());
     SmartDashboard.putNumber("Y-Coordinate", drivebase.getPose().getY());
 
+    SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
+
   }
 
   @Override
@@ -147,6 +150,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     intake.updatePose();
+
+    if (driver.getAButton()) {
+      drivebase.resetPose(PathPlannerAuto.getStaringPoseFromAutoFile(m_chooser.getSelected().getName()));
+
+    }
 
     boolean fieldRelative = true;
 
@@ -245,6 +253,10 @@ public class Robot extends TimedRobot {
       intake.setRollerOff();
       handoffCommand.cancel();
       shootCommand.cancel();
+    }
+
+    if (operator.getAButton()) {
+      launcher.setReverseLauncherOn();
     }
 
   }

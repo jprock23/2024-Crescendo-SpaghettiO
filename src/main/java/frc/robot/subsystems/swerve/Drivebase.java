@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 import frc.robot.Constants.DriveConstants;
 
-public class Drivebase extends SubsystemBase{
+public class Drivebase extends SubsystemBase {
   private static Drivebase instance;
 
   public SwerveModule frontLeft;
@@ -66,8 +66,8 @@ public class Drivebase extends SubsystemBase{
         });
 
     config = new HolonomicPathFollowerConfig(new PIDConstants(.8, 0, 0),
-        new PIDConstants(.43, 0, 0),
-        2, Math.sqrt(Math.pow(DriveConstants.kTrackWidth / 2, 2) +
+        new PIDConstants(.35, 0, 0),
+        5, Math.sqrt(Math.pow(DriveConstants.kTrackWidth / 2, 2) +
             Math.pow(DriveConstants.kWheelBase / 2, 2)),
         new ReplanningConfig());
 
@@ -161,6 +161,10 @@ public class Drivebase extends SubsystemBase{
         backLeft.getPosition(),
         backRight.getPosition()
     };
+  }
+
+  public double getTranslationalVelocity() {
+    return frontLeft.getTranslationalVelocity();
   }
 
   public SwerveModuleState[] getModuleStates() {

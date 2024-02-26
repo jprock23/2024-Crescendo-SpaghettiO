@@ -14,9 +14,11 @@ public class AutoSpeaker extends Command {
   private boolean ended;
 
   private double startTime;
-  // these are somewhat random numbers so change however you like
-  private double windup = .25;
+  private double elapsedTime;
+  private double windup = 1.0;
   private double duration = windup + .5;
+
+  private boolean beganShooting;
 
   public AutoSpeaker() {
     launcher = Launcher.getInstance();
@@ -25,17 +27,24 @@ public class AutoSpeaker extends Command {
   @Override
   public void initialize() {
     ended = false;
+    beganShooting = false;
 
     launcher.setLauncherState(LauncherState.SPEAKER);
-    startTime = Timer.getFPGATimestamp();
+    startTime = 0;
+    elapsedTime = 0;
     launcher.setLauncherOn();
   }
 
   @Override
   public void execute() {
+    launcher.updatePose();
 
     if(launcher.hasReachedPose(20.0)){
-      double elapsedTime = Timer.getFPGATimestamp() - startTime;
+      if (!beganShooting) {
+        startTime = Timer.getFPGATimestamp();
+        beganShooting = true;
+      }
+      elapsedTime = Timer.getFPGATimestamp() - startTime;
       System.out.println("anshanshanshanshansh");
 
       if (elapsedTime > windup) {
@@ -50,7 +59,7 @@ public class AutoSpeaker extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    // launcher.setFlickOff();
+    launcher.setFlickOff();
     launcher.setLauncherOff();
   }
 

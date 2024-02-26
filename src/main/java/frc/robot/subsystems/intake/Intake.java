@@ -28,7 +28,7 @@ public class Intake {
     private CANSparkMax roller;
     private CANSparkMax flipper;
 
-    public IntakeState intakeState = IntakeState.STOP;
+    public IntakeState intakeState = IntakeState.GROUND;
     public static Intake instance;
 
     private double power = 0.7;

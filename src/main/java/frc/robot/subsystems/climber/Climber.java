@@ -15,7 +15,7 @@ public class Climber {
 
     private boolean[] connections = new boolean[4];
 
-    private double pow = 0.5;
+    private double pow = 0.75;
 
     public Climber() {
         climber1 = new CANSparkMax(Ports.climber1, MotorType.kBrushless);

@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import javax.security.auth.login.AppConfigurationEntry.LoginModuleControlFlag;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
@@ -27,11 +25,6 @@ public class BreakBeamHandoff extends Command {
   private double startTime2 = 0.0;
   private double timeElapsed2 = 0.0;
 
-  private double startTime3 = 0.0;
-  private double timeElapsed3 = 0.0;
-
-  private double count;
-
   private boolean beganIntaking;
   private boolean hasRing;
   private boolean beganHandoff;
@@ -48,9 +41,6 @@ public class BreakBeamHandoff extends Command {
 
     startTime = 0;
     startTime2 = 0;
-    startTime3 = 0;
-
-    count = 0;
 
     intake.setIntakeState(IntakeState.GROUND);
     launcher.setLauncherState(LauncherState.HANDOFF);

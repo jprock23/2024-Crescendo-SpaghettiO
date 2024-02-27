@@ -13,7 +13,6 @@ import frc.robot.commands.AutoAmp;
 import frc.robot.commands.AutoSpeaker;
 import frc.robot.commands.BreakBeamHandoff;
 import frc.robot.commands.ShootCommand;
-import frc.robot.commands.HandoffCommand;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
@@ -127,8 +126,11 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
 
-    drivebase.resetPose(new Pose2d(1.3, 5.56, new Rotation2d(0)));
-    drivebase.resetOdometry(new Pose2d(1.3, 5.56, new Rotation2d(0)));
+    drivebase.resetPose(new Pose2d(1.0, 2.0, new Rotation2d(0)));
+    drivebase.resetOdometry(new Pose2d(1.0, 2.0, new Rotation2d(0)));
+
+    // drivebase.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile(m_chooser.getSelected().getName()));
+    // drivebase.resetPose(PathPlannerAuto.getStaringPoseFromAutoFile(m_chooser.getSelected().getName()));
 
     if (m_autoSelected != null) {
       m_autoSelected.schedule();
@@ -164,6 +166,8 @@ public class Robot extends TimedRobot {
     }
     if (driver.getAButton()) {
       drivebase.lockWheels();
+      drivebase.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile(m_chooser.getSelected().getName()));
+      drivebase.resetPose(PathPlannerAuto.getStaringPoseFromAutoFile(m_chooser.getSelected().getName()));
     } else {
       drivebase.drive(xSpeed, ySpeed, rot, fieldRelative);
     }
@@ -187,24 +191,24 @@ public class Robot extends TimedRobot {
       launcher.setLauncherState(LauncherState.HOLD);
     }
 
-    if(operator.getLeftBumper()){
+    if (operator.getLeftBumper()) {
       intake.setIntakeState(IntakeState.STOP);
     }
 
     // if (operator.getXButton()) {
-    //   launcher.setLauncherState(LauncherState.AMP);
+    // launcher.setLauncherState(LauncherState.AMP);
     // } else if (operator.getYButton()) {
-    //   launcher.setLauncherState(LauncherState.TRAP);
+    // launcher.setLauncherState(LauncherState.TRAP);
     // } else if (operator.getLeftBumper()) {
-    //   intake.setIntakeState(IntakePosition.STOP);
+    // intake.setIntakeState(IntakePosition.STOP);
     // } else if (operator.getLeftStickButton()) {
-    //   intake.setIntakeState(IntakePosition.GROUND);
+    // intake.setIntakeState(IntakePosition.GROUND);
     // }
     //
     // if (operator.getAButton()) {
-    //   launcher.setLauncherState(LauncherState.HANDOFF);
+    // launcher.setLauncherState(LauncherState.HANDOFF);
     // } else if (operator.getBButton()) {
-    //   launcher.setLauncherState(LauncherState.SPEAKER);
+    // launcher.setLauncherState(LauncherState.SPEAKER);
     // }
 
     // *CLIMBER CONTROLS */

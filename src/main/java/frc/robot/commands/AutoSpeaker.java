@@ -1,8 +1,7 @@
 package frc.robot.commands;
 
-import java.util.spi.TimeZoneNameProvider;
-
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.launcher.Launcher;
 import frc.robot.subsystems.launcher.Launcher.LauncherState;
@@ -18,8 +17,6 @@ public class AutoSpeaker extends Command {
   private double windup = 1.0;
   private double duration = windup + .5;
 
-  private boolean beganShooting;
-
   public AutoSpeaker() {
     launcher = Launcher.getInstance();
   }
@@ -27,10 +24,9 @@ public class AutoSpeaker extends Command {
   @Override
   public void initialize() {
     ended = false;
-    beganShooting = false;
 
     launcher.setLauncherState(LauncherState.SPEAKER);
-    startTime = 0;
+    startTime = -1;
     elapsedTime = 0;
     launcher.setLauncherOn();
   }
@@ -39,10 +35,12 @@ public class AutoSpeaker extends Command {
   public void execute() {
     launcher.updatePose();
 
-    if(launcher.hasReachedPose(20.0)){
-      if (!beganShooting) {
+    SmartDashboard.putNumber("Start Time", startTime);
+    SmartDashboard.putNumber("Elapsed Time", elapsedTime);
+
+    if(launcher.hasReachedPose(2.0)){
+      if (startTime == -1) {
         startTime = Timer.getFPGATimestamp();
-        beganShooting = true;
       }
       elapsedTime = Timer.getFPGATimestamp() - startTime;
       System.out.println("anshanshanshanshansh");

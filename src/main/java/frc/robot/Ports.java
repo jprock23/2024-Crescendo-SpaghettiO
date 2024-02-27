@@ -31,4 +31,8 @@ public class Ports {
     // Intake
     public static final int roller = 12;
     public static final int flipper = 16;
+
+    //*DIO */
+
+    public static final int breakBeam = 0;
 }

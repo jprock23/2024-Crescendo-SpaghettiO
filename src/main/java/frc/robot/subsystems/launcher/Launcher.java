@@ -7,13 +7,13 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants.LauncherConstants;
-import frc.robot.subsystems.intake.Intake;
 import frc.robot.Ports;
 
 public class Launcher {
@@ -24,12 +24,11 @@ public class Launcher {
         HOLD(-6.714231491088867, 0.0),
         TRAP(-70.04991149902344, 0.8),
         LONG(-15, 1),
-        HANDOFF(8.92857551574707, 0.25),
+        HANDOFF(8.92857551574707, 0.35),
         SPEAKER(-67.0, 1.0);
 
         public double position;
         public double launchSpeed;
-
 
         private LauncherState(double position, double launchSpeed) {
             this.position = position;
@@ -57,13 +56,13 @@ public class Launcher {
     private double maxAccel = 3000;
 
     private static RelativeEncoder encoder;
+    private DigitalInput breakBeam;
 
     private boolean[] connections = new boolean[8];
 
     private static LauncherState launchState = LauncherState.START;
 
     public static Launcher instance;
-    public static Intake intake;
 
     public Launcher() {
         shootMotor1 = new CANSparkMax(Ports.shootMotor1, MotorType.kBrushless);
@@ -100,7 +99,7 @@ public class Launcher {
 
         feedForward = new ArmFeedforward(0.0, 0.4
 
-        , 0.1, 0.0);
+                , 0.1, 0.0);
         motionProfile = new TrapezoidProfile(new Constraints(veloSP, maxAccel));
 
         // Prototype numbers
@@ -120,7 +119,8 @@ public class Launcher {
 
         pivotMotor.burnFlash();
 
-        intake = Intake.getInstance();
+        breakBeam = new DigitalInput(Ports.breakBeam);
+
     }
 
     public void updatePose() {
@@ -130,10 +130,6 @@ public class Launcher {
         pivotController1.setReference(launchState.position, CANSparkMax.ControlType.kPosition, 0,
                 feedForward.calculate(encoder.getPosition(), 0));
 
-    }
-
-    public double[] getConstants() {
-        return new double[] { pivotController1.getP(), pivotController1.getI(), pivotController1.getD() };
     }
 
     public void setPivotPower() {
@@ -180,6 +176,11 @@ public class Launcher {
         return encoder.getPosition();
     }
 
+    public boolean getBreakBeam() {
+        return !breakBeam.get();
+    }
+
+
     public LauncherState getLaunchState() {
         return launchState;
     }
@@ -189,10 +190,7 @@ public class Launcher {
     }
 
     public boolean hasReachedPose(double tolerance) {
-        if (Math.abs(getPosition() - launchState.position) >= tolerance) {
-            return true;
-        }
-        return false;
+        return Math.abs(getPosition() - launchState.position) < tolerance;
     }
 
     public void setLauncherState(LauncherState state) {

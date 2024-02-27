@@ -82,8 +82,8 @@ public class Intake {
 
     public void updatePose() {
         flipperController.setReference(intakeState.position,
-        CANSparkMax.ControlType.kPosition, 0,
-        feedforward.calculate(encoder.getPosition(), veloSP));
+                CANSparkMax.ControlType.kPosition, 0,
+                feedforward.calculate(encoder.getPosition(), veloSP));
     }
 
     public void setRollerPower() {
@@ -136,10 +136,7 @@ public class Intake {
     }
 
     public boolean hasReachedPose(double tolerance) {
-        if (Math.abs(encoder.getPosition() - intakeState.position) > tolerance) {
-            return false;
-        }
-        return true;
+        return Math.abs(encoder.getPosition() - intakeState.position) < tolerance;
     }
 
     public void setIntakeState(IntakeState state) {

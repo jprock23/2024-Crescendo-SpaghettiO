@@ -5,15 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
-import frc.robot.subsystems.launcher.*;
+import frc.robot.subsystems.launcher.Launcher;
 import frc.robot.subsystems.launcher.Launcher.LauncherState;
 
-public class HandoffCommand extends Command {
+public class BreakBeamHandoff extends Command {
 
   private Launcher launcher;
   private Intake intake;
@@ -27,13 +25,17 @@ public class HandoffCommand extends Command {
   private double startTime2 = 0.0;
   private double timeElapsed2 = 0.0;
 
+  private double startTime3 = 0.0;
+  private double timeElapsed3 = 0.0;
+
   private boolean beganIntaking;
   private boolean hasRing;
   private boolean beganHandoff;
+  private boolean launcherHasRing;
   private boolean ended;
 
-  public HandoffCommand() {
-    launcher = Launcher.getInstance();
+  public BreakBeamHandoff() {
+     launcher = Launcher.getInstance();
     intake = Intake.getInstance();
   }
 
@@ -42,6 +44,7 @@ public class HandoffCommand extends Command {
 
     startTime = 0;
     startTime2 = 0;
+    startTime3 = 0;
 
     intake.setIntakeState(IntakeState.GROUND);
     launcher.setLauncherState(LauncherState.HANDOFF);
@@ -50,6 +53,7 @@ public class HandoffCommand extends Command {
     beganIntaking = false;
     hasRing = false;
     beganHandoff = false;
+    launcherHasRing = false;
     ended = false;
   }
 
@@ -75,8 +79,8 @@ public class HandoffCommand extends Command {
       launcher.setReverseLauncherOn();
       launcher.setFlickerReverse();
     }
-    SmartDashboard.putNumber("StartTime2", startTime2);
-    SmartDashboard.putNumber("timeElapsed2", timeElapsed2);
+
+
     if (hasRing && intake.hasReachedPose(2.3)) {
       intake.setRollerPower();
 
@@ -87,9 +91,28 @@ public class HandoffCommand extends Command {
 
       timeElapsed2 = Timer.getFPGATimestamp() - startTime2;
 
-      if (timeElapsed2 > .5) {
-        ended = true;
+      if (timeElapsed2 > .25) {
+        intake.setRollerOff();
       }
+                               if(launcher.getBreakBeam() && !launcherHasRing){
+                                  launcherHasRing = true;
+                                    if(!launcher.getBreakBeam()){
+                                      ended = true;
+                                    }
+                                  }
+
+      // if(launcher.getBreakBeam() && !launcherHasRing){
+      //   launcherHasRing = true;
+      //   startTime3 = Timer.getFPGATimestamp();
+      // }
+
+      // timeElapsed3 = Timer.getFPGATimestamp() - startTime3;
+
+      // if(!launcher.getBreakBeam() && launcherHasRing){
+      //   if(timeElapsed3 > .2){
+      //     ended = true;
+      //   }
+      // }
     }
   }
 
@@ -97,7 +120,6 @@ public class HandoffCommand extends Command {
   public void end(boolean interrupted) {
     launcher.setFlickOff();
     launcher.setLauncherOff();
-    intake.setRollerOff();
   }
 
   @Override

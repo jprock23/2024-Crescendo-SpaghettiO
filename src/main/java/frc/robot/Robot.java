@@ -82,11 +82,10 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("Handoff", handoffCommand);
 
     m_chooser = AutoBuilder.buildAutoChooser();
-    m_chooser.addOption("Position 1 1 Piece", new PathPlannerAuto("Position 1 1 Piece"));
-    m_chooser.addOption("Position 2 1 Piece", new PathPlannerAuto("Position 2 1 Piece"));
-    m_chooser.addOption("Position 3 1 Piece", new PathPlannerAuto("Position 3 1 Piece"));
+    m_chooser.addOption("P1 1 Piece", new PathPlannerAuto("P1 1 Piece"));
+    m_chooser.addOption("P2 1 Piece", new PathPlannerAuto("P2 1 Piece"));
+    m_chooser.addOption("P3 1 Piece", new PathPlannerAuto("P3 1 Piece"));
     m_chooser.addOption("BeepBoop", new PathPlannerAuto("BeepBoop"));
-    m_chooser.addOption("3LittlePigs", new  PathPlannerAuto("3LittlePigs"));
 
     SmartDashboard.putData("Auto choices", m_chooser);
 
@@ -111,11 +110,13 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Roller Current", intake.getRollerCurrent());
 
     SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
-    SmartDashboard.putNumber(" Launcher Position", launcher.getPosition());
+    SmartDashboard.putNumber("Launcher Position", launcher.getPosition());
 
     SmartDashboard.putString("Intake State", intake.getIntakeState());
+    SmartDashboard.putBoolean("Breakbeam", launcher.getBreakBeam());
+
     SmartDashboard.putString("Launcher State", launcher.getLaunchState().toString());
-    SmartDashboard.putBoolean("Handoff Done", handoffCommand.isFinished());
+    SmartDashboard.putBoolean("Shoot Done", autoSpeaker.isFinished());
 
     SmartDashboard.putNumber("X-Coordinate", drivebase.getPose().getX());
     SmartDashboard.putNumber("Y-Coordinate", drivebase.getPose().getY());
@@ -151,11 +152,6 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     intake.updatePose();
 
-    if (driver.getAButton()) {
-      drivebase.resetPose(PathPlannerAuto.getStaringPoseFromAutoFile(m_chooser.getSelected().getName()));
-
-    }
-
     boolean fieldRelative = true;
 
     /* DRIVE CONTROLS */
@@ -189,31 +185,27 @@ public class Robot extends TimedRobot {
       launcher.setLauncherState(LauncherState.TRAP);
     }
     if (operator.getPOV() == 270) {
-      launcher.setLauncherState(LauncherState.LONG);
-    }
-
-    if (operator.getAButton()) {
       launcher.setLauncherState(LauncherState.HOLD);
     }
 
-    if (operator.getLeftBumper()) {
+    if(operator.getLeftBumper()){
       intake.setIntakeState(IntakeState.STOP);
     }
 
     // if (operator.getXButton()) {
-    // launcher.setLauncherState(LauncherState.AMP);
+    //   launcher.setLauncherState(LauncherState.AMP);
     // } else if (operator.getYButton()) {
-    // launcher.setLauncherState(LauncherState.TRAP);
+    //   launcher.setLauncherState(LauncherState.TRAP);
     // } else if (operator.getLeftBumper()) {
-    // intake.setIntakeState(IntakePosition.STOP);
+    //   intake.setIntakeState(IntakePosition.STOP);
     // } else if (operator.getLeftStickButton()) {
-    // intake.setIntakeState(IntakePosition.GROUND);
+    //   intake.setIntakeState(IntakePosition.GROUND);
     // }
     //
     // if (operator.getAButton()) {
-    // launcher.setLauncherState(LauncherState.HANDOFF);
+    //   launcher.setLauncherState(LauncherState.HANDOFF);
     // } else if (operator.getBButton()) {
-    // launcher.setLauncherState(LauncherState.SPEAKER);
+    //   launcher.setLauncherState(LauncherState.SPEAKER);
     // }
 
     // *CLIMBER CONTROLS */
@@ -237,26 +229,11 @@ public class Robot extends TimedRobot {
     // }
 
     if (operator.getRightTriggerAxis() > 0) {
-      // if(operator.getAButton()){
-      handoffCommand.cancel();
-      intake.setRollerOff();
-      if (launcher.getLaunchState() != LauncherState.LONG) {
-        intake.setIntakeState(IntakeState.STOP);
-      }
-      // autoSpeaker.initialize();
-      // autoSpeaker.schedule();
       shootCommand.initialize();
       shootCommand.schedule();
     } else if (operator.getLeftTriggerAxis() > 0) {
       launcher.setLauncherOff();
       launcher.setFlickOff();
-      intake.setRollerOff();
-      handoffCommand.cancel();
-      shootCommand.cancel();
-    }
-
-    if (operator.getAButton()) {
-      launcher.setReverseLauncherOn();
     }
 
   }

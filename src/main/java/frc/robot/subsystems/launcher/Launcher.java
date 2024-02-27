@@ -25,7 +25,7 @@ public class Launcher {
         TRAP(-70.04991149902344, 0.8),
         LONG(-15, 1),
         HANDOFF(8.92857551574707, 0.35),
-        SPEAKER(-67.0, 1.0);
+        SPEAKER(-67.0, 0.8);
 
         public double position;
         public double launchSpeed;

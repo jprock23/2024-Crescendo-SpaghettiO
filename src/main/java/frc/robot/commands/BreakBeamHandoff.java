@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import javax.security.auth.login.AppConfigurationEntry.LoginModuleControlFlag;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
@@ -28,6 +30,8 @@ public class BreakBeamHandoff extends Command {
   private double startTime3 = 0.0;
   private double timeElapsed3 = 0.0;
 
+  private double count;
+
   private boolean beganIntaking;
   private boolean hasRing;
   private boolean beganHandoff;
@@ -35,7 +39,7 @@ public class BreakBeamHandoff extends Command {
   private boolean ended;
 
   public BreakBeamHandoff() {
-     launcher = Launcher.getInstance();
+    launcher = Launcher.getInstance();
     intake = Intake.getInstance();
   }
 
@@ -45,6 +49,8 @@ public class BreakBeamHandoff extends Command {
     startTime = 0;
     startTime2 = 0;
     startTime3 = 0;
+
+    count = 0;
 
     intake.setIntakeState(IntakeState.GROUND);
     launcher.setLauncherState(LauncherState.HANDOFF);
@@ -80,7 +86,6 @@ public class BreakBeamHandoff extends Command {
       launcher.setFlickerReverse();
     }
 
-
     if (hasRing && intake.hasReachedPose(2.3)) {
       intake.setRollerPower();
 
@@ -94,31 +99,22 @@ public class BreakBeamHandoff extends Command {
       if (timeElapsed2 > .25) {
         intake.setRollerOff();
       }
-                               if(launcher.getBreakBeam() && !launcherHasRing){
-                                  launcherHasRing = true;
-                                    if(!launcher.getBreakBeam()){
-                                      ended = true;
-                                    }
-                                  }
 
-      // if(launcher.getBreakBeam() && !launcherHasRing){
-      //   launcherHasRing = true;
-      //   startTime3 = Timer.getFPGATimestamp();
-      // }
+      if(!launcherHasRing && launcher.getBreakBeam()){
+        launcherHasRing = true;
+      }
 
-      // timeElapsed3 = Timer.getFPGATimestamp() - startTime3;
-
-      // if(!launcher.getBreakBeam() && launcherHasRing){
-      //   if(timeElapsed3 > .2){
-      //     ended = true;
-      //   }
-      // }
+      if(launcherHasRing && !launcher.getBreakBeam()){
+        ended = true;
+      }
+  
     }
   }
 
   @Override
   public void end(boolean interrupted) {
     launcher.setFlickOff();
+    intake.setRollerOff();
     launcher.setLauncherOff();
   }
 

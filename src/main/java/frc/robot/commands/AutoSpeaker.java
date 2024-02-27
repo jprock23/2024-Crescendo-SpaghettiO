@@ -14,8 +14,8 @@ public class AutoSpeaker extends Command {
 
   private double startTime;
   private double elapsedTime;
-  private double windup = 1.0;
-  private double duration = windup + .5;
+  private double windup = 0.25;
+  private double duration = windup + .25;
 
   public AutoSpeaker() {
     launcher = Launcher.getInstance();

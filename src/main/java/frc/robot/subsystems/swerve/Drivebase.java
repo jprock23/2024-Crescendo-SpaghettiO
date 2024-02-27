@@ -66,7 +66,7 @@ public class Drivebase extends SubsystemBase {
         });
 
     config = new HolonomicPathFollowerConfig(new PIDConstants(.8, 0, 0),
-        new PIDConstants(.35, 0, 0),
+        new PIDConstants(.12, 0, 0.0),
         5, Math.sqrt(Math.pow(DriveConstants.kTrackWidth / 2, 2) +
             Math.pow(DriveConstants.kWheelBase / 2, 2)),
         new ReplanningConfig());
@@ -83,7 +83,7 @@ public class Drivebase extends SubsystemBase {
   }
 
   public void periodic() {
-    SmartDashboard.putNumber("Gyro Angle:", gyro.getRotation2d().getDegrees());
+    SmartDashboard.putNumber("Gyro Angle:", -gyro.getRotation2d().getDegrees());
     SmartDashboard.putNumber("X-coordinate", getPose().getX());
     SmartDashboard.putNumber("Y-coordinate", getPose().getY());
 
@@ -98,7 +98,7 @@ public class Drivebase extends SubsystemBase {
 
   // Returns the currently-estimated pose of the robot
   public Pose2d getPose() {
-    return odometry.getPoseMeters();
+    return new Pose2d(-odometry.getPoseMeters().getX(), -odometry.getPoseMeters().getY(), new Rotation2d(-gyro.getAngle()));
   }
 
   // Resets the odometry to the specified pose

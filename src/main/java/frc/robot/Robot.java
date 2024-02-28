@@ -126,11 +126,9 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
 
-    drivebase.resetPose(new Pose2d(1.0, 2.0, new Rotation2d(0)));
-    drivebase.resetOdometry(new Pose2d(1.0, 2.0, new Rotation2d(0)));
+    drivebase.resetOdometry(new Pose2d(2.0, 1.0, new Rotation2d(0)));
 
     // drivebase.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile(m_chooser.getSelected().getName()));
-    // drivebase.resetPose(PathPlannerAuto.getStaringPoseFromAutoFile(m_chooser.getSelected().getName()));
 
     if (m_autoSelected != null) {
       m_autoSelected.schedule();
@@ -167,7 +165,6 @@ public class Robot extends TimedRobot {
     if (driver.getAButton()) {
       drivebase.lockWheels();
       drivebase.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile(m_chooser.getSelected().getName()));
-      drivebase.resetPose(PathPlannerAuto.getStaringPoseFromAutoFile(m_chooser.getSelected().getName()));
     } else {
       drivebase.drive(xSpeed, ySpeed, rot, fieldRelative);
     }

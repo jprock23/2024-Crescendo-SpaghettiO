@@ -72,7 +72,7 @@ public class Drivebase extends SubsystemBase {
 
     SmartDashboard.putData("FIELD", fieldmap);
 
-    AutoBuilder.configureHolonomic(this::getPose, this::resetPose, this::getSpeeds, this::setChassisSpeed, config,
+    AutoBuilder.configureHolonomic(this::getPose, this::resetOdometry, this::getSpeeds, this::setChassisSpeed, config,
         shouldFlipPath(), this);
 
   }

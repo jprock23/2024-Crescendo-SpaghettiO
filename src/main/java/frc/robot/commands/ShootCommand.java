@@ -3,10 +3,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.launcher.Launcher;
+import frc.robot.subsystems.led.LED;
 
 public class ShootCommand extends Command {
 
   private Launcher launcher;
+  private LED litty;
 
   private boolean ended;
 
@@ -16,6 +18,7 @@ public class ShootCommand extends Command {
 
   public ShootCommand() {
     launcher = Launcher.getInstance();
+    litty = LED.getInstance();
   }
 
   @Override
@@ -46,6 +49,7 @@ public class ShootCommand extends Command {
   public void end(boolean interrupted) {
     launcher.setFlickOff();
     launcher.setLauncherOff();
+    litty.setRed();
   }
 
   @Override

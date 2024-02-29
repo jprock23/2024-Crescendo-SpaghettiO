@@ -42,29 +42,27 @@ public class Drivebase extends SubsystemBase {
 
     // Swerve modules
 
-    frontLeft = new SwerveModule(Ports.frontLeftDrive, Ports.frontLeftSteer,
-        DriveConstants.kFrontLeftChassisAngularOffset);
-    backLeft = new SwerveModule(Ports.backLeftDrive, Ports.backLeftSteer, DriveConstants.kBackLeftChassisAngularOffset);
-
-    frontRight = new SwerveModule(Ports.frontRightDrive, Ports.frontRightSteer,
-        DriveConstants.kFrontRightChassisAngularOffset);
-    backRight = new SwerveModule(Ports.backRightDrive, Ports.backRightSteer,
-        DriveConstants.kBackRightChassisAngularOffset);
+    frontLeft = new SwerveModule(Ports.frontLeftDrive, Ports.frontLeftSteer,DriveConstants.kFrontLeftChassisAngularOffset, true);
+    backLeft = new SwerveModule(Ports.backLeftDrive, Ports.backLeftSteer, DriveConstants.kBackLeftChassisAngularOffset, false);
+    frontRight = new SwerveModule(Ports.frontRightDrive, Ports.frontRightSteer, DriveConstants.kFrontRightChassisAngularOffset, false);
+    backRight = new SwerveModule(Ports.backRightDrive, Ports.backRightSteer, DriveConstants.kBackRightChassisAngularOffset, true);
 
     gyro = new AHRS(SPI.Port.kMXP);
+    gyro.setAngleAdjustment(90);
 
     gyro.zeroYaw();
 
     odometry = new SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
-        Rotation2d.fromDegrees(-gyro.getAngle()), new SwerveModulePosition[] {
+        Rotation2d.fromDegrees(gyro.getAngle()), new SwerveModulePosition[] {
             frontLeft.getPosition(),
-            backLeft.getPosition(),
             frontRight.getPosition(),
-            backRight.getPosition()
+            backRight.getPosition(),
+            backLeft.getPosition(),
+
         });
 
-    config = new HolonomicPathFollowerConfig(new PIDConstants(.8, 0, 0),
+    config = new HolonomicPathFollowerConfig(new PIDConstants(1, 0, 0),
         new PIDConstants(0.0012, 0, 0.0),
         5, Math.sqrt(Math.pow(DriveConstants.kTrackWidth / 2, 2) +
             Math.pow(DriveConstants.kWheelBase / 2, 2)),
@@ -82,14 +80,15 @@ public class Drivebase extends SubsystemBase {
   }
 
   public void periodic() {
-    SmartDashboard.putNumber("Gyro Angle:", -gyro.getRotation2d().getDegrees() - 90);
-    SmartDashboard.putNumber("X-coordinate", getPose().getX());
-    SmartDashboard.putNumber("Y-coordinate", getPose().getY());
 
     // Update the odometry in the periodic block
-    odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()),
-        new SwerveModulePosition[] { frontLeft.getPosition(), backLeft.getPosition(), frontRight.getPosition(),
-            backRight.getPosition() });
+    odometry.update(Rotation2d.fromDegrees(gyro.getAngle()),
+        new SwerveModulePosition[] {
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            backRight.getPosition(),
+            backLeft.getPosition()
+        });
 
     fieldmap.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(),
         odometry.getPoseMeters().getRotation());
@@ -97,24 +96,29 @@ public class Drivebase extends SubsystemBase {
 
   // Returns the currently-estimated pose of the robot
   public Pose2d getPose() {
-    // return odometry.getPoseMeters();
-    return new Pose2d(odometry.getPoseMeters().getY(), odometry.getPoseMeters().getX(), odometry.getPoseMeters().getRotation());
+    return odometry.getPoseMeters();
+    // return new Pose2d(odometry.getPoseMeters().getY(),
+    // odometry.getPoseMeters().getX(), odometry.getPoseMeters().getRotation());
   }
 
   // Resets the odometry to the specified pose
   public void resetOdometry(Pose2d pose) {
     odometry.resetPosition(
-        Rotation2d.fromDegrees(-gyro.getAngle()),
-        new SwerveModulePosition[] { frontLeft.getPosition(), backLeft.getPosition(), frontRight.getPosition(),
-            backRight.getPosition() },
+        Rotation2d.fromDegrees(gyro.getAngle()),
+        new SwerveModulePosition[] {
+            frontLeft.getPosition(), frontRight.getPosition(), backLeft.getPosition(),
+            backRight.getPosition()
+        },
         pose);
   }
 
   public void resetOdometry() {
     odometry.resetPosition(
-        Rotation2d.fromDegrees(-gyro.getAngle()),
-        new SwerveModulePosition[] { frontLeft.getPosition(), backLeft.getPosition(), frontRight.getPosition(),
-            backRight.getPosition() },
+        Rotation2d.fromDegrees(gyro.getAngle()),
+        new SwerveModulePosition[] {
+            frontLeft.getPosition(), frontRight.getPosition(), backLeft.getPosition(),
+            backRight.getPosition()
+        },
         getPose());
   }
 
@@ -134,7 +138,7 @@ public class Drivebase extends SubsystemBase {
 
     var chassisspeeds = fieldRelative
         ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-            Rotation2d.fromDegrees(-gyro.getAngle()))
+            Rotation2d.fromDegrees(gyro.getAngle()))
         : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered);
 
     setChassisSpeed(chassisspeeds);
@@ -149,8 +153,8 @@ public class Drivebase extends SubsystemBase {
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
 
     frontLeft.setDesiredState(swerveModuleStates[0]);
-    backLeft.setDesiredState(swerveModuleStates[2]);
     frontRight.setDesiredState(swerveModuleStates[1]);
+    backLeft.setDesiredState(swerveModuleStates[2]);
     backRight.setDesiredState(swerveModuleStates[3]);
   }
 
@@ -186,8 +190,8 @@ public class Drivebase extends SubsystemBase {
 
   public void lockWheels() {
     frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-    backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
     frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+    backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
     backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
   }
 
@@ -196,8 +200,8 @@ public class Drivebase extends SubsystemBase {
     SwerveDriveKinematics.desaturateWheelSpeeds(
         desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
     frontLeft.setDesiredState(desiredStates[0]);
-    backLeft.setDesiredState(desiredStates[2]);
     frontRight.setDesiredState(desiredStates[1]);
+    backLeft.setDesiredState(desiredStates[2]);
     backRight.setDesiredState(desiredStates[3]);
   }
 
@@ -216,7 +220,7 @@ public class Drivebase extends SubsystemBase {
 
   // Returns the heading of the robot(=180 to 180)
   public double getHeading() {
-    return Rotation2d.fromDegrees(-gyro.getAngle()).getDegrees();
+    return Rotation2d.fromDegrees(gyro.getAngle()).getDegrees();
   }
 
   public BooleanSupplier shouldFlipPath() {
@@ -234,7 +238,7 @@ public class Drivebase extends SubsystemBase {
 
   // Returns the turn rate of the robot
   public double getTurnRate() {
-    return gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return -gyro.getRate();
   }
 
   public static Drivebase getInstance() {

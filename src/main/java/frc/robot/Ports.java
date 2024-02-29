@@ -35,4 +35,7 @@ public class Ports {
     //*DIO */
 
     public static final int breakBeam = 0;
+
+    //*BLINKIN */
+    public static final int blinkin = 9;
 }

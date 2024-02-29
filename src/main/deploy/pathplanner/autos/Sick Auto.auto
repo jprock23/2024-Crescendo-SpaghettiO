@@ -22,6 +22,18 @@
           "data": {
             "pathName": "Ring"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ding"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoSpeaker"
+          }
         }
       ]
     }

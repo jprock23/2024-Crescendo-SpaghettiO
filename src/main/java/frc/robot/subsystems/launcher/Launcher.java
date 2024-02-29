@@ -1,5 +1,6 @@
 package frc.robot.subsystems.launcher;
 
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -7,25 +8,25 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants.LauncherConstants;
+import frc.robot.subsystems.IO.DigitalInputs;
 import frc.robot.Ports;
 
 public class Launcher {
 
     public enum LauncherState {
         AMP(-65, 0.225),
-        START(-1.809524536132812, 0.0),
+        START(-4.809524536132812, 0.0),
         HOLD(-6.714231491088867, 0.0),
         TRAP(-70.04991149902344, 0.8),
         LONG(-15, 1),
         HANDOFF(8.92857551574707, 0.35),
-        SPEAKER(-67.0, 0.8);
+        SPEAKER(-55.0, 0.8);
 
         public double position;
         public double launchSpeed;
@@ -36,7 +37,7 @@ public class Launcher {
         }
     }
 
-    double anglePower = 0.25;
+    double anglePower = 0.2;
 
     private CANSparkMax shootMotor1;
     private CANSparkMax shootMotor2;
@@ -56,7 +57,7 @@ public class Launcher {
     private double maxAccel = 3000;
 
     private static RelativeEncoder encoder;
-    private DigitalInput breakBeam;
+    private DigitalInputs breakBeam;
 
     private boolean[] connections = new boolean[8];
 
@@ -119,7 +120,7 @@ public class Launcher {
 
         pivotMotor.burnFlash();
 
-        breakBeam = new DigitalInput(Ports.breakBeam);
+        breakBeam = DigitalInputs.getInstance();
 
     }
 
@@ -177,9 +178,8 @@ public class Launcher {
     }
 
     public boolean getBreakBeam() {
-        return !breakBeam.get();
+        return !breakBeam.getInputs()[Ports.breakBeam];
     }
-
 
     public LauncherState getLaunchState() {
         return launchState;

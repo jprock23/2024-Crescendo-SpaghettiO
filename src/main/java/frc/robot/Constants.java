@@ -43,31 +43,34 @@ public final class Constants {
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
 
-        new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-        new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
+
+        // new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
+        // new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+        // new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+        // new Translation2d(kWheelBase / 2, kTrackWidth / 2));
+
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-        new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
+        new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+        new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+        new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
     // Angular offsets of the modules relative to the chassis in radians
-    // public static final double kFrontLeftChassisAngularOffset = Math.PI / 2;
-    // public static final double kFrontRightChassisAngularOffset = Math.PI;
-    // public static final double kBackLeftChassisAngularOffset = 0;
-    // public static final double kBackRightChassisAngularOffset = -Math.PI / 2;
 
-    public static final double kFrontLeftChassisAngularOffset = -Math.PI;
-    public static final double kFrontRightChassisAngularOffset = -Math.PI/2;
-    public static final double kBackLeftChassisAngularOffset = Math.PI / 2;
-    public static final double kBackRightChassisAngularOffset = 0;
+
+    // public static final double kFrontLeftChassisAngularOffset = -Math.PI/2;
+    // public static final double kFrontRightChassisAngularOffset = 0;
+    // public static final double kBackLeftChassisAngularOffset = Math.PI;
+    // public static final double kBackRightChassisAngularOffset = Math.PI/2;
+
+    public static final double kFrontLeftChassisAngularOffset = -Math.PI/2;
+    public static final double kFrontRightChassisAngularOffset = 0;
+    public static final double kBackLeftChassisAngularOffset = Math.PI;
+    public static final double kBackRightChassisAngularOffset = Math.PI/2;
 
     public static final boolean kGyroReversed = false;
   }
 
   public static final class ModuleConstants {
-    // The MAXSwerve module can be configured with one of three pinion gears: 12T,
-    // 13T, or 14T.
-    // This changes the drive speed of the module (a pinion gear with more teeth
-    // will result in a
-    // robot that drives faster).
     public static final int kDrivingMotorPinionTeeth = 14;
 
     // Invert the turning encoder, since the output shaft rotates in the opposite
@@ -103,8 +106,7 @@ public final class Constants {
     public static final double kDrivingMinOutput = -1;
     public static final double kDrivingMaxOutput = 1;
 
-    public static final double kTurningP = 1;
-    // 8
+    public static final double kTurningP = 0.4;
     public static final double kTurningI = 0;
     public static final double kTurningD = 0;
     public static final double kTurningFF = 0;

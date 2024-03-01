@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.84,
+      "y": 6.52
+    },
+    "rotation": -120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Test1 Start"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Test1 Score"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoSpeaker"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Test",
+  "choreoAuto": false
+}

@@ -95,9 +95,9 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("Handoff", handoffCommand);
 
     m_chooser = AutoBuilder.buildAutoChooser();
-    m_chooser.addOption("P1 1 Piece", new PathPlannerAuto("P1 1 Piece"));
-    m_chooser.addOption("P2 1 Piece", new PathPlannerAuto("P2 1 Piece"));
-    m_chooser.addOption("P3 1 Piece", new PathPlannerAuto("P3 1 Piece"));
+    m_chooser.addOption("Test1", new PathPlannerAuto("Test1"));
+    m_chooser.addOption("Test2", new PathPlannerAuto("Test2"));
+    m_chooser.addOption("Test3", new PathPlannerAuto("Test3"));
     m_chooser.addOption("BeepBoop", new PathPlannerAuto("BeepBoop"));
 
     SmartDashboard.putData("Auto choices", m_chooser);

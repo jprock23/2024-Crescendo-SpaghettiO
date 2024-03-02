@@ -22,11 +22,10 @@ public class Launcher {
     public enum LauncherState {
         AMP(-65, 0.225),
         START(-4.809524536132812, 0.0),
-        HOLD(-6.714231491088867, 0.0),
         TRAP(-70.04991149902344, 0.8),
-        LONG(-15, 1),
+        LONG(-10, 1.0),
         HANDOFF(8.92857551574707, 0.35),
-        SPEAKER(-55.0, 0.8);
+        SPEAKER(-55.0, 1.0);
 
         public double position;
         public double launchSpeed;
@@ -162,11 +161,11 @@ public class Launcher {
     }
 
     public void setFlickerOn() {
-        flicker.set(.5);
+        flicker.set(0.8);
     }
 
     public void setFlickerReverse() {
-        flicker.set(-.5);
+        flicker.set(-0.8);
     }
 
     public void setFlickOff() {

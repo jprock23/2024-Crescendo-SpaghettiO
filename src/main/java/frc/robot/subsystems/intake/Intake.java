@@ -31,7 +31,7 @@ public class Intake {
     public IntakeState intakeState = IntakeState.STOP;
     public static Intake instance;
 
-    private double power = 0.7;
+    private double power = 0.9;
 
     private double flip = 0.25;
 

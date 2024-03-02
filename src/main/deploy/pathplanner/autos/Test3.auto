@@ -5,34 +5,16 @@
       "x": 0.83,
       "y": 4.59
     },
-    "rotation": 120.0
+    "rotation": -60.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "AutoSpeaker"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Test 3 Start"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Test2 Score"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AutoSpeaker"
           }
         }
       ]

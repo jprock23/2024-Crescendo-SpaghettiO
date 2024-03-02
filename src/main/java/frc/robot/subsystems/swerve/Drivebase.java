@@ -48,13 +48,14 @@ public class Drivebase extends SubsystemBase {
     backRight = new SwerveModule(Ports.backRightDrive, Ports.backRightSteer, DriveConstants.kBackRightChassisAngularOffset, true);
 
     gyro = new AHRS(SPI.Port.kMXP);
-    gyro.setAngleAdjustment(90);
 
+    gyro.setAngleAdjustment(90);
     gyro.zeroYaw();
+
 
     odometry = new SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
-        Rotation2d.fromDegrees(gyro.getAngle()), new SwerveModulePosition[] {
+        Rotation2d.fromDegrees(-gyro.getAngle()), new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
             backRight.getPosition(),
@@ -62,8 +63,8 @@ public class Drivebase extends SubsystemBase {
 
         });
 
-    config = new HolonomicPathFollowerConfig(new PIDConstants(1, 0, 0),
-        new PIDConstants(0.0012, 0, 0.0),
+    config = new HolonomicPathFollowerConfig(new PIDConstants(1.2, 0, 0),
+        new PIDConstants(0.00012, 0, 0.0),
         5, Math.sqrt(Math.pow(DriveConstants.kTrackWidth / 2, 2) +
             Math.pow(DriveConstants.kWheelBase / 2, 2)),
         new ReplanningConfig());
@@ -97,8 +98,8 @@ public class Drivebase extends SubsystemBase {
   // Returns the currently-estimated pose of the robot
   public Pose2d getPose() {
     return odometry.getPoseMeters();
-    // return new Pose2d(odometry.getPoseMeters().getY(),
-    // odometry.getPoseMeters().getX(), odometry.getPoseMeters().getRotation());
+    // return new Pose2d(odometry.getPoseMeters().getX(),
+    // odometry.getPoseMeters().getY(), new Rotation2d(gyro.getAngle()));
   }
 
   // Resets the odometry to the specified pose
@@ -136,10 +137,8 @@ public class Drivebase extends SubsystemBase {
     double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
     double rotDelivered = currentRotation * DriveConstants.kMaxAngularSpeed;
 
-    var chassisspeeds = fieldRelative
-        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-            Rotation2d.fromDegrees(gyro.getAngle()))
-        : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered);
+    var chassisspeeds = ChassisSpeeds.fromRobotRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
+            Rotation2d.fromDegrees(gyro.getAngle()));
 
     setChassisSpeed(chassisspeeds);
   }

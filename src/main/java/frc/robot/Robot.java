@@ -83,7 +83,7 @@ public class Robot extends TimedRobot {
 
     driver = new XboxController(0);
     operator = new XboxController(1);
-    drivebase.resetOdometry(new Pose2d(1.3, 5.56, new Rotation2d(0)));
+    drivebase.resetOdometry(new Pose2d(0.83, 4.59, new Rotation2d(-60)));
 
     handoffCommand = new BreakBeamHandoff();
     shootCommand = new ShootCommand();
@@ -152,8 +152,6 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
 
-    drivebase.resetOdometry(new Pose2d(2.0, 1.0, new Rotation2d(0)));
-
     // drivebase.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile(m_chooser.getSelected().getName()));
 
     if (m_autoSelected != null) {
@@ -184,17 +182,15 @@ public class Robot extends TimedRobot {
     double ySpeed;
     double xSpeed;
     double rot;
-    if (driver.getRightBumper()) {
-      ySpeed = autoAlign.getXSpeed();
-      // xSpeed = autoAlign.getYSpeed();
-      // rot = autoAlign.getRotSpeed();
-      xSpeed = 0;
-      rot = 0;
-    } else {
-      ySpeed = driver.getLeftX();
-      xSpeed = -driver.getLeftY();
+    // if (driver.getRightBumper()) {
+    //   ySpeed = autoAlign.getXSpeed();
+    //   // xSpeed = autoAlign.getYSpeed();
+    //   // rot = autoAlign.getRotSpeed();
+    //   xSpeed = 0;
+    //   rot = 0;
+      ySpeed = -driver.getLeftX();
+      xSpeed = driver.getLeftY();
       rot = -driver.getRightX();
-    }
 
     if (operator.getBButton()) {
       litty.setBlue();
@@ -204,14 +200,11 @@ public class Robot extends TimedRobot {
       litty.setRed();
     }
 
-    if (driver.getYButton()) {
-      fieldRelative = !fieldRelative;
-    }
     if (driver.getAButton()) {
       drivebase.lockWheels();
       drivebase.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile(m_chooser.getSelected().getName()));
     } else {
-      drivebase.drive(xSpeed, ySpeed, rot, fieldRelative);
+      drivebase.drive(xSpeed, ySpeed, rot, true);
     }
 
     /* INTAKE CONTROLS */
@@ -219,6 +212,22 @@ public class Robot extends TimedRobot {
     if (operator.getRightBumper()) {
       handoffCommand.schedule();
     }
+
+    // if(operator.getRightBumper()){
+    //   intake.setIntakeState(IntakeState.HANDOFF);
+    //   launcher.setLauncherState(LauncherState.HANDOFF);
+    //   launcher.updatePose();
+    // }
+
+    // if(operator.getBButton()){
+    //   intake.setIntakeState(IntakeState.GROUND);
+    // }
+
+    // if(operator.getAButton()){
+    //   intake.setRollerPower();
+    // } else{
+    //   intake.setRollerOff();
+    // }
 
     if (operator.getPOV() == 0) {
       launcher.setLauncherState(LauncherState.SPEAKER);
@@ -230,7 +239,7 @@ public class Robot extends TimedRobot {
       launcher.setLauncherState(LauncherState.TRAP);
     }
     if (operator.getPOV() == 270) {
-      launcher.setLauncherState(LauncherState.HOLD);
+      launcher.setLauncherState(LauncherState.LONG);
     }
 
     if (operator.getLeftBumper()) {
@@ -276,6 +285,11 @@ public class Robot extends TimedRobot {
     // } else {
     // launcher.setPivotOff();
     // }
+
+    if(operator.getAButton()){
+      launcher.setReverseLauncherOn();
+      launcher.setFlickerReverse();
+    }
 
     if (operator.getRightTriggerAxis() > 0) {
       shootCommand.initialize();

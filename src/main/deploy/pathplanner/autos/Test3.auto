@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.83,
-      "y": 4.59
+      "x": 0.82,
+      "y": 4.51
     },
     "rotation": -60.0
   },
@@ -15,6 +15,12 @@
           "type": "path",
           "data": {
             "pathName": "Test 3 Start"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Test3 Score"
           }
         }
       ]

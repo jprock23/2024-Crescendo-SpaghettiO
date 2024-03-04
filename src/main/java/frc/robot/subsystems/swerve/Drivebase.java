@@ -55,7 +55,7 @@ public class Drivebase extends SubsystemBase {
 
     odometry = new SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
-        Rotation2d.fromDegrees(-gyro.getAngle()), new SwerveModulePosition[] {
+        Rotation2d.fromDegrees(gyro.getAngle()), new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
             backRight.getPosition(),
@@ -63,8 +63,9 @@ public class Drivebase extends SubsystemBase {
 
         });
 
-    config = new HolonomicPathFollowerConfig(new PIDConstants(1.2, 0, 0),
-        new PIDConstants(0.00012, 0, 0.0),
+    config = new HolonomicPathFollowerConfig(new PIDConstants(1.4, 0, 0),
+        new PIDConstants(0.048, 0, 0.0005),
+        //.00012
         5, Math.sqrt(Math.pow(DriveConstants.kTrackWidth / 2, 2) +
             Math.pow(DriveConstants.kWheelBase / 2, 2)),
         new ReplanningConfig());
@@ -237,7 +238,7 @@ public class Drivebase extends SubsystemBase {
 
   // Returns the turn rate of the robot
   public double getTurnRate() {
-    return -gyro.getRate();
+    return gyro.getRate();
   }
 
   public static Drivebase getInstance() {

@@ -83,7 +83,7 @@ public class Robot extends TimedRobot {
 
     driver = new XboxController(0);
     operator = new XboxController(1);
-    drivebase.resetOdometry(new Pose2d(0.83, 4.59, new Rotation2d(-60)));
+    drivebase.resetOdometry(new Pose2d(0.82, 4.51, new Rotation2d(0)));
 
     handoffCommand = new BreakBeamHandoff();
     shootCommand = new ShootCommand();
@@ -135,7 +135,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
     SmartDashboard.putNumber("Launcher Position", launcher.getPosition());
 
-    // SmartDashboard.putString("Intake State", intake.getIntakeState());
+    SmartDashboard.putString("Intake State", intake.getIntakeState());
     SmartDashboard.putBoolean("Breakbeam", launcher.getBreakBeam());
 
     // SmartDashboard.putString("Launcher State",
@@ -174,7 +174,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    intake.updatePose();
+    // intake.updatePose();
+
+    if(operator.getYButton()){
+      intake.setFlipperPower();
+    } else if (operator.getBButton()){
+      intake.setReverseFlipperPower();
+    } else {
+      intake.setFlipperOff();
+    }
 
     boolean fieldRelative = true;
 

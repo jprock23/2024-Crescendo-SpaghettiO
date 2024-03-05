@@ -55,7 +55,7 @@ public class Drivebase extends SubsystemBase {
 
     odometry = new SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
-        Rotation2d.fromDegrees(gyro.getAngle()), new SwerveModulePosition[] {
+        Rotation2d.fromDegrees(-gyro.getAngle()), new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
             backRight.getPosition(),
@@ -63,7 +63,7 @@ public class Drivebase extends SubsystemBase {
 
         });
 
-    config = new HolonomicPathFollowerConfig(new PIDConstants(1.4, 0, 0),
+    config = new HolonomicPathFollowerConfig(new PIDConstants(1.2, 0, 0),
         new PIDConstants(0.048, 0, 0.0005),
         //.00012
         5, Math.sqrt(Math.pow(DriveConstants.kTrackWidth / 2, 2) +
@@ -84,7 +84,7 @@ public class Drivebase extends SubsystemBase {
   public void periodic() {
 
     // Update the odometry in the periodic block
-    odometry.update(Rotation2d.fromDegrees(gyro.getAngle()),
+    odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()),
         new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
@@ -104,7 +104,7 @@ public class Drivebase extends SubsystemBase {
   // Resets the odometry to the specified pose
   public void resetOdometry(Pose2d pose) {
     odometry.resetPosition(
-        Rotation2d.fromDegrees(gyro.getAngle()),
+        Rotation2d.fromDegrees(-gyro.getAngle()),
         new SwerveModulePosition[] {
             frontLeft.getPosition(), frontRight.getPosition(), backLeft.getPosition(),
             backRight.getPosition()
@@ -114,7 +114,7 @@ public class Drivebase extends SubsystemBase {
 
   public void resetOdometry() {
     odometry.resetPosition(
-        Rotation2d.fromDegrees(gyro.getAngle()),
+        Rotation2d.fromDegrees(-gyro.getAngle()),
         new SwerveModulePosition[] {
             frontLeft.getPosition(), frontRight.getPosition(), backLeft.getPosition(),
             backRight.getPosition()
@@ -138,6 +138,7 @@ public class Drivebase extends SubsystemBase {
 
     var chassisspeeds = ChassisSpeeds.fromRobotRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
             Rotation2d.fromDegrees(gyro.getAngle()));
+            new ChassisSpeeds();
 
     setChassisSpeed(chassisspeeds);
   }
@@ -218,7 +219,7 @@ public class Drivebase extends SubsystemBase {
 
   // Returns the heading of the robot(=180 to 180)
   public double getHeading() {
-    return Rotation2d.fromDegrees(gyro.getAngle()).getDegrees();
+    return Rotation2d.fromDegrees(-gyro.getAngle()).getDegrees();
   }
 
   public BooleanSupplier shouldFlipPath() {

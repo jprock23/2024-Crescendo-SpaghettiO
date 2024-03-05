@@ -20,13 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Test2 CENTER"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Test2 Score"
+            "pathName": "Test2 Start"
           }
         },
         {

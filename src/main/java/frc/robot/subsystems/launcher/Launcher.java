@@ -24,7 +24,7 @@ public class Launcher {
         START(-4.809524536132812, 0.0),
         TRAP(-70.04991149902344, 0.8),
         LONG(-10, 1.0),
-        HANDOFF(8.92857551574707, 0.35),
+        HANDOFF(8.6,0.5),
         SPEAKER(-55.0, 1.0);
 
         public double position;
@@ -146,8 +146,13 @@ public class Launcher {
     }
 
     public void setLauncherOn() {
+        if(launchState == LauncherState.AMP){
+        shootMotor1.set(0);
+        shootMotor2.set(launchState.launchSpeed);
+        } else {
         shootMotor1.set(launchState.launchSpeed);
         shootMotor2.set(launchState.launchSpeed);
+        }
     }
 
     public void setReverseLauncherOn() {

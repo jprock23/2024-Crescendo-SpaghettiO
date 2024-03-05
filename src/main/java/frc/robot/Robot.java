@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -83,7 +84,7 @@ public class Robot extends TimedRobot {
 
     driver = new XboxController(0);
     operator = new XboxController(1);
-    drivebase.resetOdometry(new Pose2d(0.75, 6.6, new Rotation2d(0)));
+    drivebase.resetOdometry(new Pose2d(0.38, 6.83, new Rotation2d(0)));
 
     handoffCommand = new BreakBeamHandoff();
     shootCommand = new ShootCommand();
@@ -124,9 +125,11 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("RIght Stick X", driver.getRightX());;
 
-    SmartDashboard.putNumber("Gyro Angle:", drivebase.getHeading());
+    SmartDashboard.putNumber("Gyro Angle:", drivebase.getHeading() + 90);
     SmartDashboard.putNumber("X-coordinate", drivebase.getPose().getX());
     SmartDashboard.putNumber("Y-coordinate", drivebase.getPose().getY());
+
+    SmartDashboard.putString("Alliance", DriverStation.getAlliance().toString());
 
     // SmartDashboard.putNumber("Flipper Current", intake.getFlipperCurrent());
     // SmartDashboard.putNumber("Pivot Current", launcher.getPivotCurrent());
@@ -162,7 +165,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     intake.updatePose();
-    litty.setDisco();
   }
 
   @Override
@@ -176,18 +178,11 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     intake.updatePose();
 
-    boolean fieldRelative = true;
-
     /* DRIVE CONTROLS */
     double ySpeed;
     double xSpeed;
     double rot;
-    // if (driver.getRightBumper()) {
-    //   ySpeed = autoAlign.getXSpeed();
-    //   // xSpeed = autoAlign.getYSpeed();
-    //   // rot = autoAlign.getRotSpeed();
-    //   xSpeed = 0;
-    //   rot = 0;
+
       ySpeed = -driver.getLeftX();
       xSpeed = driver.getLeftY();
       rot = -driver.getRightX();

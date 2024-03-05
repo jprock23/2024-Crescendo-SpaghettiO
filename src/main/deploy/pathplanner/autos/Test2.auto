@@ -12,15 +12,27 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "AutoSpeaker"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Test2 Start"
+            "pathName": "Test2 CENTER"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Test2 Score"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoSpeaker"
           }
         }
       ]

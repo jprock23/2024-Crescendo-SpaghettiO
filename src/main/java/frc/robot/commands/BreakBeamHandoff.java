@@ -83,6 +83,7 @@ public class BreakBeamHandoff extends Command {
 
     if (hasRing && intake.hasReachedPose(3.0)) {
       intake.setRollerPower();
+      System.out.print("anshanshasnh");
 
       if (!beganHandoff) {
         startTime2 = Timer.getFPGATimestamp();

@@ -43,7 +43,6 @@ public class AutoSpeaker extends Command {
         startTime = Timer.getFPGATimestamp();
       }
       elapsedTime = Timer.getFPGATimestamp() - startTime;
-      System.out.println("anshanshanshanshansh");
 
       if (elapsedTime > windup) {
         launcher.setFlickerOn();

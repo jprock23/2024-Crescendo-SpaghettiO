@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 0.84,
-      "y": 6.52
+      "y": 6.63
     },
-    "rotation": -120.0
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Test1 Score"
+            "pathName": "Test1 Score 1st"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Test2 Start"
           }
         }
       ]

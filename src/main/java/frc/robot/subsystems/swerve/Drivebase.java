@@ -99,8 +99,6 @@ public class Drivebase extends SubsystemBase {
   // Returns the currently-estimated pose of the robot
   public Pose2d getPose() {
     return odometry.getPoseMeters();
-    // return new Pose2d(odometry.getPoseMeters().getX(),
-    // odometry.getPoseMeters().getY(), new Rotation2d(gyro.getAngle()));
   }
 
   // Resets the odometry to the specified pose

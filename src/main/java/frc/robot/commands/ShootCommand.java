@@ -2,12 +2,15 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.launcher.Launcher;
 import frc.robot.subsystems.led.LED;
 
 public class ShootCommand extends Command {
 
   private Launcher launcher;
+  private Intake intake;
   private LED litty;
 
   private boolean ended;
@@ -18,6 +21,7 @@ public class ShootCommand extends Command {
 
   public ShootCommand() {
     launcher = Launcher.getInstance();
+    intake = Intake.getInstance();
     litty = LED.getInstance();
   }
 
@@ -28,7 +32,7 @@ public class ShootCommand extends Command {
     launcher.updatePose();
     startTime = Timer.getFPGATimestamp();
     launcher.setLauncherOn();
-
+    intake.setIntakeState(IntakeState.STOP);
   }
 
   @Override

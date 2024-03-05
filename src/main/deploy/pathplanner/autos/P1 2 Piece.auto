@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.38,
+      "y": 6.83
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -20,19 +26,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "P1 Intake 2nd"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Handoff"
+            "pathName": "P1 Intake LeftFront"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "P1 Score 2nd"
+            "pathName": "P1 Score Second"
           }
         },
         {
@@ -44,6 +44,6 @@
       ]
     }
   },
-  "folder": "V2",
+  "folder": "Competition",
   "choreoAuto": false
 }

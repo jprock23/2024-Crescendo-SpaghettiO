@@ -3,34 +3,52 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.8263427261804908,
-        "y": 4.534892769206057
+        "x": 0.93,
+        "y": 4.48
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4682949266806873,
-        "y": 4.213916668956377
+        "x": 1.5966444112749465,
+        "y": 4.301996548022575
       },
       "isLocked": false,
-      "linkedName": "LeftSpeakerScore"
+      "linkedName": "P3 Score"
     },
     {
       "anchor": {
-        "x": 2.35,
+        "x": 2.42,
         "y": 4.12
       },
       "prevControl": {
-        "x": 1.4478070904944451,
-        "y": 4.200258111498882
+        "x": 1.6149356950826732,
+        "y": 4.32191945163352
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LeftRingFront"
+      "linkedName": "RightRingRight"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "AutoSpeaker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 1.5,
@@ -39,11 +57,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 0.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "V2",
+  "folder": "Competition",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

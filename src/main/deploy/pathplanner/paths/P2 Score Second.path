@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.761513061487663,
-        "y": 4.361188722377445
+        "x": 2.36,
+        "y": 5.56
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6495379144604458,
-        "y": 4.124382094918037
+        "x": 1.8725297778010668,
+        "y": 5.56
       },
       "isLocked": false,
-      "linkedName": "3 Score 1st Speaker"
+      "linkedName": "MiddleRingFront"
     },
     {
       "anchor": {
-        "x": 2.517828881811611,
-        "y": 4.09478126648561
+        "x": 1.3,
+        "y": 5.56
       },
       "prevControl": {
-        "x": 1.8962114847306633,
-        "y": 4.213184580215315
+        "x": 1.872572213479752,
+        "y": 5.56
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "3 Intake 2nd"
+      "linkedName": "P2 Score"
     }
   ],
   "rotationTargets": [],
@@ -33,20 +33,20 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxAcceleration": 1.5,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 270.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "V1",
+  "folder": "Competition",
   "previewStartingState": {
-    "rotation": 120.0,
+    "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

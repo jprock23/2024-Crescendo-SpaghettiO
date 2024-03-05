@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.35,
+        "x": 2.42,
         "y": 4.12
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1578170269062458,
-        "y": 3.9774847369058186
+        "x": 1.74962191264478,
+        "y": 4.233987806338913
       },
       "isLocked": false,
-      "linkedName": "LeftRingFront"
+      "linkedName": "RightRingRight"
     },
     {
       "anchor": {
-        "x": 0.8263427261804908,
-        "y": 4.534892769206057
+        "x": 0.93,
+        "y": 4.48
       },
       "prevControl": {
-        "x": 1.8439052567591543,
-        "y": 4.01586758582468
+        "x": 1.7326222891009921,
+        "y": 4.200183165198584
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LeftSpeakerScore"
+      "linkedName": "P3 Score"
     }
   ],
   "rotationTargets": [],
@@ -39,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 120.0,
+    "rotation": -70.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "V2",
+  "folder": "Competition",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

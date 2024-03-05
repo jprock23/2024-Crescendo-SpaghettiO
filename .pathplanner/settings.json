@@ -3,14 +3,12 @@
   "robotLength": 0.6223,
   "holonomicMode": true,
   "pathFolders": [
-    "V2",
-    "Test",
-    "V1"
+    "Competition",
+    "Test"
   ],
   "autoFolders": [
-    "V2",
-    "Test",
-    "V1"
+    "Competition",
+    "Test"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 1.5,

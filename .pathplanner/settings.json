@@ -1,6 +1,6 @@
 {
-  "robotWidth": 0.5461,
-  "robotLength": 0.6223,
+  "robotWidth": 0.64,
+  "robotLength": 0.71,
   "holonomicMode": true,
   "pathFolders": [
     "Competition",

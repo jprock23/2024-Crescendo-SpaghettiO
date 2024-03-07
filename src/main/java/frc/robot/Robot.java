@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoAmp;
 import frc.robot.commands.AutoSpeaker;
 import frc.robot.commands.BreakBeamHandoff;
+import frc.robot.commands.HandoffCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.IO.DigitalInputs;
 import frc.robot.subsystems.climber.Climber;
@@ -68,6 +69,9 @@ public class Robot extends TimedRobot {
   private ShootCommand shootCommand;
   private AutoSpeaker autoSpeaker;
   private AutoAmp autoAmp;
+  private HandoffCommand currentSpikeHandoff;
+
+  private boolean useCurrentSpike;
 
   private SendableChooser<Command> m_chooser;
 
@@ -91,6 +95,8 @@ public class Robot extends TimedRobot {
     autoSpeaker = new AutoSpeaker();
     autoAmp = new AutoAmp();
 
+    currentSpikeHandoff = new HandoffCommand();
+
     NamedCommands.registerCommand("AutoAmp", autoAmp);
     NamedCommands.registerCommand("AutoSpeaker", autoSpeaker);
     NamedCommands.registerCommand("Handoff", handoffCommand);
@@ -104,6 +110,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     litty.setBlue();
+    useCurrentSpike = false;
 
     // CameraServer.startAutomaticCapture(0);
   }
@@ -121,8 +128,6 @@ public class Robot extends TimedRobot {
     // intake.printConnections();
     // climber.printConnections();
 
-    boolean[] DIO = digitalInputs.getInputs();
-
     SmartDashboard.putNumber("Gyro Angle:", drivebase.getHeading() + 90);
     SmartDashboard.putNumber("X-coordinate", drivebase.getPose().getX());
     SmartDashboard.putNumber("Y-coordinate", drivebase.getPose().getY());
@@ -137,12 +142,12 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Launcher Position", launcher.getPosition());
 
     SmartDashboard.putString("Intake State", intake.getIntakeState().toString());
+    SmartDashboard.putString("Launcher State", launcher.getLaunchState().toString());
 
     SmartDashboard.putBoolean("Launcher Breakbeam", launcher.getBreakBeam());
     SmartDashboard.putBoolean("Intake Breakbeam", intake.getBreakBeam());
 
-    // SmartDashboard.putString("Launcher State",
-    // launcher.getLaunchState().toString());
+
     // SmartDashboard.putBoolean("Shoot Done", autoSpeaker.isFinished());
 
     // visTables.putInfoOnDashboard();
@@ -154,8 +159,6 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
     SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
-
-    digitalInputs.checkInput(0);
   }
 
   @Override
@@ -208,9 +211,13 @@ public class Robot extends TimedRobot {
 
     /* INTAKE CONTROLS */
 
-    if (operator.getRightBumper()) {
+    if (operator.getRightBumper() && !useCurrentSpike) {
       handoffCommand.schedule();
+    } else if(operator.getRightBumper()){
+      currentSpikeHandoff.schedule();
     }
+
+ 
 
     if (operator.getLeftBumper()) {
       intake.setIntakeState(IntakeState.STOP);

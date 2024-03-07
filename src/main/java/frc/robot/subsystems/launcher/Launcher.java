@@ -56,6 +56,7 @@ public class Launcher {
     private double maxAccel = 3000;
 
     private static RelativeEncoder encoder;
+
     private DigitalInputs breakBeam;
 
     private boolean[] connections = new boolean[8];

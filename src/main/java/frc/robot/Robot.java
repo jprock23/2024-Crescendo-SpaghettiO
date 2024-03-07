@@ -154,6 +154,8 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
     SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
+
+    digitalInputs.checkInput(0);
   }
 
   @Override

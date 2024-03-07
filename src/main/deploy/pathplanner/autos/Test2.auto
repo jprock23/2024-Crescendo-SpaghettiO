@@ -24,6 +24,12 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Test2 Score 2nd"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "AutoSpeaker"

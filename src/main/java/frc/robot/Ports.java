@@ -34,7 +34,8 @@ public class Ports {
 
     //*DIO */
 
-    public static final int breakBeam = 0;
+    public static final int launcherBreakBeam = 0;
+    public static final int intakeBreakBeam = 3;
 
     //*BLINKIN */
     public static final int blinkin = 9;

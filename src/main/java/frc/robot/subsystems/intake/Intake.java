@@ -10,13 +10,14 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Ports;
+import frc.robot.subsystems.IO.DigitalInputs;
 
 public class Intake {
 
     public enum IntakeState {
         STOP(0.0),
-        GROUND(-7.00039100646973),
-        HANDOFF(-1.5);
+        GROUND(-7.5),
+        HANDOFF(-2);
 
         public double position;
 
@@ -40,8 +41,10 @@ public class Intake {
 
     private RelativeEncoder encoder;
 
-    private boolean[] connections = new boolean[4];
+    private DigitalInputs breakBeam;
 
+    private boolean[] connections = new boolean[4];
+    
     private double veloSP = 0.0;
 
     public Intake() {
@@ -76,8 +79,9 @@ public class Intake {
         flipperController.setI(IntakeConstants.flipperICoefficient);
         flipperController.setD(IntakeConstants.flipperDCoefficient);
 
-        flipper.burnFlash();
+        breakBeam = DigitalInputs.getInstance();
 
+        flipper.burnFlash();
     }
 
     public void updatePose() {
@@ -131,8 +135,8 @@ public class Intake {
         return veloSP;
     }
 
-    public String getIntakeState() {
-        return intakeState.toString();
+    public IntakeState getIntakeState() {
+        return intakeState;
     }
 
     public boolean hasReachedPose(double tolerance) {
@@ -141,6 +145,10 @@ public class Intake {
 
     public void setIntakeState(IntakeState state) {
         intakeState = state;
+    }
+
+    public boolean getBreakBeam(){
+        return !breakBeam.getInputs()[Ports.intakeBreakBeam];
     }
 
     public boolean[] intakeConnections() {

@@ -25,7 +25,7 @@ public class Launcher {
         TRAP(-70.04991149902344, 0.8),
         LONG(-12, 1.0),
         HANDOFF(8.6,0.5),
-        SPEAKER(-55.0, 1.0);
+        SPEAKER(-53.0, 1.0);
 
         public double position;
         public double launchSpeed;
@@ -182,7 +182,7 @@ public class Launcher {
     }
 
     public boolean getBreakBeam() {
-        return !breakBeam.getInputs()[Ports.breakBeam];
+        return !breakBeam.getInputs()[Ports.launcherBreakBeam];
     }
 
     public LauncherState getLaunchState() {

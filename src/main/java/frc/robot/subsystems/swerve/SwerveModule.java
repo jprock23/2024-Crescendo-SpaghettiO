@@ -127,6 +127,10 @@ public class SwerveModule {
                                 new Rotation2d(turningEncoder.getPosition() - chassisAngularOffset));
         }
 
+        public double getModuleAngle(){
+                return (new Rotation2d(turningEncoder.getPosition() - chassisAngularOffset)).getDegrees();
+        }
+
         /**
          * Returns the current position of the module.
          *

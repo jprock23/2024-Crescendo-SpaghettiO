@@ -194,6 +194,20 @@ public class Drivebase extends SubsystemBase {
     backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
   }
 
+    public void wheelsTo90() {
+    frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-90)));
+    frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(90)));
+    backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(90)));
+    backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-90)));
+  }
+
+  public void wheelsTo0() {
+    frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+  }
+
   // sets state for all modules
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
@@ -238,6 +252,15 @@ public class Drivebase extends SubsystemBase {
   // Returns the turn rate of the robot
   public double getTurnRate() {
     return gyro.getRate();
+  }
+
+  public double[] getModuleRotations(){
+    return new double[]{
+      frontLeft.getModuleAngle(),
+      frontRight.getModuleAngle(),
+      backLeft.getModuleAngle(),
+      backRight.getModuleAngle()
+    };
   }
 
   public static Drivebase getInstance() {

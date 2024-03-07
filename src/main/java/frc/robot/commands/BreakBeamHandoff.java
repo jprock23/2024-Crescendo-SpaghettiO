@@ -33,6 +33,8 @@ public class BreakBeamHandoff extends Command {
   private boolean launcherHasRing;
   private boolean ended;
 
+  private boolean intakeHasRing;
+
   public BreakBeamHandoff() {
     launcher = Launcher.getInstance();
     intake = Intake.getInstance();
@@ -55,6 +57,8 @@ public class BreakBeamHandoff extends Command {
     launcherHasRing = false;
     ended = false;
 
+    intakeHasRing = false;
+
     litty.setRed();
   }
 
@@ -62,49 +66,72 @@ public class BreakBeamHandoff extends Command {
   public void execute() {
     intake.setRollerPower();
 
-    if (intake.getRollerCurrent() > threshold) {
-      if (!beganIntaking) {
-        startTime = Timer.getFPGATimestamp();
-        beganIntaking = true;
-      }
-      timeElapsed = Timer.getFPGATimestamp() - startTime;
-
-      if (timeElapsed > duration) {
-        intake.setRollerOff();
-        hasRing = true;
-      }
-    }
-
-    if (hasRing) {
+    if (intake.getBreakBeam() && !intakeHasRing) {
       intake.setIntakeState(IntakeState.HANDOFF);
+      intake.setRollerOff();
       launcher.setReverseLauncherOn();
       launcher.setFlickerReverse();
     }
 
-    if (hasRing && intake.hasReachedPose(3.0)) {
+    if (intake.getIntakeState() == IntakeState.HANDOFF && intake.hasReachedPose(3.0)) {
       intake.setRollerPower();
-      System.out.print("anshanshasnh");
 
-      if (!beganHandoff) {
-        startTime2 = Timer.getFPGATimestamp();
-        beganHandoff = true;
-      }
-
-      timeElapsed2 = Timer.getFPGATimestamp() - startTime2;
-
-      if (timeElapsed2 > .25) {
+      if (!intake.getBreakBeam() && intakeHasRing) {
         intake.setRollerOff();
       }
 
-      if(!launcherHasRing && launcher.getBreakBeam()){
+      if (!launcherHasRing && launcher.getBreakBeam()) {
         launcherHasRing = true;
       }
 
-      if(launcherHasRing && !launcher.getBreakBeam()){
+      if (launcherHasRing && !launcher.getBreakBeam()) {
         ended = true;
       }
-  
     }
+////////////////////////////////////////////
+    // if (intake.getRollerCurrent() > threshold) {
+    // if (!beganIntaking) {
+    // startTime = Timer.getFPGATimestamp();
+    // beganIntaking = true;
+    // }
+    // timeElapsed = Timer.getFPGATimestamp() - startTime;
+
+    // if (timeElapsed > duration) {
+    // intake.setRollerOff();
+    // hasRing = true;
+    // }
+    // }
+
+    // if (hasRing) {
+    // intake.setIntakeState(IntakeState.HANDOFF);
+    // launcher.setReverseLauncherOn();
+    // launcher.setFlickerReverse();
+    // }
+
+    // if (hasRing && intake.hasReachedPose(3.0)) {
+    // intake.setRollerPower();
+    // System.out.print("anshanshasnh");
+
+    // if (!beganHandoff) {
+    // startTime2 = Timer.getFPGATimestamp();
+    // beganHandoff = true;
+    // }
+
+    // timeElapsed2 = Timer.getFPGATimestamp() - startTime2;
+
+    // if (timeElapsed2 > .25) {
+    // intake.setRollerOff();
+    // }
+
+    // if(!launcherHasRing && launcher.getBreakBeam()){
+    // launcherHasRing = true;
+    // }
+
+    // if(launcherHasRing && !launcher.getBreakBeam()){
+    // ended = true;
+    // }
+
+    // }
   }
 
   @Override

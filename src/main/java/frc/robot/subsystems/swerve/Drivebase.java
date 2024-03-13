@@ -254,6 +254,11 @@ public class Drivebase extends SubsystemBase {
     return gyro.getRate();
   }
 
+  public double inputDeadband(double input){
+
+    return Math.abs(input) > .05 ?  input : 0;
+}
+
   public double[] getModuleRotations(){
     return new double[]{
       frontLeft.getModuleAngle(),

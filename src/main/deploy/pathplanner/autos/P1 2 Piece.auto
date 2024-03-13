@@ -26,12 +26,6 @@
         {
           "type": "path",
           "data": {
-            "pathName": "P1 Intake LeftFront"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "P1 Score Second"
           }
         },

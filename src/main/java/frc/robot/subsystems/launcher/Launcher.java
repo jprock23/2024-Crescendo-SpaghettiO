@@ -20,15 +20,20 @@ import frc.robot.Ports;
 public class Launcher {
 
     public enum LauncherState {
-        AMP(-65, 0.225),
+        AMP(-65, 0.5),
         START(-4.809524536132812, 0.0),
         TRAP(-70.04991149902344, 0.8),
-        LONG(-12, 1.0),
+        LONG(-11.5, 1.0),
         HANDOFF(8.6,0.5),
-        SPEAKER(-53.0, 1.0);
+        HOVER(-3.0, 0.0),
+        SPEAKER(-55.0, 1.0);
 
         public double position;
         public double launchSpeed;
+
+        // public void increasePose(){
+        //     this.position += .05;
+        // }
 
         private LauncherState(double position, double launchSpeed) {
             this.position = position;
@@ -149,7 +154,7 @@ public class Launcher {
     public void setLauncherOn() {
         if(launchState == LauncherState.AMP){
         shootMotor1.set(launchState.launchSpeed);
-        shootMotor2.set(0);
+        shootMotor2.set(launchState.launchSpeed/2);
         } else {
         shootMotor1.set(launchState.launchSpeed);
         shootMotor2.set(launchState.launchSpeed);
@@ -157,8 +162,14 @@ public class Launcher {
     }
 
     public void setReverseLauncherOn() {
+
+        if(launchState == LauncherState.AMP){
+        shootMotor1.set(-launchState.launchSpeed);
+        shootMotor2.set(launchState.launchSpeed * 0.36);
+        } else {
         shootMotor1.set(-launchState.launchSpeed);
         shootMotor2.set(-launchState.launchSpeed);
+        }
     }
 
     public void setLauncherOff() {

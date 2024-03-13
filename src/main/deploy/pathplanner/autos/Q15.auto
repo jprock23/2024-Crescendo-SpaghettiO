@@ -20,24 +20,42 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Test2 Start"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ReverseLauncher"
+            "pathName": "P2 Intake Second"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Test2 Score 2nd"
+            "pathName": "P2 Score Second"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Q9 3rd Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Q9 3rd Score"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoSpeaker"
           }
         }
       ]
     }
   },
-  "folder": "Test",
+  "folder": "Belton",
   "choreoAuto": false
 }

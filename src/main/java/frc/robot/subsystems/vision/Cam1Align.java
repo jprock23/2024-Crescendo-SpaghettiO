@@ -49,7 +49,7 @@ public class Cam1Align {
     
     
 
-    public void getBestTagAbsPos() {
+    public double[] getBestTagAbsPos() {
         int id = (int)vListener.getBestID();
         //return format: [x, y, z, rot (degrees)]
         // ID X     Y    Z     Rotation
@@ -121,6 +121,8 @@ public class Cam1Align {
             default:
                 bestTagAbsPos = null;
         }
+
+        return bestTagAbsPos;
     }
 
     public double getYSpeed(PIDController controller){

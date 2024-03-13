@@ -26,12 +26,6 @@
         {
           "type": "path",
           "data": {
-            "pathName": "P3 Intake Second"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "P3 Score Second"
           }
         },

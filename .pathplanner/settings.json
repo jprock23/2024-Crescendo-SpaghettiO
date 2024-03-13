@@ -4,10 +4,12 @@
   "holonomicMode": true,
   "pathFolders": [
     "Competition",
+    "Belton",
     "Test"
   ],
   "autoFolders": [
     "Competition",
+    "Belton",
     "Test"
   ],
   "defaultMaxVel": 3.0,

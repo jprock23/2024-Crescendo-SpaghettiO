@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.45,
-        "y": 5.56
+        "x": 0.93,
+        "y": 4.48
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4684941677575676,
-        "y": 6.7095211113499165
+        "x": 1.4194171612308972,
+        "y": 1.6980712991383184
+      },
+      "isLocked": false,
+      "linkedName": "P3 Score"
+    },
+    {
+      "anchor": {
+        "x": 1.4662605074140238,
+        "y": 1.6863604625925368
+      },
+      "prevControl": {
+        "x": 1.435367188125602,
+        "y": 1.6844928305548472
+      },
+      "nextControl": {
+        "x": 1.4971538267024456,
+        "y": 1.6882280946302264
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.498094996189994,
-        "y": 6.739121939782341
+        "x": 4.61647553822925,
+        "y": 0.7143610292926715
       },
       "prevControl": {
-        "x": 1.4620660010550806,
-        "y": 5.564955745296107
+        "x": 1.44283883432246,
+        "y": 1.6863604625925368
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,25 +46,7 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Handoff"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 1.5,
@@ -57,11 +55,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 36.60707481260747,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Test",
+  "folder": "Belton",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

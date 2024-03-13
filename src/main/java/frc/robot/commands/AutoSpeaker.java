@@ -14,8 +14,8 @@ public class AutoSpeaker extends Command {
 
   private double startTime;
   private double elapsedTime;
-  private double windup = 0.25;
-  private double duration = windup + .25;
+  private double windup = 0.5;
+  private double duration = windup + .4;
 
   public AutoSpeaker() {
     launcher = Launcher.getInstance();
@@ -28,7 +28,7 @@ public class AutoSpeaker extends Command {
     launcher.setLauncherState(LauncherState.SPEAKER);
     startTime = -1;
     elapsedTime = 0;
-    launcher.setLauncherOn();
+    // launcher.setLauncherOn();
   }
 
   @Override
@@ -39,6 +39,8 @@ public class AutoSpeaker extends Command {
     SmartDashboard.putNumber("Elapsed Time", elapsedTime);
 
     if(launcher.hasReachedPose(2.0)){
+    launcher.setLauncherOn();
+
       if (startTime == -1) {
         startTime = Timer.getFPGATimestamp();
       }
@@ -58,6 +60,8 @@ public class AutoSpeaker extends Command {
   public void end(boolean interrupted) {
     launcher.setFlickOff();
     launcher.setLauncherOff();
+    launcher.setLauncherState(LauncherState.HOVER);
+    launcher.updatePose();  
   }
 
   @Override

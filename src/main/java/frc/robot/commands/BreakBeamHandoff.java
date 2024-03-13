@@ -18,18 +18,6 @@ public class BreakBeamHandoff extends Command {
   private Intake intake;
   private LED litty;
 
-  private double threshold = 18.0;
-
-  private double startTime = 0.0;
-  private double timeElapsed = 0.0;
-  private double duration = 1.15;
-
-  private double startTime2 = 0.0;
-  private double timeElapsed2 = 0.0;
-
-  private boolean beganIntaking;
-  private boolean hasRing;
-  private boolean beganHandoff;
   private boolean launcherHasRing;
   private boolean ended;
 
@@ -44,16 +32,11 @@ public class BreakBeamHandoff extends Command {
   @Override
   public void initialize() {
 
-    startTime = 0;
-    startTime2 = 0;
-
     intake.setIntakeState(IntakeState.GROUND);
     launcher.setLauncherState(LauncherState.HANDOFF);
     launcher.updatePose();
 
-    beganIntaking = false;
-    hasRing = false;
-    beganHandoff = false;
+
     launcherHasRing = false;
     ended = false;
 
@@ -139,6 +122,9 @@ public class BreakBeamHandoff extends Command {
     launcher.setFlickOff();
     intake.setRollerOff();
     launcher.setLauncherOff();
+    launcher.setLauncherState(LauncherState.HOVER);
+    intake.setIntakeState(IntakeState.STOP);
+    launcher.updatePose();
     litty.setGreen();
   }
 

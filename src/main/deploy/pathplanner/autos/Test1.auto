@@ -30,15 +30,15 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Test1 2nd Score"
+            "name": "ReverseLauncher"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "AutoSpeaker"
+            "pathName": "Test1 2nd Score"
           }
         }
       ]

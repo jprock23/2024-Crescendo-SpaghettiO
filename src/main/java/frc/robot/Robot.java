@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoAmp;
+import frc.robot.commands.AutoReverseLauncher;
 import frc.robot.commands.AutoSpeaker;
 import frc.robot.commands.BreakBeamHandoff;
 import frc.robot.commands.HandoffCommand;
@@ -25,6 +26,7 @@ import frc.robot.subsystems.led.LED;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
 import frc.robot.subsystems.vision.AutoAlign;
+import frc.robot.subsystems.vision.Cam1Align;
 import frc.robot.subsystems.vision.VisionTablesListener;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -59,6 +61,7 @@ public class Robot extends TimedRobot {
   private AutoAlign autoAlign;
   private LED litty;
   private VisionTablesListener visTables;
+  private Cam1Align cam1;
 
   private static XboxController driver;
   private static XboxController operator;
@@ -70,6 +73,7 @@ public class Robot extends TimedRobot {
   private AutoSpeaker autoSpeaker;
   private AutoAmp autoAmp;
   private HandoffCommand currentSpikeHandoff;
+  private AutoReverseLauncher reverseLauncher;
 
   private boolean useCurrentSpike;
 
@@ -85,27 +89,31 @@ public class Robot extends TimedRobot {
     autoAlign = AutoAlign.getInstance();
     litty = LED.getInstance();
     visTables = VisionTablesListener.getInstance();
+    cam1 = Cam1Align.getInstance();
 
     driver = new XboxController(0);
     operator = new XboxController(1);
-    drivebase.resetOdometry(new Pose2d(1, 1, new Rotation2d(0)));
+    // drivebase.resetOdometry(new Pose2d(1, 1, new Rotation2d(0)));
 
     handoffCommand = new BreakBeamHandoff();
     shootCommand = new ShootCommand();
     autoSpeaker = new AutoSpeaker();
     autoAmp = new AutoAmp();
+    reverseLauncher = new AutoReverseLauncher();
 
     currentSpikeHandoff = new HandoffCommand();
 
     NamedCommands.registerCommand("AutoAmp", autoAmp);
     NamedCommands.registerCommand("AutoSpeaker", autoSpeaker);
     NamedCommands.registerCommand("Handoff", handoffCommand);
+    NamedCommands.registerCommand("ReverseLauncher", reverseLauncher);
 
     m_chooser = AutoBuilder.buildAutoChooser();
     m_chooser.addOption("Test1", new PathPlannerAuto("Test1"));
     m_chooser.addOption("Test2", new PathPlannerAuto("Test2"));
     m_chooser.addOption("Test3", new PathPlannerAuto("Test3"));
     m_chooser.addOption("BeepBoop", new PathPlannerAuto("BeepBoop"));
+    m_chooser.addOption("Playoffs Source Leave", new PathPlannerAuto("Playoffs Source Leave"));
 
     SmartDashboard.putData("Auto choices", m_chooser);
 
@@ -120,9 +128,9 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     drivebase.periodic();
 
-    launcher.launcherConnections();
-    intake.intakeConnections();
-    climber.climberConnections();
+    // launcher.launcherConnections();
+    // intake.intakeConnections();
+    // climber.climberConnections();
 
     // launcher.printConnections();
     // intake.printConnections();
@@ -134,9 +142,9 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putString("Alliance", DriverStation.getAlliance().toString());
 
-    // SmartDashboard.putNumber("Flipper Current", intake.getFlipperCurrent());
-    // SmartDashboard.putNumber("Pivot Current", launcher.getPivotCurrent());
-    // SmartDashboard.putNumber("Roller Current", intake.getRollerCurrent());
+    SmartDashboard.putNumber("Flipper Current", intake.getFlipperCurrent());
+    SmartDashboard.putNumber("Pivot Current", launcher.getPivotCurrent());
+    SmartDashboard.putNumber("Roller Current", intake.getRollerCurrent());
 
     SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
     SmartDashboard.putNumber("Launcher Position", launcher.getPosition());
@@ -147,15 +155,18 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Launcher Breakbeam", launcher.getBreakBeam());
     SmartDashboard.putBoolean("Intake Breakbeam", intake.getBreakBeam());
 
-
     // SmartDashboard.putBoolean("Shoot Done", autoSpeaker.isFinished());
 
     // visTables.putInfoOnDashboard();
 
-    SmartDashboard.putNumber("Frontleft Rotation", drivebase.getModuleRotations()[0]);
-    SmartDashboard.putNumber("Frontright Rotation", drivebase.getModuleRotations()[1]);
-    SmartDashboard.putNumber("Backleft Rotation", drivebase.getModuleRotations()[2]);
-    SmartDashboard.putNumber("Backright Rotation", drivebase.getModuleRotations()[3]);
+    // SmartDashboard.putNumber("Frontleft Rotation",
+    // drivebase.getModuleRotations()[0]);
+    // SmartDashboard.putNumber("Frontright Rotation",
+    // drivebase.getModuleRotations()[1]);
+    // SmartDashboard.putNumber("Backleft Rotation",
+    // drivebase.getModuleRotations()[2]);
+    // SmartDashboard.putNumber("Backright Rotation",
+    // drivebase.getModuleRotations()[3]);
 
     SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
     SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
@@ -165,7 +176,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
 
-    // drivebase.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile(m_chooser.getSelected().getName()));
+    drivebase.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile(m_chooser.getSelected().getName()));
 
     if (m_autoSelected != null) {
       m_autoSelected.schedule();
@@ -193,34 +204,53 @@ public class Robot extends TimedRobot {
     double xSpeed;
     double rot;
 
-    ySpeed = -driver.getLeftX();
-    xSpeed = driver.getLeftY();
-    rot = -driver.getRightX();
+    // ySpeed = -driver.getLeftX();
+    // xSpeed = driver.getLeftY();
+    // rot = -driver.getRightX();
+    ySpeed = drivebase.inputDeadband(-driver.getLeftX());
+    xSpeed = drivebase.inputDeadband(driver.getLeftY());
+    rot = drivebase.inputDeadband(-driver.getRightX());
 
     if (driver.getXButton()) {
       drivebase.lockWheels();
-    // } 
-    // else if (driver.getAButton()) {
-    //   drivebase.wheelsTo0();
-    // } else if (driver.getBButton()) {
-    //   drivebase.wheelsTo90();
-    // }
-    }else {
-    drivebase.drive(xSpeed, ySpeed, rot, true);
+    } else {
+      drivebase.drive(xSpeed, ySpeed, rot, true);
+    }
+
+    if (driver.getYButton()) {
+      launcher.setLauncherState(LauncherState.AMP);
+      launcher.setReverseLauncherOn();
+      launcher.setFlickerOn();
+    } else{
+      launcher.setFlickOff();
+      launcher.setLauncherOff();
     }
 
     /* INTAKE CONTROLS */
 
     if (operator.getRightBumper() && !useCurrentSpike) {
       handoffCommand.schedule();
-    } else if(operator.getRightBumper()){
+    } else if (operator.getRightBumper()) {
       currentSpikeHandoff.schedule();
     }
 
- 
+    if (operator.getYButton()) {
+      intake.setIntakeState(IntakeState.GROUND);
+      launcher.setLauncherState(LauncherState.LONG);
+      launcher.updatePose();
+    }
+
+    if (operator.getBButton()) {
+      intake.setReverseRollerPower();
+    }
 
     if (operator.getLeftBumper()) {
       intake.setIntakeState(IntakeState.STOP);
+      launcher.setLauncherState(LauncherState.HOVER);
+      launcher.updatePose();
+      launcher.setLauncherOff();
+      launcher.setFlickOff();
+
     }
 
     // *CLIMBER CONTROLS */

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.36,
-        "y": 5.56
+        "x": 2.53,
+        "y": 4.44
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.3345030423278064,
-        "y": 5.56
+        "x": 1.8863445419198543,
+        "y": 5.042007776323246
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "RightRingFront"
     },
     {
       "anchor": {
-        "x": 2.9,
-        "y": 4.99
+        "x": 1.32,
+        "y": 5.53
       },
       "prevControl": {
-        "x": 2.260536481892132,
-        "y": 4.99
+        "x": 1.8964775991090461,
+        "y": 5.012007776323246
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "P2 Start"
     }
   ],
   "rotationTargets": [],
@@ -39,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Test",
+  "folder": "Belton",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

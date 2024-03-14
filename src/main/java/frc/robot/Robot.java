@@ -36,6 +36,8 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -62,6 +64,8 @@ public class Robot extends TimedRobot {
   private LED litty;
   private VisionTablesListener visTables;
   private Cam1Align cam1;
+  private Translation3d bestTagPos;
+  private Translation3d currentPosTag;
 
   private static XboxController driver;
   private static XboxController operator;
@@ -304,6 +308,8 @@ public class Robot extends TimedRobot {
       handoffCommand.cancel();
       litty.setBlue();
     }
+    bestTagPos = cam1.getBestTagAbsPos();
+    currentPosTag = visTables.getBestPos().plus(bestTagPos);
 
   }
 

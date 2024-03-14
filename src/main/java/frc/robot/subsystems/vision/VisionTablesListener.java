@@ -1,5 +1,6 @@
 package frc.robot.subsystems.vision;
 
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.IntegerArraySubscriber;
 import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
@@ -17,15 +18,21 @@ public class VisionTablesListener {
     private IntegerArraySubscriber yCoordsSub;
     private IntegerArraySubscriber zRotsSub;
     private IntegerSubscriber bestIDSub;
+    private IntegerSubscriber bestXSub;
+    private IntegerSubscriber bestYSub;
+    private IntegerSubscriber bestZSub;
     private IntegerArraySubscriber ringCenterXSub;
     private IntegerArraySubscriber ringCenterYSub;
-    private StringSubscriber cam1StreamSub;
+
     private double yPose = 0;
     private double xPose = 0;
     private double zRot = 0;
     private double ringX = -1;
     private double ringY = -1;
     private double bestTagID = -1;
+    private double bestTagX = -1;
+    private double bestTagY = -1;
+    private double bestTagZ = -1;
     private String cam1Stream = null;
     // private IntegerArraySubscriber xEulerSub;
     // private IntegerArraySubscriber yEulerSub;
@@ -40,8 +47,10 @@ public class VisionTablesListener {
         zRotsSub = visionTable.getIntegerArrayTopic("Z Euler Angles").subscribe(new long[] {});
         ringCenterXSub = visionTable.getIntegerArrayTopic("Ring Center X Coords").subscribe(new long[] {});
         ringCenterYSub = visionTable.getIntegerArrayTopic("Ring Center Y Coords").subscribe(new long[] {});
-        cam1StreamSub = visionTable.getStringTopic("Cam1 Stream").subscribe(new String());
         bestIDSub = visionTable.getIntegerTopic("Best Tag ID").subscribe(-1);
+        bestXSub = visionTable.getIntegerTopic("Best Tag X").subscribe(-1);
+        bestYSub = visionTable.getIntegerTopic("Best Tag Y").subscribe(-1);
+        bestZSub = visionTable.getIntegerTopic("Best Tag Z").subscribe(-1);
               // xEulerSub = visionTable.getIntegerArrayTopic("X Euler Angles").subscribe(new
         // long[] {});
         // yEulerSub = visionTable.getIntegerArrayTopic("Y Euler Angles").subscribe(new
@@ -71,6 +80,9 @@ public class VisionTablesListener {
             tagVisible = false;
         }
         bestTagID = bestIDSub.get();
+        bestTagX = bestXSub.get();
+        bestTagY = bestYSub.get();
+        bestTagZ = bestZSub.get();
         SmartDashboard.putNumber("IDs", bestTagID);
         if(xPoses.length != 0){
             xPose = xPoses[0];
@@ -104,10 +116,7 @@ public class VisionTablesListener {
         ringY = ringCenterY[0];
         SmartDashboard.putNumber("Ring X Coord", ringX);
         SmartDashboard.putNumber("Ring Y Coords", ringY);
-        
-        cam1Stream = cam1StreamSub.get();
-        if(cam1Stream != null)
-            SmartDashboard.putString("Cam1 Stream", cam1Stream);
+    
     }
     
 
@@ -149,5 +158,9 @@ public class VisionTablesListener {
 
     public double getBestID() {
         return bestTagID;
+    }
+
+    public Translation3d getBestPos() {
+        return new Translation3d(bestTagX, bestTagY, bestTagZ);
     }
 }

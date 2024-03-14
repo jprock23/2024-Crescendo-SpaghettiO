@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -79,6 +80,8 @@ public class Robot extends TimedRobot {
 
   private SendableChooser<Command> m_chooser;
 
+  private double startTime = -1;
+
   @Override
   public void robotInit() {
     drivebase = Drivebase.getInstance();
@@ -128,11 +131,11 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     drivebase.periodic();
 
-    // launcher.launcherConnections();
+    launcher.launcherConnections();
     // intake.intakeConnections();
     // climber.climberConnections();
 
-    // launcher.printConnections();
+    launcher.printConnections();
     // intake.printConnections();
     // climber.printConnections();
 
@@ -218,10 +221,18 @@ public class Robot extends TimedRobot {
     }
 
     if (driver.getYButton()) {
+      if(startTime == -1){
+        startTime = Timer.getFPGATimestamp();
+      }
+
       launcher.setLauncherState(LauncherState.AMP);
       launcher.setReverseLauncherOn();
-      launcher.setFlickerOn();
-    } else{
+
+      if (Timer.getFPGATimestamp() - startTime > .75) {
+        launcher.setFlickerOn();
+      }
+
+    } else {
       launcher.setFlickOff();
       launcher.setLauncherOff();
     }

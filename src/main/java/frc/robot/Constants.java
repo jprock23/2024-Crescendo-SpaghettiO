@@ -70,7 +70,7 @@ public final class Constants {
   }
 
   public static final class ModuleConstants {
-    public static final int kDrivingMotorPinionTeeth = 14;
+    public static final int kDrivingMotorPinionTeeth = 12;
 
     // Invert the turning encoder, since the output shaft rotates in the opposite
     // direction of

@@ -20,8 +20,8 @@ import frc.robot.Ports;
 public class Launcher {
 
     public enum LauncherState {
-        AMP(-65, 0.5),
-        START(-4.809524536132812, 0.0),
+        AMP(-40, 1),
+        START(0, 0.0),
         TRAP(-70.04991149902344, 0.8),
         LONG(-11.5, 1.0),
         HANDOFF(8.6,0.5),
@@ -69,6 +69,8 @@ public class Launcher {
     private static LauncherState launchState = LauncherState.START;
 
     public static Launcher instance;
+
+    public boolean ansh;
 
     public Launcher() {
         shootMotor1 = new CANSparkMax(Ports.shootMotor1, MotorType.kBrushless);
@@ -147,6 +149,11 @@ public class Launcher {
 
     }
 
+
+    public void thisScuffed(){
+    
+    }
+
     public void setPivotOff() {
         pivotMotor.set(0.0);
     }
@@ -178,11 +185,11 @@ public class Launcher {
     }
 
     public void setFlickerOn() {
-        flicker.set(0.8);
+        flicker.set(1.0);
     }
 
     public void setFlickerReverse() {
-        flicker.set(-0.8);
+        flicker.set(-1.0);
     }
 
     public void setFlickOff() {

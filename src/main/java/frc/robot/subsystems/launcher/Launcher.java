@@ -20,13 +20,13 @@ import frc.robot.Ports;
 public class Launcher {
 
     public enum LauncherState {
-        AMP(-40, 1),
+        AMP(-48.5, 1),
         START(0, 0.0),
         TRAP(-70.04991149902344, 0.8),
         LONG(-11.5, 1.0),
-        HANDOFF(8.6,0.5),
-        HOVER(-3.0, 0.0),
-        SPEAKER(-55.0, 1.0);
+        HANDOFF(4.5,0.5),
+        HOVER(-8, 0.0),
+        SPEAKER(-65.0, 1.0);
 
         public double position;
         public double launchSpeed;
@@ -150,8 +150,9 @@ public class Launcher {
     }
 
 
-    public void thisScuffed(){
-    
+    public void eject(){
+        shootMotor1.set(launchState.launchSpeed/4);
+        shootMotor2.set(launchState.launchSpeed/4);
     }
 
     public void setPivotOff() {

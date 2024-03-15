@@ -15,9 +15,9 @@ import frc.robot.subsystems.IO.DigitalInputs;
 public class Intake {
 
     public enum IntakeState {
-        STOP(0.0),
-        GROUND(-7.5),
-        HANDOFF(-2);
+        STOP(0.2),
+        GROUND(-8.5),
+        HANDOFF(-3.5);
 
         public double position;
 
@@ -60,7 +60,7 @@ public class Intake {
         flipper.restoreFactoryDefaults();
 
         flipper.setSmartCurrentLimit(70);
-        flipper.setIdleMode(IdleMode.kBrake);
+        flipper.setIdleMode(IdleMode.kCoast);
         flipper.setInverted(true);
 
         feedforward = new ArmFeedforward(0.04, 0.05, 0, 0);

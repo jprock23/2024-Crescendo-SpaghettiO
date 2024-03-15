@@ -1,5 +1,9 @@
 package frc.robot.subsystems.vision;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.IntegerArraySubscriber;
 import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
@@ -20,6 +24,11 @@ public class VisionTablesListener {
     private IntegerArraySubscriber ringCenterXSub;
     private IntegerArraySubscriber ringCenterYSub;
     private StringSubscriber cam1StreamSub;
+    private DoubleSubscriber xTranslationSub;
+    private DoubleSubscriber yTranslationSub;
+    private DoubleSubscriber zTranslationSub;
+    private DoubleSubscriber timeStampSub;
+
     private double yPose = 0;
     private double xPose = 0;
     private double zRot = 0;
@@ -27,9 +36,14 @@ public class VisionTablesListener {
     private double ringY = -1;
     private double bestTagID = -1;
     private String cam1Stream = null;
-    // private IntegerArraySubscriber xEulerSub;
-    // private IntegerArraySubscriber yEulerSub;
-    // private IntegerArraySubscriber zEulerSub;
+
+    private double xTranslation;
+    private double yTranslation;
+    private double zTranslation;
+
+    private double timestamp;
+
+    private boolean tagVisible;
 
     public VisionTablesListener() {
         networkTable = NetworkTableInstance.getDefault();
@@ -42,16 +56,13 @@ public class VisionTablesListener {
         ringCenterYSub = visionTable.getIntegerArrayTopic("Ring Center Y Coords").subscribe(new long[] {});
         cam1StreamSub = visionTable.getStringTopic("Cam1 Stream").subscribe(new String());
         bestIDSub = visionTable.getIntegerTopic("Best Tag ID").subscribe(-1);
-              // xEulerSub = visionTable.getIntegerArrayTopic("X Euler Angles").subscribe(new
-        // long[] {});
-        // yEulerSub = visionTable.getIntegerArrayTopic("Y Euler Angles").subscribe(new
-        // long[] {});
-        // // zEulerSub = visionTable.getIntegerArrayTopic("Z Euler
-        // Angles").subscribe(new long[] {});
+        xTranslationSub = visionTable.getDoubleTopic("Best Tag X").subscribe(-1.0);
+        yTranslationSub = visionTable.getDoubleTopic("Best Tag Y").subscribe(-1.0);
+        zTranslationSub = visionTable.getDoubleTopic("Best Tag Z").subscribe(-1.0);
+        timeStampSub = visionTable.getDoubleTopic("Best Timestamp").subscribe(-1.0);
     }
 
     public void putInfoOnDashboard() {
-        boolean tagVisible;
         
         double ringCenterX[];
         double ringCenterY[];
@@ -63,6 +74,12 @@ public class VisionTablesListener {
             yPoses = convertArray(yCoordsSub.get());
             xPoses = convertArray(xCoordsSub.get());
             zRots = convertArray(zRotsSub.get());
+
+            xTranslation = xTranslationSub.get();
+            yTranslation = yTranslationSub.get();
+            zTranslation = zTranslationSub.get();
+
+            timestamp = timeStampSub.get();
             tagVisible = true;
         } else {
             xPoses = new double[]{-.90}; 
@@ -109,7 +126,18 @@ public class VisionTablesListener {
         if(cam1Stream != null)
             SmartDashboard.putString("Cam1 Stream", cam1Stream);
     }
+
+    public boolean getTagVisible(){
+        return tagVisible;
+    }
+
+    public Pose3d getVisDisplacement(){
+        return new Pose3d(xTranslation, yTranslation, zTranslation, new Rotation3d());
+    }
     
+    public double getTimeStamp(){
+        return timestamp;
+    }
 
     // need to convert each value to double individually, can't typecast entire array
     private double[] convertArray(long[] arr) {

@@ -1,6 +1,9 @@
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 
 public class Cam1Align {
     public static Cam1Align instance;
@@ -9,7 +12,7 @@ public class Cam1Align {
     private double xPose;
     private double yPose;
     private double zRot;
-    private double[] bestTagAbsPos;
+    private Pose3d bestTagAbsPos;
 
     private PIDController[] controllers = {
         new PIDController(3.0, 0, 0),
@@ -49,7 +52,7 @@ public class Cam1Align {
     
     
 
-    public double[] getBestTagAbsPos() {
+    public Pose3d getBestTagAbsPos() {
         int id = (int)vListener.getBestID();
         //return format: [x, y, z, rot (degrees)]
         // ID X     Y    Z     Rotation
@@ -69,54 +72,55 @@ public class Cam1Align {
         // 14 209.48 161.62 52.00 0°
         // 15 182.73 177.10 52.00 120°
         // 16 182.73 146.19 52.00 240°
+
         switch(id) {
             case 1:
-                bestTagAbsPos = new double[]{593.68, 9.68, 53.38, 120};
+                bestTagAbsPos = new Pose3d(new Translation3d(593.68, 9.68, 53.38), new Rotation3d());
                 break;
             case 2:
-                bestTagAbsPos = new double[]{637.21, 34.79, 53.38, 120};
+                bestTagAbsPos = new Pose3d(new Translation3d(637.21, 34.79, 53.38), new Rotation3d());
                 break;
             case 3:
-                bestTagAbsPos= new double[]{652.73, 196.17, 57.13, 180};
+                bestTagAbsPos= new Pose3d(new Translation3d(652.73, 196.17, 57.13), new Rotation3d());
                 break;
             case 4:
-                bestTagAbsPos= new double[]{652.73, 218.42, 57.13, 180};
+                bestTagAbsPos= new Pose3d(new Translation3d(652.73, 218.42, 57.13), new Rotation3d());
                 break;
             case 5:
-                bestTagAbsPos= new double[]{578.77, 323.00, 53.38, 270};
+                bestTagAbsPos= new Pose3d(new Translation3d(578.77, 323.00, 53.38), new Rotation3d());
                 break;
             case 6:
-                bestTagAbsPos= new double[]{72.5, 323.00, 53.38, 270};
+                bestTagAbsPos= new Pose3d(new Translation3d(1.8415, 8.2042, 1.355852), new Rotation3d(0,0, -90));
                 break;
             case 7:
-                bestTagAbsPos= new double[]{-1.50, 218.42, 57.13, 0};
+                bestTagAbsPos= new Pose3d(new Translation3d(-1.50, 218.42, 57.13), new Rotation3d());
                 break;
             case 8:
-                bestTagAbsPos= new double[]{-1.50, 196.17, 57.13, 0};
+                bestTagAbsPos= new Pose3d(new Translation3d(-1.50, 196.17, 57.13), new Rotation3d());
                 break;
             case 9:
-                bestTagAbsPos= new double[]{14.02, 34.79, 53.38, 60};
+                bestTagAbsPos= new Pose3d(new Translation3d(14.02, 34.79, 53.38), new Rotation3d());
                 break;
             case 10:
-                bestTagAbsPos= new double[]{57.54, 9.68, 53.38, 60};
+                bestTagAbsPos= new Pose3d(new Translation3d(57.54, 9.68, 53.38), new Rotation3d());
                 break;
             case 11:
-                bestTagAbsPos= new double[]{468.69, 146.19, 52.00, 300};
+                bestTagAbsPos= new Pose3d(new Translation3d(468.69, 146.19, 52.00), new Rotation3d());
                 break;
             case 12:
-                bestTagAbsPos= new double[]{468.69, 177.10, 52.00, 60};
+                bestTagAbsPos= new Pose3d(new Translation3d(468.69, 177.10, 52.00), new Rotation3d());
                 break;
             case 13:
-                bestTagAbsPos= new double[]{441.74, 161.62, 52.00, 180};
+                bestTagAbsPos= new Pose3d(new Translation3d(441.74, 161.62, 52.00), new Rotation3d());
                 break;
             case 14:
-                bestTagAbsPos= new double[]{209.48, 161.62, 52.00, 0};
+                bestTagAbsPos= new Pose3d(new Translation3d(209.48, 161.62, 52.00), new Rotation3d());
                 break;
             case 15:
-                bestTagAbsPos= new double[]{182.73, 177.10, 52.00, 120};
+                bestTagAbsPos= new Pose3d(new Translation3d(182.73, 177.10, 52.00), new Rotation3d());
                 break;
             case 16:
-                bestTagAbsPos= new double[]{182.73, 146.19, 52.00, 240};
+                bestTagAbsPos= new Pose3d(new Translation3d(182.73, 146.19, 52.00), new Rotation3d());
                 break;
             default:
                 bestTagAbsPos = null;

@@ -6,10 +6,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AmpCommand;
 import frc.robot.commands.AutoAmp;
 import frc.robot.commands.AutoReverseLauncher;
 import frc.robot.commands.AutoSpeaker;
@@ -78,10 +80,13 @@ public class Robot extends TimedRobot {
   private AutoAmp autoAmp;
   private HandoffCommand currentSpikeHandoff;
   private AutoReverseLauncher reverseLauncher;
+  private AmpCommand ampCommand;
 
   private boolean useCurrentSpike;
 
   private SendableChooser<Command> m_chooser;
+
+  private double startTime = -1;
 
   @Override
   public void robotInit() {
@@ -104,6 +109,7 @@ public class Robot extends TimedRobot {
     autoSpeaker = new AutoSpeaker();
     autoAmp = new AutoAmp();
     reverseLauncher = new AutoReverseLauncher();
+    ampCommand = new AmpCommand();
 
     currentSpikeHandoff = new HandoffCommand();
 
@@ -124,7 +130,8 @@ public class Robot extends TimedRobot {
     litty.setBlue();
     useCurrentSpike = false;
 
-    // CameraServer.startAutomaticCapture(0);
+    CameraServer.startAutomaticCapture();
+
   }
 
   @Override
@@ -139,6 +146,8 @@ public class Robot extends TimedRobot {
     // launcher.printConnections();
     // intake.printConnections();
     // climber.printConnections();
+
+    visTables.putInfoOnDashboard();
 
     SmartDashboard.putNumber("Gyro Angle:", drivebase.getHeading() + 90);
     SmartDashboard.putNumber("X-coordinate", drivebase.getPose().getX());
@@ -172,6 +181,10 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putNumber("Backright Rotation",
     // drivebase.getModuleRotations()[3]);
 
+    SmartDashboard.putNumber("X Displacemnt", visTables.getVisDisplacement().getX());
+    SmartDashboard.putNumber("Y Displacemnt", visTables.getVisDisplacement().getY());
+
+
     SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
     SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
   }
@@ -201,7 +214,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    intake.updatePose();
+    // intake.updatePose();
 
     /* DRIVE CONTROLS */
     double ySpeed;
@@ -221,16 +234,28 @@ public class Robot extends TimedRobot {
       drivebase.drive(xSpeed, ySpeed, rot, true);
     }
 
-    if (driver.getYButton()) {
-      launcher.setLauncherState(LauncherState.AMP);
-      launcher.setReverseLauncherOn();
-      launcher.setFlickerOn();
-    } else{
-      launcher.setFlickOff();
-      launcher.setLauncherOff();
-    }
+    // if (driver.getYButton()) {
+    //   if(startTime == -1){
+    //     startTime = Timer.getFPGATimestamp();
+    //   }
+
+    //   launcher.setLauncherState(LauncherState.AMP);
+    //   launcher.setReverseLauncherOn();
+
+    //   if (Timer.getFPGATimestamp() - startTime > .75) {
+    //     launcher.setFlickerOn();
+    //   }
+
+    // } else {
+    //   launcher.setFlickOff();
+    //   launcher.setLauncherOff();
+    // }
 
     /* INTAKE CONTROLS */
+
+      if(operator.getAButton()){
+        intake.setRollerPower();
+      }
 
     if (operator.getRightBumper() && !useCurrentSpike) {
       handoffCommand.schedule();
@@ -245,7 +270,8 @@ public class Robot extends TimedRobot {
     }
 
     if (operator.getBButton()) {
-      intake.setReverseRollerPower();
+      launcher.eject();
+      launcher.setFlickerOn();
     }
 
     if (operator.getLeftBumper()) {
@@ -293,13 +319,18 @@ public class Robot extends TimedRobot {
     if (operator.getXButton()) {
       intake.setReverseRollerPower();
       launcher.setFlickerReverse();
-
       launcher.setReverseLauncherOn();
     }
 
+
     if (operator.getRightTriggerAxis() > 0) {
-      shootCommand.initialize();
-      shootCommand.schedule();
+      if(launcher.getLaunchState() == LauncherState.AMP){
+        ampCommand.initialize();
+        ampCommand.schedule();
+      } else {
+        shootCommand.initialize();
+        shootCommand.schedule();
+      }
     } else if (operator.getLeftTriggerAxis() > 0) {
       launcher.setLauncherOff();
       launcher.setFlickOff();

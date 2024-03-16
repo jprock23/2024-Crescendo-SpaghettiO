@@ -1,6 +1,9 @@
 package frc.robot.subsystems.vision;
 
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.IntegerArraySubscriber;
 import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
@@ -23,6 +26,11 @@ public class VisionTablesListener {
     private IntegerSubscriber bestZSub;
     private IntegerArraySubscriber ringCenterXSub;
     private IntegerArraySubscriber ringCenterYSub;
+    private StringSubscriber cam1StreamSub;
+    private DoubleSubscriber xTranslationSub;
+    private DoubleSubscriber yTranslationSub;
+    private DoubleSubscriber zTranslationSub;
+    private DoubleSubscriber timeStampSub;
 
     private double yPose = 0;
     private double xPose = 0;
@@ -34,9 +42,14 @@ public class VisionTablesListener {
     private double bestTagY = -1;
     private double bestTagZ = -1;
     private String cam1Stream = null;
-    // private IntegerArraySubscriber xEulerSub;
-    // private IntegerArraySubscriber yEulerSub;
-    // private IntegerArraySubscriber zEulerSub;
+
+    private double xTranslation;
+    private double yTranslation;
+    private double zTranslation;
+
+    private double timestamp;
+
+    private boolean tagVisible;
 
     public VisionTablesListener() {
         networkTable = NetworkTableInstance.getDefault();
@@ -48,35 +61,35 @@ public class VisionTablesListener {
         ringCenterXSub = visionTable.getIntegerArrayTopic("Ring Center X Coords").subscribe(new long[] {});
         ringCenterYSub = visionTable.getIntegerArrayTopic("Ring Center Y Coords").subscribe(new long[] {});
         bestIDSub = visionTable.getIntegerTopic("Best Tag ID").subscribe(-1);
-        bestXSub = visionTable.getIntegerTopic("Best Tag X").subscribe(-1);
-        bestYSub = visionTable.getIntegerTopic("Best Tag Y").subscribe(-1);
-        bestZSub = visionTable.getIntegerTopic("Best Tag Z").subscribe(-1);
-              // xEulerSub = visionTable.getIntegerArrayTopic("X Euler Angles").subscribe(new
-        // long[] {});
-        // yEulerSub = visionTable.getIntegerArrayTopic("Y Euler Angles").subscribe(new
-        // long[] {});
-        // // zEulerSub = visionTable.getIntegerArrayTopic("Z Euler
-        // Angles").subscribe(new long[] {});
+        xTranslationSub = visionTable.getDoubleTopic("Best Tag X").subscribe(-1.0);
+        yTranslationSub = visionTable.getDoubleTopic("Best Tag Y").subscribe(-1.0);
+        zTranslationSub = visionTable.getDoubleTopic("Best Tag Z").subscribe(-1.0);
+        timeStampSub = visionTable.getDoubleTopic("Best Timestamp").subscribe(-1.0);
     }
 
     public void putInfoOnDashboard() {
-        boolean tagVisible;
-        
+
         double ringCenterX[];
         double ringCenterY[];
         double[] xPoses;
         double[] yPoses;
         double[] zRots;
 
-        if(tagIDSub.get().length != 0){
+        if (tagIDSub.get().length != 0) {
             yPoses = convertArray(yCoordsSub.get());
             xPoses = convertArray(xCoordsSub.get());
             zRots = convertArray(zRotsSub.get());
+
+            xTranslation = xTranslationSub.get();
+            yTranslation = yTranslationSub.get();
+            zTranslation = zTranslationSub.get();
+
+            timestamp = timeStampSub.get();
             tagVisible = true;
         } else {
-            xPoses = new double[]{-.90}; 
-            yPoses = new double[]{-.67}; 
-            zRots = new double[]{.5}; 
+            xPoses = new double[] { -.90 };
+            yPoses = new double[] { -.67 };
+            zRots = new double[] { .5 };
             tagVisible = false;
         }
         bestTagID = bestIDSub.get();
@@ -84,11 +97,11 @@ public class VisionTablesListener {
         bestTagY = bestYSub.get();
         bestTagZ = bestZSub.get();
         SmartDashboard.putNumber("IDs", bestTagID);
-        if(xPoses.length != 0){
+        if (xPoses.length != 0) {
             xPose = xPoses[0];
             yPose = yPoses[0];
-            zRot = zRots[0];   
-        
+            zRot = zRots[0];
+
             // SmartDashboard.putNumberArray("IDs", convertArray(tagIDSub.get()));
             SmartDashboard.putNumber("X Coords", xPose);
             SmartDashboard.putNumber("Y Coords", yPose);
@@ -102,25 +115,36 @@ public class VisionTablesListener {
             // SmartDashboard.putNumberArray("Z Euler Angles",
             // convertArray(zEulerSub.get()));
         }
-        
-        if(ringCenterXSub.get().length != 0) {
+
+        if (ringCenterXSub.get().length != 0) {
             ringCenterX = convertArray(ringCenterXSub.get());
             ringCenterY = convertArray(ringCenterYSub.get());
+        } else {
+            ringCenterX = new double[] { -1 };
+            ringCenterY = new double[] { -1 };
         }
-        else {
-            ringCenterX = new double[]{-1};
-            ringCenterY = new double[]{-1};
-        }
-        
+
         ringX = ringCenterX[0];
         ringY = ringCenterY[0];
         SmartDashboard.putNumber("Ring X Coord", ringX);
         SmartDashboard.putNumber("Ring Y Coords", ringY);
-    
-    }
-    
 
-    // need to convert each value to double individually, can't typecast entire array
+    }
+
+    public boolean getTagVisible() {
+        return tagVisible;
+    }
+
+    public Pose3d getVisDisplacement() {
+        return new Pose3d(xTranslation, yTranslation, zTranslation, new Rotation3d());
+    }
+
+    public double getTimeStamp() {
+        return timestamp;
+    }
+
+    // need to convert each value to double individually, can't typecast entire
+    // array
     private double[] convertArray(long[] arr) {
         double[] newArr = new double[arr.length];
 
@@ -136,7 +160,7 @@ public class VisionTablesListener {
         return instance;
     }
 
-    public double getRot(){
+    public double getRot() {
         return zRot;
     }
 
@@ -144,7 +168,7 @@ public class VisionTablesListener {
         return yPose;
     }
 
-      public double getX() {
+    public double getX() {
         return xPose;
     }
 

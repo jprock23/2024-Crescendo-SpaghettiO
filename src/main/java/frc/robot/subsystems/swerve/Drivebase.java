@@ -6,13 +6,20 @@ import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.*;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -20,9 +27,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.vision.Cam1Align;
+import frc.robot.subsystems.vision.VisionTablesListener;
 
 public class Drivebase extends SubsystemBase {
   private static Drivebase instance;
+
+  private VisionTablesListener visTables;
+  private Cam1Align cam1Align;
 
   public SwerveModule frontLeft;
   public SwerveModule backLeft;
@@ -38,6 +50,11 @@ public class Drivebase extends SubsystemBase {
 
   Field2d fieldmap = new Field2d();
 
+  private SwerveDrivePoseEstimator poseEstimator;
+
+  private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
+  private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10));
+
   public Drivebase() {
 
     // Swerve modules
@@ -52,6 +69,8 @@ public class Drivebase extends SubsystemBase {
     gyro.setAngleAdjustment(90);
     gyro.zeroYaw();
 
+    visTables = VisionTablesListener.getInstance();
+    cam1Align = Cam1Align.getInstance();
 
     odometry = new SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
@@ -62,6 +81,9 @@ public class Drivebase extends SubsystemBase {
             backLeft.getPosition(),
 
         });
+
+          poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, gyro.getRotation2d(),
+        getPositions(), new Pose2d(), stateStdDevs, visionMeasurementStdDevs);
 
     config = new HolonomicPathFollowerConfig(new PIDConstants(1.2, 0, 0),
         new PIDConstants(0.048, 0, 0.0005),
@@ -74,7 +96,6 @@ public class Drivebase extends SubsystemBase {
 
     AutoBuilder.configureHolonomic(this::getPose, this::resetOdometry, this::getSpeeds, this::setChassisSpeed, config,
         shouldFlipPath(), this);
-
   }
 
   public void setFieldPose(final Pose2d pose) {
@@ -83,22 +104,38 @@ public class Drivebase extends SubsystemBase {
 
   public void periodic() {
 
-    // Update the odometry in the periodic block
-    odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()),
-        new SwerveModulePosition[] {
-            frontLeft.getPosition(),
-            frontRight.getPosition(),
-            backRight.getPosition(),
-            backLeft.getPosition()
-        });
+    if(visTables.getTagVisible()){
 
-    fieldmap.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(),
-        odometry.getPoseMeters().getRotation());
+      Pose3d tagPos = cam1Align.getBestTagAbsPos();
+
+      Pose2d visDisplacement = visTables.getVisDisplacement().toPose2d();
+
+      Pose2d visPose = new Pose2d(tagPos.getX() - visDisplacement.getX(), tagPos.getY() - visDisplacement.getY(), new Rotation2d());
+
+      poseEstimator.addVisionMeasurement(visPose, visTables.getTimeStamp());
+    }
+
+    poseEstimator.update(gyro.getRotation2d(), getPositions());
+
+    // Update the odometry in the periodic block
+    // odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()),
+    //     new SwerveModulePosition[] {
+    //         frontLeft.getPosition(),
+    //         frontRight.getPosition(),
+    //         backRight.getPosition(),
+    //         backLeft.getPosition()
+    //     });
+
+    // fieldmap.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(),
+    //     odometry.getPoseMeters().getRotation());
   }
 
   // Returns the currently-estimated pose of the robot
   public Pose2d getPose() {
-    return odometry.getPoseMeters();
+
+    return poseEstimator.getEstimatedPosition();
+
+    // return odometry.getPoseMeters();
   }
 
   // Resets the odometry to the specified pose

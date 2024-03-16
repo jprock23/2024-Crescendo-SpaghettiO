@@ -17,7 +17,7 @@ public class Intake {
     public enum IntakeState {
         STOP(0.2),
         GROUND(-8.5),
-        HANDOFF(-3.5);
+        HANDOFF(-1.5);
 
         public double position;
 
@@ -33,6 +33,7 @@ public class Intake {
     public static Intake instance;
 
     private double power = 0.9;
+    //.9 shot into the launcher
 
     private double flip = 0.25;
 
@@ -60,7 +61,7 @@ public class Intake {
         flipper.restoreFactoryDefaults();
 
         flipper.setSmartCurrentLimit(70);
-        flipper.setIdleMode(IdleMode.kBrake);
+        flipper.setIdleMode(IdleMode.kCoast);
         flipper.setInverted(true);
 
         feedforward = new ArmFeedforward(0.04, 0.05, 0, 0);

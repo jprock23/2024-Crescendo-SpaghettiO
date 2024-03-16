@@ -20,13 +20,19 @@ import frc.robot.Ports;
 public class Launcher {
 
     public enum LauncherState {
-        AMP(-48.5, 1),
+        AMP(-39, 1),
         START(0, 0.0),
         TRAP(-70.04991149902344, 0.8),
         LONG(-11.5, 1.0),
-        HANDOFF(4.5,0.5),
+        HANDOFF(7.5,0.5),
         HOVER(-8, 0.0),
-        SPEAKER(-65.0, 1.0);
+        TOSS(-18, .9),
+        AUTOMIDSHOT(-20, 1.0),
+        AUTOLEFTSHOT(-15, 1.0),
+        AUTORIGHTSHOT(-15, 1.0),
+        //210 degrees
+        //-155 degrees
+        SPEAKER(-53.0, 1.0);
 
         public double position;
         public double launchSpeed;
@@ -101,7 +107,7 @@ public class Launcher {
         pivotMotor.restoreFactoryDefaults();
 
         pivotMotor.setSmartCurrentLimit(60);
-        pivotMotor.setIdleMode(IdleMode.kBrake);
+        pivotMotor.setIdleMode(IdleMode.kCoast);
         pivotMotor.setInverted(true);
         pivotMotor.setOpenLoopRampRate(1);
 

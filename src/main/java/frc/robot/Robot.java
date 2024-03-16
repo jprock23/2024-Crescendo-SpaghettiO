@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AmpCommand;
 import frc.robot.commands.AutoAmp;
+import frc.robot.commands.AutoHandoff;
 import frc.robot.commands.AutoReverseLauncher;
 import frc.robot.commands.AutoSpeaker;
 import frc.robot.commands.BreakBeamHandoff;
@@ -54,7 +55,7 @@ public class Robot extends TimedRobot {
   private Intake intake;
   private Launcher launcher;
   private LED litty;
-  private VisionTablesListener visTables;
+  // private VisionTablesListener visTables;
 
   private static XboxController driver;
   private static XboxController operator;
@@ -80,7 +81,7 @@ public class Robot extends TimedRobot {
     intake = Intake.getInstance();
     climber = Climber.getInstance();
     litty = LED.getInstance();
-    visTables = VisionTablesListener.getInstance();
+    // visTables = VisionTablesListener.getInstance();
 
     driver = new XboxController(0);
     operator = new XboxController(1);
@@ -97,7 +98,7 @@ public class Robot extends TimedRobot {
 
     NamedCommands.registerCommand("AutoAmp", autoAmp);
     NamedCommands.registerCommand("AutoSpeaker", autoSpeaker);
-    NamedCommands.registerCommand("Handoff", handoffCommand);
+    NamedCommands.registerCommand("Handoff", new AutoHandoff());
     NamedCommands.registerCommand("ReverseLauncher", reverseLauncher);
 
     m_chooser = AutoBuilder.buildAutoChooser();
@@ -105,7 +106,7 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("Test2", new PathPlannerAuto("Test2"));
     m_chooser.addOption("Test3", new PathPlannerAuto("Test3"));
     m_chooser.addOption("BeepBoop", new PathPlannerAuto("BeepBoop"));
-    m_chooser.addOption("Playoffs Source Leave", new PathPlannerAuto("Playoffs Source Leave"));
+    m_chooser.addOption("3LittlePigs", new PathPlannerAuto("3LittlePigs"));
 
     SmartDashboard.putData("Auto choices", m_chooser);
 
@@ -129,7 +130,7 @@ public class Robot extends TimedRobot {
     // intake.printConnections();
     // climber.printConnections();
 
-    visTables.putInfoOnDashboard();
+    // visTables.putInfoOnDashboard();
 
     SmartDashboard.putNumber("Gyro Angle:", drivebase.getHeading() + 90);
     SmartDashboard.putNumber("X-coordinate", drivebase.getPose().getX());
@@ -163,8 +164,8 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putNumber("Backright Rotation",
     // drivebase.getModuleRotations()[3]);
 
-    SmartDashboard.putNumber("X Displacemnt", visTables.getVisDisplacement().getX());
-    SmartDashboard.putNumber("Y Displacemnt", visTables.getVisDisplacement().getY());
+    // SmartDashboard.putNumber("X Displacemnt", visTables.getVisDisplacement().getX());
+    // SmartDashboard.putNumber("Y Displacemnt", visTables.getVisDisplacement().getY());
 
 
     SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
@@ -196,16 +197,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    // intake.updatePose();
+    intake.updatePose();
 
     /* DRIVE CONTROLS */
     double ySpeed;
     double xSpeed;
     double rot;
 
-    // ySpeed = -driver.getLeftX();
-    // xSpeed = driver.getLeftY();
-    // rot = -driver.getRightX();
     ySpeed = drivebase.inputDeadband(-driver.getLeftX());
     xSpeed = drivebase.inputDeadband(driver.getLeftY());
     rot = drivebase.inputDeadband(-driver.getRightX());
@@ -236,7 +234,7 @@ public class Robot extends TimedRobot {
     /* INTAKE CONTROLS */
 
       if(operator.getAButton()){
-        intake.setRollerPower();
+        launcher.setLauncherState(LauncherState.AUTOLEFTSHOT);
       }
 
     if (operator.getRightBumper() && !useCurrentSpike) {
@@ -292,7 +290,7 @@ public class Robot extends TimedRobot {
       launcher.setLauncherState(LauncherState.AMP);
     }
     if (operator.getPOV() == 180) {
-      launcher.setLauncherState(LauncherState.TRAP);
+      launcher.setLauncherState(LauncherState.TOSS);
     }
     if (operator.getPOV() == 270) {
       launcher.setLauncherState(LauncherState.LONG);

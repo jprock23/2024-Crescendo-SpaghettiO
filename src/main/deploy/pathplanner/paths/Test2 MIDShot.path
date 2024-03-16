@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.93,
-        "y": 4.48
+        "x": 2.39,
+        "y": 5.56
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6013145064119725,
-        "y": 4.300719915653322
+        "x": 2.362772708622342,
+        "y": 5.564955745296107
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.45,
-        "y": 4.116488540669389
+        "x": 2.92,
+        "y": 5.56
       },
       "prevControl": {
-        "x": 1.6422382816310555,
-        "y": 4.319048787695681
+        "x": 2.6559660811629335,
+        "y": 5.505754088431254
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,25 +30,7 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Handoff"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 1.5,
@@ -57,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -1.2627325464908539,
+    "rotation": 180.0,
     "rotateFast": true
   },
   "reversed": false,
   "folder": "Test",
   "previewStartingState": {
-    "rotation": -47.208902674720704,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true

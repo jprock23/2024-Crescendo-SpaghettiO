@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.32,
-        "y": 5.53
+        "x": 1.852718113424813,
+        "y": 5.527514849608872
       },
       "isLocked": false,
       "linkedName": "P2 Start"
@@ -20,8 +20,8 @@
         "y": 5.56
       },
       "prevControl": {
-        "x": 1.3900000000000001,
-        "y": 5.56
+        "x": 1.852718113424813,
+        "y": 5.539225686154654
       },
       "nextControl": null,
       "isLocked": false,
@@ -52,8 +52,8 @@
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 1.5,
-    "maxAngularVelocity": 360.0,
-    "maxAngularAcceleration": 270.0
+    "maxAngularVelocity": 780.0,
+    "maxAngularAcceleration": 540.0
   },
   "goalEndState": {
     "velocity": 0,

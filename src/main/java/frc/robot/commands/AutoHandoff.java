@@ -12,7 +12,7 @@ import frc.robot.subsystems.launcher.Launcher;
 import frc.robot.subsystems.launcher.Launcher.LauncherState;
 import frc.robot.subsystems.led.LED;
 
-public class BreakBeamHandoff extends Command {
+public class AutoHandoff extends Command {
 
   private Launcher launcher;
   private Intake intake;
@@ -26,7 +26,7 @@ public class BreakBeamHandoff extends Command {
 
   private boolean intakeHasRing;
 
-  public BreakBeamHandoff() {
+  public AutoHandoff() {
     launcher = Launcher.getInstance();
     intake = Intake.getInstance();
     litty = LED.getInstance();
@@ -140,7 +140,6 @@ public class BreakBeamHandoff extends Command {
   @Override
   public void end(boolean interrupted) {
     launcher.setFlickOff();
-    launcher.setLauncherState(LauncherState.HOVER);
     intake.setIntakeState(IntakeState.STOP);
     launcher.updatePose();
     litty.setGreen();

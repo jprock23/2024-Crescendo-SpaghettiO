@@ -14,7 +14,32 @@
         {
           "type": "named",
           "data": {
-            "name": "Handoff"
+            "name": "AutoSpeaker"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Handoff"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "P2 Intake Second"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "P2 Score Second"
           }
         },
         {

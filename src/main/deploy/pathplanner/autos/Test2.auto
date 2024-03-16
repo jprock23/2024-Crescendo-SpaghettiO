@@ -18,21 +18,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Test2 Start"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Handoff"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "P2 Intake Second"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ReverseLauncher"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Test2 Score 2nd"
+            "pathName": "Test2 MIDShot"
           }
         }
       ]

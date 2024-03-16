@@ -1,14 +1,13 @@
 package frc.robot.subsystems.vision;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.IntegerArraySubscriber;
 import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StringSubscriber;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionTablesListener {
@@ -26,7 +25,6 @@ public class VisionTablesListener {
     private IntegerSubscriber bestZSub;
     private IntegerArraySubscriber ringCenterXSub;
     private IntegerArraySubscriber ringCenterYSub;
-    private StringSubscriber cam1StreamSub;
     private DoubleSubscriber xTranslationSub;
     private DoubleSubscriber yTranslationSub;
     private DoubleSubscriber zTranslationSub;
@@ -41,7 +39,6 @@ public class VisionTablesListener {
     private double bestTagX = -1;
     private double bestTagY = -1;
     private double bestTagZ = -1;
-    private String cam1Stream = null;
 
     private double xTranslation;
     private double yTranslation;

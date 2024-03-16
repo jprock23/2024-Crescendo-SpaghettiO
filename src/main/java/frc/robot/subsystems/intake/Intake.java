@@ -60,7 +60,7 @@ public class Intake {
         flipper.restoreFactoryDefaults();
 
         flipper.setSmartCurrentLimit(70);
-        flipper.setIdleMode(IdleMode.kCoast);
+        flipper.setIdleMode(IdleMode.kBrake);
         flipper.setInverted(true);
 
         feedforward = new ArmFeedforward(0.04, 0.05, 0, 0);

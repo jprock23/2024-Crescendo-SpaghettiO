@@ -12,7 +12,6 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -22,6 +21,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -72,17 +72,17 @@ public class Drivebase extends SubsystemBase {
     visTables = VisionTablesListener.getInstance();
     cam1Align = Cam1Align.getInstance();
 
-    odometry = new SwerveDriveOdometry(
-        DriveConstants.kDriveKinematics,
-        Rotation2d.fromDegrees(-gyro.getAngle()), new SwerveModulePosition[] {
-            frontLeft.getPosition(),
-            frontRight.getPosition(),
-            backRight.getPosition(),
-            backLeft.getPosition(),
+    // odometry = new SwerveDriveOdometry(
+    //     DriveConstants.kDriveKinematics,
+    //     Rotation2d.fromDegrees(-gyro.getAngle()), new SwerveModulePosition[] {
+    //         frontLeft.getPosition(),
+    //         frontRight.getPosition(),
+    //         backRight.getPosition(),
+    //         backLeft.getPosition(),
 
-        });
+    //     });
 
-          poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, gyro.getRotation2d(),
+          poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, Rotation2d.fromDegrees(-gyro.getAngle()),
         getPositions(), new Pose2d(), stateStdDevs, visionMeasurementStdDevs);
 
     config = new HolonomicPathFollowerConfig(new PIDConstants(1.2, 0, 0),
@@ -110,14 +110,15 @@ public class Drivebase extends SubsystemBase {
 
       Pose2d visDisplacement = visTables.getVisDisplacement().toPose2d();
 
-      Pose2d visPose = new Pose2d(tagPos.getX() - visDisplacement.getX(), tagPos.getY() - visDisplacement.getY(), new Rotation2d());
+      Pose2d visPose = new Pose2d(tagPos.getX() - visDisplacement.getX(), tagPos.getY() - visDisplacement.getY(), Rotation2d.fromDegrees(-gyro.getAngle()));
 
       poseEstimator.addVisionMeasurement(visPose, visTables.getTimeStamp());
     }
 
-    poseEstimator.update(gyro.getRotation2d(), getPositions());
+    poseEstimator.updateWithTime(Timer.getFPGATimestamp(), Rotation2d.fromDegrees(-gyro.getAngle()), getPositions());
 
-    // Update the odometry in the periodic block
+    // poseEstimator.update(Rotation2d.fromDegrees(-gyro.getAngle()), getPositions());
+
     // odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()),
     //     new SwerveModulePosition[] {
     //         frontLeft.getPosition(),
@@ -140,13 +141,17 @@ public class Drivebase extends SubsystemBase {
 
   // Resets the odometry to the specified pose
   public void resetOdometry(Pose2d pose) {
-    odometry.resetPosition(
-        Rotation2d.fromDegrees(-gyro.getAngle()),
-        new SwerveModulePosition[] {
-            frontLeft.getPosition(), frontRight.getPosition(), backLeft.getPosition(),
-            backRight.getPosition()
-        },
-        pose);
+
+    poseEstimator.resetPosition(Rotation2d.fromDegrees(-gyro.getAngle()), getPositions(), pose);
+
+
+    // odometry.resetPosition(
+    //     Rotation2d.fromDegrees(-gyro.getAngle()),
+    //     new SwerveModulePosition[] {
+    //         frontLeft.getPosition(), frontRight.getPosition(), backLeft.getPosition(),
+    //         backRight.getPosition()
+    //     },
+    //     pose);
   }
 
   public void resetOdometry() {
@@ -220,9 +225,6 @@ public class Drivebase extends SubsystemBase {
     return DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
   }
 
-  public void resetPose(final Pose2d pose) {
-    odometry.resetPosition(gyro.getRotation2d(), getPositions(), pose);
-  }
 
   public void lockWheels() {
     frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));

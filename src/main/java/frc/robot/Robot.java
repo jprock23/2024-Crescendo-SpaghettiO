@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,7 +17,6 @@ import frc.robot.commands.AutoSpeaker;
 import frc.robot.commands.BreakBeamHandoff;
 import frc.robot.commands.HandoffCommand;
 import frc.robot.commands.ShootCommand;
-import frc.robot.subsystems.IO.DigitalInputs;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
@@ -27,8 +25,6 @@ import frc.robot.subsystems.launcher.Launcher.LauncherState;
 import frc.robot.subsystems.led.LED;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
-import frc.robot.subsystems.vision.AutoAlign;
-import frc.robot.subsystems.vision.Cam1Align;
 import frc.robot.subsystems.vision.VisionTablesListener;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -36,10 +32,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -61,13 +53,8 @@ public class Robot extends TimedRobot {
   private Climber climber;
   private Intake intake;
   private Launcher launcher;
-  private DigitalInputs digitalInputs;
-  private AutoAlign autoAlign;
   private LED litty;
   private VisionTablesListener visTables;
-  private Cam1Align cam1;
-  private Translation3d bestTagPos;
-  private Translation3d currentPosTag;
 
   private static XboxController driver;
   private static XboxController operator;
@@ -86,19 +73,14 @@ public class Robot extends TimedRobot {
 
   private SendableChooser<Command> m_chooser;
 
-  private double startTime = -1;
-
   @Override
   public void robotInit() {
     drivebase = Drivebase.getInstance();
     launcher = Launcher.getInstance();
     intake = Intake.getInstance();
     climber = Climber.getInstance();
-    digitalInputs = DigitalInputs.getInstance();
-    autoAlign = AutoAlign.getInstance();
     litty = LED.getInstance();
     visTables = VisionTablesListener.getInstance();
-    cam1 = Cam1Align.getInstance();
 
     driver = new XboxController(0);
     operator = new XboxController(1);
@@ -339,8 +321,6 @@ public class Robot extends TimedRobot {
       handoffCommand.cancel();
       litty.setBlue();
     }
-    bestTagPos = cam1.getBestTagAbsPos();
-    currentPosTag = visTables.getBestPos().plus(bestTagPos);
 
   }
 

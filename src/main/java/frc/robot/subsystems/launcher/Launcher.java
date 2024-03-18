@@ -29,17 +29,13 @@ public class Launcher {
         TOSS(-18, .9),
         AUTOMIDSHOT(-20, 1.0),
         AUTOLEFTSHOT(-15, 1.0),
-        AUTORIGHTSHOT(-15, 1.0),
         //210 degrees
+        AUTORIGHTSHOT(-15, 1.0),
         //-155 degrees
         SPEAKER(-53.0, 1.0);
 
         public double position;
         public double launchSpeed;
-
-        // public void increasePose(){
-        //     this.position += .05;
-        // }
 
         private LauncherState(double position, double launchSpeed) {
             this.position = position;

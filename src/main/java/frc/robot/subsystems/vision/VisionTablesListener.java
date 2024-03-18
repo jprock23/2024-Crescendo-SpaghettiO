@@ -5,12 +5,9 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.DoubleArraySubscriber;
-import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.IntegerArraySubscriber;
-import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionTablesListener {
     private static VisionTablesListener instance;
@@ -18,12 +15,12 @@ public class VisionTablesListener {
     private NetworkTableInstance networkTable;
     private NetworkTable visionTable;
 
-    private IntegerArraySubscriber tagIDSub;
-    private DoubleArraySubscriber xSub;
-    private DoubleArraySubscriber ySub;
-    private DoubleArraySubscriber zSub;
-    private DoubleArraySubscriber yawSub;
-    private DoubleArraySubscriber timestampSub;
+    private IntegerArraySubscriber tagIDSub1;
+    private DoubleArraySubscriber x1Sub;
+    private DoubleArraySubscriber y1Sub;
+    private DoubleArraySubscriber z1Sub;
+    private DoubleArraySubscriber yaw1Sub;
+    private DoubleArraySubscriber timestamp1Sub;
 
     private IntegerArraySubscriber tagID2Sub;
     private DoubleArraySubscriber x2Sub;
@@ -77,12 +74,12 @@ public class VisionTablesListener {
         networkTable = NetworkTableInstance.getDefault();
         visionTable = networkTable.getTable("Vision");
 
-        tagIDSub = visionTable.getIntegerArrayTopic("IDs").subscribe(new long[] {});
-        xSub = visionTable.getDoubleArrayTopic("X Coords").subscribe(new double[] {});
-        ySub = visionTable.getDoubleArrayTopic("Y Coords").subscribe(new double[] {});
-        zSub = visionTable.getDoubleArrayTopic("Z Coords").subscribe(new double[] {});
-        yawSub = visionTable.getDoubleArrayTopic("Yaws").subscribe(new double[] {});
-        timestampSub = visionTable.getDoubleArrayTopic("Timestamps").subscribe(new double[] {});
+        tagIDSub1 = visionTable.getIntegerArrayTopic("IDs").subscribe(new long[] {});
+        x1Sub = visionTable.getDoubleArrayTopic("X Coords").subscribe(new double[] {});
+        y1Sub = visionTable.getDoubleArrayTopic("Y Coords").subscribe(new double[] {});
+        z1Sub = visionTable.getDoubleArrayTopic("Z Coords").subscribe(new double[] {});
+        yaw1Sub = visionTable.getDoubleArrayTopic("Yaws").subscribe(new double[] {});
+        timestamp1Sub = visionTable.getDoubleArrayTopic("Timestamps").subscribe(new double[] {});
         
         tagID2Sub = visionTable.getIntegerArrayTopic("IDs 2").subscribe(new long[] {});
         x2Sub = visionTable.getDoubleArrayTopic("X Coords 2").subscribe(new double[] {});
@@ -172,17 +169,18 @@ public class VisionTablesListener {
 
     }
 
-    public boolean getTagVisible() {
-        return tagIDSub.get().length  > 0 || tagID2Sub.get().length  > 0 || tagID3Sub.get().length  > 0;
+    public boolean getTagVisible1() {
+        return tagIDSub1.get().length  > 0;
     }
 
-    // public Pose3d getVisDisplacement() {
-    //     return new Pose3d(xTranslation, yTranslation, zTranslation, new Rotation3d());
-    // }
+     public boolean getTagVisible2() {
+        return tagID2Sub.get().length  > 0;
+    }
 
-    // public double getTimeStamp() {
-    //     return timestamp;
-    // }
+    public boolean getTagVisible3() {
+        return tagID3Sub.get().length  > 0;
+    }
+
 
     // need to convert each value to double individually, can't typecast entire array
     private double[] convertArray(long[] arr) {
@@ -201,7 +199,7 @@ public class VisionTablesListener {
     }
 
     public double[] getCam1IDs() {
-        return convertArray(tagIDSub.get());
+        return convertArray(tagIDSub1.get());
     }
 
     public double[] getCam2IDs() {
@@ -213,7 +211,7 @@ public class VisionTablesListener {
     }
 
     public double[] getCam1Timestamps() {
-        return timestampSub.get();
+        return timestamp1Sub.get();
     }
 
     public double[] getCam2Timestamps() {
@@ -253,11 +251,11 @@ public class VisionTablesListener {
     // }
 
     public Transform3d[] getCam1Transforms(double yaw) {
-        double[] ids = convertArray(tagIDSub.get());
-        double[] xPoses = xSub.get();
-        double[] yPoses = ySub.get();
-        double[] zPoses = zSub.get();
-        double[] yaws = yawSub.get();
+        double[] ids = convertArray(tagIDSub1.get());
+        double[] xPoses = x1Sub.get();
+        double[] yPoses = y1Sub.get();
+        double[] zPoses = z1Sub.get();
+        double[] yaws = yaw1Sub.get();
         
         Transform3d[] transforms = new Transform3d[ids.length];
         for(int i = 0; i < ids.length; i++) {

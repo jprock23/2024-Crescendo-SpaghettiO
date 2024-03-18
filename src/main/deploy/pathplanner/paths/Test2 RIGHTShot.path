@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.92,
-        "y": 5.56
+        "x": 2.53,
+        "y": 4.44
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.928868453678517,
-        "y": 5.999910616522666
+        "x": 2.310020971287762,
+        "y": 4.242040701280868
       },
       "isLocked": false,
-      "linkedName": "P2 Midshot"
+      "linkedName": "RightRingFront"
     },
     {
       "anchor": {
-        "x": 2.9,
-        "y": 6.45
+        "x": 2.53,
+        "y": 4.12513604548266
       },
       "prevControl": {
-        "x": 2.8961293950230553,
-        "y": 6.010017024855379
+        "x": 2.3243989067838933,
+        "y": 4.254688827367274
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LeftRingRight"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0,
+    "rotation": 155.0,
     "rotateFast": false
   },
   "reversed": false,

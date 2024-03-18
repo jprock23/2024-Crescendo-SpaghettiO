@@ -13,7 +13,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AmpCommand;
 import frc.robot.commands.AutoAmp;
 import frc.robot.commands.AutoHandoff;
+import frc.robot.commands.AutoLeftShot;
+import frc.robot.commands.AutoMidShot;
 import frc.robot.commands.AutoReverseLauncher;
+import frc.robot.commands.AutoRightShot;
 import frc.robot.commands.AutoSpeaker;
 import frc.robot.commands.BreakBeamHandoff;
 import frc.robot.commands.HandoffCommand;
@@ -26,8 +29,6 @@ import frc.robot.subsystems.launcher.Launcher.LauncherState;
 import frc.robot.subsystems.led.LED;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
-import frc.robot.subsystems.vision.VisionTablesListener;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -91,7 +92,6 @@ public class Robot extends TimedRobot {
     shootCommand = new ShootCommand();
     autoSpeaker = new AutoSpeaker();
     autoAmp = new AutoAmp();
-    reverseLauncher = new AutoReverseLauncher();
     ampCommand = new AmpCommand();
 
     currentSpikeHandoff = new HandoffCommand();
@@ -99,7 +99,10 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("AutoAmp", autoAmp);
     NamedCommands.registerCommand("AutoSpeaker", autoSpeaker);
     NamedCommands.registerCommand("Handoff", new AutoHandoff());
-    NamedCommands.registerCommand("ReverseLauncher", reverseLauncher);
+    NamedCommands.registerCommand("AutoLeftShot", new AutoLeftShot());
+    NamedCommands.registerCommand("AutoRightShot", new AutoRightShot());
+    NamedCommands.registerCommand("AutoMidShot", new AutoMidShot());
+
 
     m_chooser = AutoBuilder.buildAutoChooser();
     m_chooser.addOption("Test1", new PathPlannerAuto("Test1"));
@@ -151,23 +154,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Launcher Breakbeam", launcher.getBreakBeam());
     SmartDashboard.putBoolean("Intake Breakbeam", intake.getBreakBeam());
 
-    // SmartDashboard.putBoolean("Shoot Done", autoSpeaker.isFinished());
-
-    // visTables.putInfoOnDashboard();
-
-    // SmartDashboard.putNumber("Frontleft Rotation",
-    // drivebase.getModuleRotations()[0]);
-    // SmartDashboard.putNumber("Frontright Rotation",
-    // drivebase.getModuleRotations()[1]);
-    // SmartDashboard.putNumber("Backleft Rotation",
-    // drivebase.getModuleRotations()[2]);
-    // SmartDashboard.putNumber("Backright Rotation",
-    // drivebase.getModuleRotations()[3]);
-
-    // SmartDashboard.putNumber("X Displacemnt", visTables.getVisDisplacement().getX());
-    // SmartDashboard.putNumber("Y Displacemnt", visTables.getVisDisplacement().getY());
-
-
     SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
     SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
   }
@@ -213,23 +199,6 @@ public class Robot extends TimedRobot {
     } else {
       drivebase.drive(xSpeed, ySpeed, rot, true);
     }
-
-    // if (driver.getYButton()) {
-    //   if(startTime == -1){
-    //     startTime = Timer.getFPGATimestamp();
-    //   }
-
-    //   launcher.setLauncherState(LauncherState.AMP);
-    //   launcher.setReverseLauncherOn();
-
-    //   if (Timer.getFPGATimestamp() - startTime > .75) {
-    //     launcher.setFlickerOn();
-    //   }
-
-    // } else {
-    //   launcher.setFlickOff();
-    //   launcher.setLauncherOff();
-    // }
 
     /* INTAKE CONTROLS */
 

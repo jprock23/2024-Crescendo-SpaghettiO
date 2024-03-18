@@ -12,7 +12,6 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -34,7 +33,6 @@ public class Drivebase extends SubsystemBase {
   private static Drivebase instance;
 
   private VisionTablesListener visTables;
-  // private Cam1Align cam1Align;
 
   public SwerveModule frontLeft;
   public SwerveModule backLeft;
@@ -44,7 +42,6 @@ public class Drivebase extends SubsystemBase {
   private HolonomicPathFollowerConfig config;
 
   private static AHRS gyro;
-  private double currentRotation = 0.0;
 
   SwerveDriveOdometry odometry;
 
@@ -69,21 +66,20 @@ public class Drivebase extends SubsystemBase {
     gyro.setAngleAdjustment(90);
     gyro.zeroYaw();
 
-    // visTables = VisionTablesListener.getInstance();
-    // cam1Align = Cam1Align.getInstance();
+    visTables = VisionTablesListener.getInstance();
 
-    odometry = new SwerveDriveOdometry(
-        DriveConstants.kDriveKinematics,
-        Rotation2d.fromDegrees(-gyro.getAngle()), new SwerveModulePosition[] {
-            frontLeft.getPosition(),
-            frontRight.getPosition(),
-            backRight.getPosition(),
-            backLeft.getPosition(),
+    // odometry = new SwerveDriveOdometry(
+    //     DriveConstants.kDriveKinematics,
+    //     Rotation2d.fromDegrees(-gyro.getAngle()), new SwerveModulePosition[] {
+    //         frontLeft.getPosition(),
+    //         frontRight.getPosition(),
+    //         backRight.getPosition(),
+    //         backLeft.getPosition(),
 
-        });
+    //     });
 
-        //   poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, Rotation2d.fromDegrees(-gyro.getAngle()),
-        // getPositions(), new Pose2d(), stateStdDevs, visionMeasurementStdDevs);
+          poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, Rotation2d.fromDegrees(-gyro.getAngle()),
+        getPositions(), new Pose2d(), stateStdDevs, visionMeasurementStdDevs);
 
     config = new HolonomicPathFollowerConfig(new PIDConstants(1.2, 0, 0),
         new PIDConstants(0.11, 0.00001, 0.0),
@@ -105,61 +101,61 @@ public class Drivebase extends SubsystemBase {
 
   public void periodic() {
 
-    if(visTables.getTagVisible()){
+    if(visTables.getTagVisible1()){
       //cam1
-      Transform3d[] transformsCam1 = visTables.getCam1Transforms(currentRotation);
-      double[] cam1IDs = visTables.getCam1IDs();
-      double[] timestampsCam1 = visTables.getCam1Timestamps();
+      // Transform3d[] transformsCam1 = visTables.getCam1Transforms(-gyro.getAngle());
+      // double[] cam1IDs = visTables.getCam1IDs();
+      // double[] timestampsCam1 = visTables.getCam1Timestamps();
       
-      for(int i = 0; i < transformsCam1.length; i++) {
-        Pose3d tagPos = visTables.getBestTagAbsPos((int)cam1IDs[i]);
-        Pose2d robotPos = tagPos.transformBy(transformsCam1[i]).toPose2d();
-        //Pose2d visDisplacement = visTables.getVisDisplacement().toPose2d();
-        //Pose2d visPose = new Pose2d(tagPos.getX() - visDisplacement.getX(), tagPos.getY() - visDisplacement.getY(), Rotation2d.fromDegrees(-gyro.getAngle()));
+      // for(int i = 0; i < transformsCam1.length; i++) {
+      //   Pose3d tagPos1 = visTables.getBestTagAbsPos((int)cam1IDs[i]);
+      //   Pose2d robotPos1 = tagPos.transformBy(transformsCam1[i]).toPose2d();
+        Pose3d tagPos1 = visTables.getBestTagAbsPos((int)visTables.getCam1IDs()[0]);
+        Pose2d robotPos1 = tagPos1.transformBy(visTables.getCam1Transforms(-gyro.getAngle())[0]).toPose2d();
 
-        poseEstimator.addVisionMeasurement(robotPos, timestampsCam1[i]);
+        poseEstimator.addVisionMeasurement(robotPos1, visTables.getCam1Timestamps()[0]);
       }
 
-      //cam2
-      Transform3d[] transformsCam2 = visTables.getCam2Transforms(currentRotation);
-      double[] cam2IDs = visTables.getCam2IDs();
-      double[] timestampsCam2 = visTables.getCam2Timestamps();
+      if(visTables.getTagVisible2()){
+      //cam1
+      // Transform3d[] transformsCam2 = visTables.getCam2Transforms(-gyro.getAngle());
+      // double[] cam2IDs = visTables.getCam2IDs();
+      // double[] timestampsCam2 = visTables.getCam2Timestamps();
       
-      for(int i = 0; i < transformsCam2.length; i++) {
-        Pose3d tagPos = visTables.getBestTagAbsPos((int)cam2IDs[i]);
-        Pose2d robotPos = tagPos.transformBy(transformsCam2[i]).toPose2d();
-        //Pose2d visDisplacement = visTables.getVisDisplacement().toPose2d();
-        //Pose2d visPose = new Pose2d(tagPos.getX() - visDisplacement.getX(), tagPos.getY() - visDisplacement.getY(), Rotation2d.fromDegrees(-gyro.getAngle()));
+      // for(int i = 0; i < transformsCam2.length; i++) {
+      //   Pose3d tagPos2 = visTables.getBestTagAbsPos((int)cam2IDs[i]);
+      //   Pose2d robotPos2 = tagPos.transformBy(transformsCam2[i]).toPose2d();
+        Pose3d tagPos2 = visTables.getBestTagAbsPos((int)visTables.getCam2IDs()[0]);
+        Pose2d robotPos2 = tagPos2.transformBy(visTables.getCam2Transforms(-gyro.getAngle())[0]).toPose2d();
 
-        poseEstimator.addVisionMeasurement(robotPos, timestampsCam2[i]);
+        poseEstimator.addVisionMeasurement(robotPos2, visTables.getCam1Timestamps()[0]);
       }
 
-      //cam3
-      Transform3d[] transformsCam3 = visTables.getCam3Transforms(currentRotation);
-      double[] cam3IDs = visTables.getCam3IDs();
-      double[] timestampsCam3 = visTables.getCam3Timestamps();
+   
+      if(visTables.getTagVisible3()){
+      //cam1
+      // Transform3d[] transformsCam3 = visTables.getCam3Transforms(-gyro.getAngle());
+      // double[] cam3IDs = visTables.getCam3IDs();
+      // double[] timestampsCam3 = visTables.getCam3Timestamps();
       
-      for(int i = 0; i < transformsCam3.length; i++) {
-        Pose3d tagPos = visTables.getBestTagAbsPos((int)cam3IDs[i]);
-        Pose2d robotPos = tagPos.transformBy(transformsCam3[i]).toPose2d();
-        //Pose2d visDisplacement = visTables.getVisDisplacement().toPose2d();
-        //Pose2d visPose = new Pose2d(tagPos.getX() - visDisplacement.getX(), tagPos.getY() - visDisplacement.getY(), Rotation2d.fromDegrees(-gyro.getAngle()));
+      // for(int i = 0; i < transformsCam3.length; i++) {
+      //   Pose3d tagPos3 = visTables.getBestTagAbsPos((int)cam3IDs[i]);
+      //   Pose2d robotPos3 = tagPos.transformBy(transformsCam3[i]).toPose2d();
+        Pose3d tagPos3 = visTables.getBestTagAbsPos((int)visTables.getCam2IDs()[0]);
+        Pose2d robotPos3 = tagPos3.transformBy(visTables.getCam2Transforms(-gyro.getAngle())[0]).toPose2d();
 
-        poseEstimator.addVisionMeasurement(robotPos, Timer.getFPGATimestamp());
+        poseEstimator.addVisionMeasurement(robotPos3, visTables.getCam1Timestamps()[0]);
       }
-    }
 
     poseEstimator.updateWithTime(Timer.getFPGATimestamp(), Rotation2d.fromDegrees(-gyro.getAngle()), getPositions());
 
-    poseEstimator.update(Rotation2d.fromDegrees(-gyro.getAngle()), getPositions());
-
-    odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()),
-        new SwerveModulePosition[] {
-            frontLeft.getPosition(),
-            frontRight.getPosition(),
-            backRight.getPosition(),
-            backLeft.getPosition()
-        });
+    // odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()),
+    //     new SwerveModulePosition[] {
+    //         frontLeft.getPosition(),
+    //         frontRight.getPosition(),
+    //         backRight.getPosition(),
+    //         backLeft.getPosition()
+    //     });
 
     // fieldmap.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(),
     //     odometry.getPoseMeters().getRotation());
@@ -168,23 +164,20 @@ public class Drivebase extends SubsystemBase {
   // Returns the currently-estimated pose of the robot
   public Pose2d getPose() {
 
-    // return poseEstimator.getEstimatedPosition();
+    return poseEstimator.getEstimatedPosition();
 
-    return odometry.getPoseMeters();
+    // return odometry.getPoseMeters();
   }
 
   // Resets the odometry to the specified pose
   public void resetOdometry(Pose2d pose) {
 
-    // poseEstimator.resetPosition(Rotation2d.fromDegrees(-gyro.getAngle()), getPositions(), pose);
+    poseEstimator.resetPosition(Rotation2d.fromDegrees(-gyro.getAngle()), getPositions(), pose);
 
 
     odometry.resetPosition(
         Rotation2d.fromDegrees(-gyro.getAngle()),
-        new SwerveModulePosition[] {
-            frontLeft.getPosition(), frontRight.getPosition(), backLeft.getPosition(),
-            backRight.getPosition()
-        },
+        getPositions(),
         pose);
   }
 
@@ -202,15 +195,16 @@ public class Drivebase extends SubsystemBase {
 
     double xSpeedCommanded;
     double ySpeedCommanded;
+    double rotationCommanded;
 
     xSpeedCommanded = side;
     ySpeedCommanded = forward;
-    currentRotation = rot;
+    rotationCommanded = rot;
 
     // Convert the commanded speeds into the correct units for the drivetrain
     double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
-    double rotDelivered = currentRotation * DriveConstants.kMaxAngularSpeed;
+    double rotDelivered = rotationCommanded * DriveConstants.kMaxAngularSpeed;
 
     var chassisspeeds = ChassisSpeeds.fromRobotRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
             Rotation2d.fromDegrees(gyro.getAngle()));

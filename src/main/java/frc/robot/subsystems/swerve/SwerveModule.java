@@ -100,6 +100,8 @@ public class SwerveModule {
                 anglePIDController.setOutputRange(ModuleConstants.kTurningMinOutput,
                                 ModuleConstants.kTurningMaxOutput);
 
+                anglePIDController.setIZone(16);
+
                 drivingSparkMax.setIdleMode(ModuleConstants.kDrivingMotorIdleMode);
                 steerSparkMax.setIdleMode(ModuleConstants.kTurningMotorIdleMode);
                 drivingSparkMax.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
@@ -146,6 +148,14 @@ public class SwerveModule {
 
         public double getTranslationalVelocity(){
                 return drivingEncoder.getVelocity();
+        }
+
+        public double get550Current(){
+                return steerSparkMax.getOutputCurrent();
+        }
+
+        public double getNEOCurrent(){
+                return drivingSparkMax.getOutputCurrent();
         }
 
         /**

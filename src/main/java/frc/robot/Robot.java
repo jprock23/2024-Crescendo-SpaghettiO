@@ -21,17 +21,18 @@ import frc.robot.commands.AutoSpeaker;
 import frc.robot.commands.BreakBeamHandoff;
 import frc.robot.commands.HandoffCommand;
 import frc.robot.commands.ShootCommand;
+import frc.robot.subsystems.IO.LED;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.launcher.Launcher;
 import frc.robot.subsystems.launcher.Launcher.LauncherState;
-import frc.robot.subsystems.led.LED;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.cameraserver.CameraServer;
 
@@ -103,17 +104,17 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("AutoRightShot", new AutoRightShot());
     NamedCommands.registerCommand("AutoMidShot", new AutoMidShot());
 
-
     m_chooser = AutoBuilder.buildAutoChooser();
-    m_chooser.addOption("Test1", new PathPlannerAuto("Test1"));
-    m_chooser.addOption("Test2", new PathPlannerAuto("Test2"));
-    m_chooser.addOption("Test3", new PathPlannerAuto("Test3"));
-    m_chooser.addOption("BeepBoop", new PathPlannerAuto("BeepBoop"));
-    m_chooser.addOption("3LittlePigs", new PathPlannerAuto("3LittlePigs"));
+    // m_chooser.addOption("Test1", new PathPlannerAuto("Test1"));
+    // m_chooser.addOption("Test2", new PathPlannerAuto("Test2"));
+    // m_chooser.addOption("Test3", new PathPlannerAuto("Test3"));
+    // // m_chooser.addOption("BeepBoop", new PathPlannerAuto("BeepBoop"));
+    // m_chooser.addOption("Test2 Left", new PathPlannerAuto("Test2 Left"));
+    //     m_chooser.addOption("Test2 Right", new PathPlannerAuto("Test2 Right"));
+    m_chooser.addOption("P2 4 Piece", new PathPlannerAuto("P2 4 Piece"));
 
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    litty.setBlue();
     useCurrentSpike = false;
 
     CameraServer.startAutomaticCapture();
@@ -128,10 +129,14 @@ public class Robot extends TimedRobot {
     // launcher.launcherConnections();
     // intake.intakeConnections();
     // climber.climberConnections();
+  
 
     // launcher.printConnections();
     // intake.printConnections();
     // climber.printConnections();
+    // drivebase.printConnections();
+
+    // drivebase.printTranslationalVelocities();
 
     // visTables.putInfoOnDashboard();
 
@@ -141,9 +146,9 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putString("Alliance", DriverStation.getAlliance().toString());
 
-    SmartDashboard.putNumber("Flipper Current", intake.getFlipperCurrent());
-    SmartDashboard.putNumber("Pivot Current", launcher.getPivotCurrent());
-    SmartDashboard.putNumber("Roller Current", intake.getRollerCurrent());
+    // SmartDashboard.putNumber("Flipper Current", intake.getFlipperCurrent());
+    // SmartDashboard.putNumber("Pivot Current", launcher.getPivotCurrent());
+    // SmartDashboard.putNumber("Roller Current", intake.getRollerCurrent());
 
     SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
     SmartDashboard.putNumber("Launcher Position", launcher.getPosition());
@@ -156,6 +161,7 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
     SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
+
   }
 
   @Override
@@ -176,6 +182,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    // litty.setBlue();
     if (m_autoSelected != null) {
       m_autoSelected.cancel();
     }
@@ -202,9 +209,13 @@ public class Robot extends TimedRobot {
 
     /* INTAKE CONTROLS */
 
-      if(operator.getAButton()){
-        launcher.setLauncherState(LauncherState.AUTOLEFTSHOT);
-      }
+    if (driver.getAButton()) {
+      drivebase.zeroHeading();
+    }
+
+    if (operator.getAButton()) {
+      launcher.setLauncherState(LauncherState.AUTOLEFTSHOT);
+    }
 
     if (operator.getRightBumper() && !useCurrentSpike) {
       handoffCommand.schedule();
@@ -271,9 +282,8 @@ public class Robot extends TimedRobot {
       launcher.setReverseLauncherOn();
     }
 
-
     if (operator.getRightTriggerAxis() > 0) {
-      if(launcher.getLaunchState() == LauncherState.AMP){
+      if (launcher.getLaunchState() == LauncherState.AMP) {
         ampCommand.initialize();
         ampCommand.schedule();
       } else {
@@ -286,7 +296,8 @@ public class Robot extends TimedRobot {
       intake.setRollerOff();
       shootCommand.cancel();
       handoffCommand.cancel();
-      litty.setBlue();
+      // litty.setBlue();
+
     }
 
   }

@@ -3,47 +3,47 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.0,
-        "y": 1.0
+        "x": 2.35,
+        "y": 4.11
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9815373154284097,
-        "y": 1.979131376237074
+        "x": 2.616498309919698,
+        "y": 4.599968738399015
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "RightRingFront"
     },
     {
       "anchor": {
-        "x": 0.07267095846602371,
-        "y": 6.511225119454518
+        "x": 2.91,
+        "y": 5.01
       },
       "prevControl": {
-        "x": -0.941212832496994,
-        "y": 5.518357062391727
+        "x": 2.6283386412926686,
+        "y": 4.611809069771986
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "MiddleRingRight"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 1.5,
-    "maxAngularVelocity": 780.0,
-    "maxAngularAcceleration": 540.0
+    "maxVelocity": 2.5,
+    "maxAcceleration": 1.75,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
-    "rotateFast": false
+    "rotation": 90.0,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "Test",
+  "folder": "Competition",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

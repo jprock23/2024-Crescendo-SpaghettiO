@@ -18,26 +18,39 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "P2 Intake Second"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Handoff"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Test2 Intake 4th"
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "P2 Score Second"
+            "pathName": "Test2 RIGHTShot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "AutoSpeaker"
+            "name": "AutoRightShot"
           }
         }
       ]
     }
   },
-  "folder": "Competition",
+  "folder": "Test",
   "choreoAuto": false
 }

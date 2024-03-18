@@ -3,47 +3,47 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.53,
-        "y": 4.44
+        "x": 2.39,
+        "y": 5.56
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8863445419198543,
-        "y": 5.042007776323246
+        "x": 2.6890756820798245,
+        "y": 6.119814048426908
       },
       "isLocked": false,
-      "linkedName": "RightRingFront"
+      "linkedName": "P2 Midshot"
     },
     {
       "anchor": {
-        "x": 1.32,
-        "y": 5.53
+        "x": 2.9,
+        "y": 6.45
       },
       "prevControl": {
-        "x": 1.8964775991090461,
-        "y": 5.012007776323246
+        "x": 2.6890756820798245,
+        "y": 6.106586029308563
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "P2 Start"
+      "linkedName": "LeftRingRight"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 1.5,
-    "maxAngularVelocity": 780.0,
-    "maxAngularAcceleration": 540.0
+    "maxVelocity": 2.5,
+    "maxAcceleration": 1.75,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
-    "rotateFast": false
+    "rotation": 90.0,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "Belton",
+  "folder": "Competition",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

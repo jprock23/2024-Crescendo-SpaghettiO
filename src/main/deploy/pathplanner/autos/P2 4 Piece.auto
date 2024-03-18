@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.93,
-      "y": 4.48
+      "x": 1.3,
+      "y": 5.56
     },
-    "rotation": 120.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -20,6 +20,6 @@
       ]
     }
   },
-  "folder": "Belton",
+  "folder": "Competition",
   "choreoAuto": false
 }

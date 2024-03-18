@@ -56,10 +56,14 @@ public class Drivebase extends SubsystemBase {
 
     // Swerve modules
 
-    frontLeft = new SwerveModule(Ports.frontLeftDrive, Ports.frontLeftSteer,DriveConstants.kFrontLeftChassisAngularOffset, true);
-    backLeft = new SwerveModule(Ports.backLeftDrive, Ports.backLeftSteer, DriveConstants.kBackLeftChassisAngularOffset, false);
-    frontRight = new SwerveModule(Ports.frontRightDrive, Ports.frontRightSteer, DriveConstants.kFrontRightChassisAngularOffset, false);
-    backRight = new SwerveModule(Ports.backRightDrive, Ports.backRightSteer, DriveConstants.kBackRightChassisAngularOffset, true);
+    frontLeft = new SwerveModule(Ports.frontLeftDrive, Ports.frontLeftSteer,
+        DriveConstants.kFrontLeftChassisAngularOffset, true);
+    backLeft = new SwerveModule(Ports.backLeftDrive, Ports.backLeftSteer, DriveConstants.kBackLeftChassisAngularOffset,
+        false);
+    frontRight = new SwerveModule(Ports.frontRightDrive, Ports.frontRightSteer,
+        DriveConstants.kFrontRightChassisAngularOffset, false);
+    backRight = new SwerveModule(Ports.backRightDrive, Ports.backRightSteer,
+        DriveConstants.kBackRightChassisAngularOffset, true);
 
     gyro = new AHRS(SPI.Port.kMXP);
 
@@ -69,22 +73,22 @@ public class Drivebase extends SubsystemBase {
     visTables = VisionTablesListener.getInstance();
 
     // odometry = new SwerveDriveOdometry(
-    //     DriveConstants.kDriveKinematics,
-    //     Rotation2d.fromDegrees(-gyro.getAngle()), new SwerveModulePosition[] {
-    //         frontLeft.getPosition(),
-    //         frontRight.getPosition(),
-    //         backRight.getPosition(),
-    //         backLeft.getPosition(),
+    // DriveConstants.kDriveKinematics,
+    // Rotation2d.fromDegrees(-gyro.getAngle()), new SwerveModulePosition[] {
+    // frontLeft.getPosition(),
+    // frontRight.getPosition(),
+    // backRight.getPosition(),
+    // backLeft.getPosition(),
 
-    //     });
+    // });
 
-          poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, Rotation2d.fromDegrees(-gyro.getAngle()),
+    poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics,
+        Rotation2d.fromDegrees(-gyro.getAngle()),
         getPositions(), new Pose2d(), stateStdDevs, visionMeasurementStdDevs);
 
     config = new HolonomicPathFollowerConfig(new PIDConstants(1.2, 0, 0),
-        new PIDConstants(0.11, 0.00001, 0.0),
-        //0.048, 0, 0.0005
-        //0.06, 0.0001, 0.0005-
+        new PIDConstants(1, 0.0000, 0.0),
+        // 0.12, 0.00001, 0.0
         5, Math.sqrt(Math.pow(DriveConstants.kTrackWidth / 2, 2) +
             Math.pow(DriveConstants.kWheelBase / 2, 2)),
         new ReplanningConfig());
@@ -101,64 +105,64 @@ public class Drivebase extends SubsystemBase {
 
   public void periodic() {
 
-    if(visTables.getTagVisible1()){
-      //cam1
+    if (visTables.getTagVisible1()) {
+      // cam1
       // Transform3d[] transformsCam1 = visTables.getCam1Transforms(-gyro.getAngle());
       // double[] cam1IDs = visTables.getCam1IDs();
       // double[] timestampsCam1 = visTables.getCam1Timestamps();
-      
+
       // for(int i = 0; i < transformsCam1.length; i++) {
-      //   Pose3d tagPos1 = visTables.getBestTagAbsPos((int)cam1IDs[i]);
-      //   Pose2d robotPos1 = tagPos.transformBy(transformsCam1[i]).toPose2d();
-        Pose3d tagPos1 = visTables.getBestTagAbsPos((int)visTables.getCam1IDs()[0]);
-        Pose2d robotPos1 = tagPos1.transformBy(visTables.getCam1Transforms(-gyro.getAngle())[0]).toPose2d();
+      // Pose3d tagPos1 = visTables.getBestTagAbsPos((int)cam1IDs[i]);
+      // Pose2d robotPos1 = tagPos.transformBy(transformsCam1[i]).toPose2d();
+      Pose3d tagPos1 = visTables.getBestTagAbsPos((int) visTables.getCam1IDs()[0]);
+      Pose2d robotPos1 = tagPos1.transformBy(visTables.getCam1Transforms(-gyro.getAngle())[0]).toPose2d();
 
-        poseEstimator.addVisionMeasurement(robotPos1, visTables.getCam1Timestamps()[0]);
-      }
+      poseEstimator.addVisionMeasurement(robotPos1, visTables.getCam1Timestamps()[0]);
+    }
 
-      if(visTables.getTagVisible2()){
-      //cam1
+    if (visTables.getTagVisible2()) {
+      // cam1
       // Transform3d[] transformsCam2 = visTables.getCam2Transforms(-gyro.getAngle());
       // double[] cam2IDs = visTables.getCam2IDs();
       // double[] timestampsCam2 = visTables.getCam2Timestamps();
-      
+
       // for(int i = 0; i < transformsCam2.length; i++) {
-      //   Pose3d tagPos2 = visTables.getBestTagAbsPos((int)cam2IDs[i]);
-      //   Pose2d robotPos2 = tagPos.transformBy(transformsCam2[i]).toPose2d();
-        Pose3d tagPos2 = visTables.getBestTagAbsPos((int)visTables.getCam2IDs()[0]);
-        Pose2d robotPos2 = tagPos2.transformBy(visTables.getCam2Transforms(-gyro.getAngle())[0]).toPose2d();
+      // Pose3d tagPos2 = visTables.getBestTagAbsPos((int)cam2IDs[i]);
+      // Pose2d robotPos2 = tagPos.transformBy(transformsCam2[i]).toPose2d();
+      Pose3d tagPos2 = visTables.getBestTagAbsPos((int) visTables.getCam2IDs()[0]);
+      Pose2d robotPos2 = tagPos2.transformBy(visTables.getCam2Transforms(-gyro.getAngle())[0]).toPose2d();
 
-        poseEstimator.addVisionMeasurement(robotPos2, visTables.getCam1Timestamps()[0]);
-      }
+      poseEstimator.addVisionMeasurement(robotPos2, visTables.getCam1Timestamps()[0]);
+    }
 
-   
-      if(visTables.getTagVisible3()){
-      //cam1
+    if (visTables.getTagVisible3()) {
+      // cam1
       // Transform3d[] transformsCam3 = visTables.getCam3Transforms(-gyro.getAngle());
       // double[] cam3IDs = visTables.getCam3IDs();
       // double[] timestampsCam3 = visTables.getCam3Timestamps();
-      
-      // for(int i = 0; i < transformsCam3.length; i++) {
-      //   Pose3d tagPos3 = visTables.getBestTagAbsPos((int)cam3IDs[i]);
-      //   Pose2d robotPos3 = tagPos.transformBy(transformsCam3[i]).toPose2d();
-        Pose3d tagPos3 = visTables.getBestTagAbsPos((int)visTables.getCam2IDs()[0]);
-        Pose2d robotPos3 = tagPos3.transformBy(visTables.getCam2Transforms(-gyro.getAngle())[0]).toPose2d();
 
-        poseEstimator.addVisionMeasurement(robotPos3, visTables.getCam1Timestamps()[0]);
-      }
+      // for(int i = 0; i < transformsCam3.length; i++) {
+      // Pose3d tagPos3 = visTables.getBestTagAbsPos((int)cam3IDs[i]);
+      // Pose2d robotPos3 = tagPos.transformBy(transformsCam3[i]).toPose2d();
+      Pose3d tagPos3 = visTables.getBestTagAbsPos((int) visTables.getCam2IDs()[0]);
+      Pose2d robotPos3 = tagPos3.transformBy(visTables.getCam2Transforms(-gyro.getAngle())[0]).toPose2d();
+
+      poseEstimator.addVisionMeasurement(robotPos3, visTables.getCam1Timestamps()[0]);
+    }
 
     poseEstimator.updateWithTime(Timer.getFPGATimestamp(), Rotation2d.fromDegrees(-gyro.getAngle()), getPositions());
 
     // odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()),
-    //     new SwerveModulePosition[] {
-    //         frontLeft.getPosition(),
-    //         frontRight.getPosition(),
-    //         backRight.getPosition(),
-    //         backLeft.getPosition()
-    //     });
+    // new SwerveModulePosition[] {
+    // frontLeft.getPosition(),
+    // frontRight.getPosition(),
+    // backRight.getPosition(),
+    // backLeft.getPosition()
+    // });
 
-    // fieldmap.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(),
-    //     odometry.getPoseMeters().getRotation());
+    // fieldmap.setRobotPose(odometry.getPoseMeters().getX(),
+    // odometry.getPoseMeters().getY(),
+    // odometry.getPoseMeters().getRotation());
   }
 
   // Returns the currently-estimated pose of the robot
@@ -174,21 +178,23 @@ public class Drivebase extends SubsystemBase {
 
     poseEstimator.resetPosition(Rotation2d.fromDegrees(-gyro.getAngle()), getPositions(), pose);
 
-
-    odometry.resetPosition(
-        Rotation2d.fromDegrees(-gyro.getAngle()),
-        getPositions(),
-        pose);
+    // odometry.resetPosition(
+    // Rotation2d.fromDegrees(-gyro.getAngle()),
+    // getPositions(),
+    // pose);
   }
 
   public void resetOdometry() {
-    odometry.resetPosition(
-        Rotation2d.fromDegrees(-gyro.getAngle()),
-        new SwerveModulePosition[] {
-            frontLeft.getPosition(), frontRight.getPosition(), backLeft.getPosition(),
-            backRight.getPosition()
-        },
-        getPose());
+
+    poseEstimator.resetPosition(Rotation2d.fromDegrees(-gyro.getAngle()), getPositions(), getPose());
+
+    // odometry.resetPosition(
+    // Rotation2d.fromDegrees(-gyro.getAngle()),
+    // new SwerveModulePosition[] {
+    // frontLeft.getPosition(), frontRight.getPosition(), backLeft.getPosition(),
+    // backRight.getPosition()
+    // },
+    // getPose());
   }
 
   public void drive(double forward, double side, double rot, boolean fieldRelative) {
@@ -207,8 +213,8 @@ public class Drivebase extends SubsystemBase {
     double rotDelivered = rotationCommanded * DriveConstants.kMaxAngularSpeed;
 
     var chassisspeeds = ChassisSpeeds.fromRobotRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-            Rotation2d.fromDegrees(gyro.getAngle()));
-            new ChassisSpeeds();
+        Rotation2d.fromDegrees(gyro.getAngle()));
+    new ChassisSpeeds();
 
     setChassisSpeed(chassisspeeds);
   }
@@ -253,7 +259,6 @@ public class Drivebase extends SubsystemBase {
     return DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
   }
 
-
   public void lockWheels() {
     frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
@@ -261,7 +266,7 @@ public class Drivebase extends SubsystemBase {
     backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
   }
 
-    public void wheelsTo90() {
+  public void wheelsTo90() {
     frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-90)));
     frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(90)));
     backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(90)));
@@ -321,17 +326,48 @@ public class Drivebase extends SubsystemBase {
     return gyro.getRate();
   }
 
-  public double inputDeadband(double input){
+  public double inputDeadband(double input) {
 
-    return Math.abs(input) > .075 ?  input : 0;
-}
+    return Math.abs(input) > .075 ? input : 0;
+  }
 
-  public double[] getModuleRotations(){
-    return new double[]{
-      frontLeft.getModuleAngle(),
-      frontRight.getModuleAngle(),
-      backLeft.getModuleAngle(),
-      backRight.getModuleAngle()
+  public double[] getConnections() {
+    return new double[] {
+        frontLeft.get550Current(), frontLeft.getNEOCurrent(),
+        frontRight.get550Current(), frontRight.getNEOCurrent(),
+        backLeft.get550Current(), backLeft.getNEOCurrent(),
+        backRight.get550Current(), backRight.getNEOCurrent()
+    };
+  }
+
+  public void printConnections() {
+    SmartDashboard.putNumber("FrontLeft550", getConnections()[0]);
+    SmartDashboard.putNumber("FrontLeftNEO", getConnections()[1]);
+
+    SmartDashboard.putNumber("FrontRight550", getConnections()[2]);
+    SmartDashboard.putNumber("FrontRightNEO", getConnections()[3]);
+
+    SmartDashboard.putNumber("BackLeft550", getConnections()[4]);
+    SmartDashboard.putNumber("BackLeftNEO", getConnections()[5]);
+
+    SmartDashboard.putNumber("BackRight550", getConnections()[6]);
+    SmartDashboard.putNumber("BackRightNEO", getConnections()[7]);
+  }
+
+  public void printTranslationalVelocities() {
+    SmartDashboard.putNumber("Front Left TranslationalVelo", frontLeft.getTranslationalVelocity());
+    SmartDashboard.putNumber("Front Right TranslationalVelo", frontRight.getTranslationalVelocity());
+    SmartDashboard.putNumber("Back Left TranslationalVelo", backLeft.getTranslationalVelocity());
+    SmartDashboard.putNumber("Back Right TranslationalVelo", backRight.getTranslationalVelocity());
+
+  }
+
+  public double[] getModuleRotations() {
+    return new double[] {
+        frontLeft.getModuleAngle(),
+        frontRight.getModuleAngle(),
+        backLeft.getModuleAngle(),
+        backRight.getModuleAngle()
     };
   }
 

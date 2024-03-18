@@ -30,12 +30,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ReverseLauncher"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Test3 Score 2nd"

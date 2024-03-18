@@ -4,17 +4,15 @@
   "holonomicMode": true,
   "pathFolders": [
     "Competition",
-    "Belton",
     "Test"
   ],
   "autoFolders": [
     "Competition",
-    "Belton",
     "Test"
   ],
-  "defaultMaxVel": 3.0,
-  "defaultMaxAccel": 1.5,
-  "defaultMaxAngVel": 780.0,
-  "defaultMaxAngAccel": 540.0,
+  "defaultMaxVel": 2.5,
+  "defaultMaxAccel": 1.75,
+  "defaultMaxAngVel": 540.0,
+  "defaultMaxAngAccel": 360.0,
   "maxModuleSpeed": 3.0
 }

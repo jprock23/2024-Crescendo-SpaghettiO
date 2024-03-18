@@ -3,44 +3,44 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.53,
-        "y": 4.44
+        "x": 2.35,
+        "y": 4.12
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.310020971287762,
-        "y": 4.242040701280868
+        "x": 2.1300209712877622,
+        "y": 3.922040701280868
       },
       "isLocked": false,
       "linkedName": "RightRingFront"
     },
     {
       "anchor": {
-        "x": 2.53,
-        "y": 4.12513604548266
+        "x": 2.35,
+        "y": 4.12
       },
       "prevControl": {
-        "x": 2.3243989067838933,
-        "y": 4.254688827367274
+        "x": 2.1443989067838936,
+        "y": 4.249552781884614
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "P2 Right Shot"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 1.5,
-    "maxAngularVelocity": 780.0,
-    "maxAngularAcceleration": 540.0
+    "maxVelocity": 2.5,
+    "maxAcceleration": 1.75,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
     "velocity": 0,
     "rotation": 155.0,
-    "rotateFast": false
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "Test",

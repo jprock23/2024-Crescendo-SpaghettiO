@@ -27,10 +27,10 @@ public class Launcher {
         HANDOFF(7.5,0.5),
         HOVER(-8, 1.0),
         TOSS(-18, .9),
-        AUTOMIDSHOT(-20, 1.0),
-        AUTOLEFTSHOT(-12, 1.0),
+        AUTOMIDSHOT(-23, 1.0),
+        AUTOLEFTSHOT(-15, 1.0),
         //210 degrees
-        AUTORIGHTSHOT(-15, 1.0),
+        AUTORIGHTSHOT(-13.5, 1.0),
         //-155 degrees
         SPEAKER(-53.0, 1.0);
 

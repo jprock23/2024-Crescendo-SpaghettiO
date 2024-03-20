@@ -13,52 +13,56 @@ public class LED {
 
     private AddressableLEDBuffer buffer;
 
-    private int length;
+    private int length = 60;
 
     private Spark PWMLED;
 
     public LED() {
 
-        // PWMLED = new Spark(Ports.blinkin);
+        PWMLED = new Spark(Ports.blinkin);
 
-        LEDs = new AddressableLED(Ports.blinkin);
+        // LEDs = new AddressableLED(Ports.blinkin);
 
-        buffer = new AddressableLEDBuffer(length);
-        LEDs.setLength(length);
+        // buffer = new AddressableLEDBuffer(length);
+        // LEDs.setLength(buffer.getLength());
 
-        LEDs.setData(buffer);
-        LEDs.start();
-    }
-
-    public void start() {
-        LEDs.start();
+        // LEDs.setData(buffer);
+        // LEDs.start();
     }
 
     public void setBlue() {
 
-        for (int i = 0; i < buffer.getLength(); i++) {
-            buffer.setRGB(i, 0, 0, 255);
-        }
+        // for (int i = 0; i < buffer.getLength(); i++) {
+        //     buffer.setRGB(i, 0, 0, 255 );
+        // }
 
-
-        // PWMLED.set(0.0);
+        // LEDs.setData(buffer);
+        PWMLED.set(.85);
+        // Yellow = .67
+        // Rainbow = -.89
+        // Flashbang? = .35
+        // Strobe = -.05
+        // Shot = .33
+        // Larson's Pattern = .19
     }
 
-    // public double get(){
-    // return PWMLED.get();
-    // }
-
     public void setDisco() {
-        PWMLED.set(-1.0);
+        PWMLED.set(-0.89);
     }
 
     public void setGreen() {
-        PWMLED.set(.87);
+        PWMLED.set(0.75);
+        //Just Green - 0.75
     }
 
     public void setRed() {
-        PWMLED.set(-.35);
+        PWMLED.set(0.61);
+        //Just Red - 0.61
     }
+    public void setYellow() {
+        PWMLED.set(.67);
+    }
+    
 
     public static LED getInstance() {
         if (instance == null) {

@@ -52,7 +52,7 @@ public class AutoHandoff extends Command {
 
     intakeHasRing = false;
 
-    // litty.setRed();
+    litty.setRed();
   }
 
   @Override
@@ -142,7 +142,7 @@ public class AutoHandoff extends Command {
     launcher.setFlickOff();
     intake.setIntakeState(IntakeState.STOP);
     launcher.updatePose();
-    // litty.setGreen();
+    litty.setGreen();
   }
 
   @Override

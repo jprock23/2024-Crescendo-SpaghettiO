@@ -15,10 +15,10 @@ import frc.robot.commands.AutoAmp;
 import frc.robot.commands.AutoHandoff;
 import frc.robot.commands.AutoLeftShot;
 import frc.robot.commands.AutoMidShot;
-import frc.robot.commands.AutoReverseLauncher;
 import frc.robot.commands.AutoRightShot;
 import frc.robot.commands.AutoSpeaker;
 import frc.robot.commands.BreakBeamHandoff;
+import frc.robot.commands.Celebrate;
 import frc.robot.commands.HandoffCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.IO.LED;
@@ -32,9 +32,10 @@ import frc.robot.subsystems.swerve.Drivebase;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -69,7 +70,6 @@ public class Robot extends TimedRobot {
   private AutoSpeaker autoSpeaker;
   private AutoAmp autoAmp;
   private HandoffCommand currentSpikeHandoff;
-  private AutoReverseLauncher reverseLauncher;
   private AmpCommand ampCommand;
 
   private boolean useCurrentSpike;
@@ -103,6 +103,7 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("AutoLeftShot", new AutoLeftShot());
     NamedCommands.registerCommand("AutoRightShot", new AutoRightShot());
     NamedCommands.registerCommand("AutoMidShot", new AutoMidShot());
+    NamedCommands.registerCommand("Celebrate", new Celebrate());
 
     m_chooser = AutoBuilder.buildAutoChooser();
     // m_chooser.addOption("Test1", new PathPlannerAuto("Test1"));
@@ -112,6 +113,8 @@ public class Robot extends TimedRobot {
     // m_chooser.addOption("Test2 Left", new PathPlannerAuto("Test2 Left"));
     //     m_chooser.addOption("Test2 Right", new PathPlannerAuto("Test2 Right"));
     m_chooser.addOption("P2 4 Piece", new PathPlannerAuto("P2 4 Piece"));
+    m_chooser.addOption("P3 4 Piece", new PathPlannerAuto("P3 4 Piece"));
+
 
     SmartDashboard.putData("Auto choices", m_chooser);
 
@@ -122,6 +125,7 @@ public class Robot extends TimedRobot {
   }
 
   @Override
+
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     drivebase.periodic();
@@ -140,7 +144,7 @@ public class Robot extends TimedRobot {
 
     // visTables.putInfoOnDashboard();
 
-    SmartDashboard.putNumber("Gyro Angle:", drivebase.getHeading() + 90);
+    SmartDashboard.putNumber("Gyro Angle:", (drivebase.getHeading() + 90)%360);
     SmartDashboard.putNumber("X-coordinate", drivebase.getPose().getX());
     SmartDashboard.putNumber("Y-coordinate", drivebase.getPose().getY());
 
@@ -161,7 +165,6 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
     SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
-
   }
 
   @Override
@@ -182,7 +185,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    // litty.setBlue();
+    litty.setRed();
     if (m_autoSelected != null) {
       m_autoSelected.cancel();
     }
@@ -213,9 +216,6 @@ public class Robot extends TimedRobot {
       drivebase.zeroHeading();
     }
 
-    if (operator.getAButton()) {
-      launcher.setLauncherState(LauncherState.AUTOLEFTSHOT);
-    }
 
     if (operator.getRightBumper() && !useCurrentSpike) {
       handoffCommand.schedule();
@@ -240,7 +240,7 @@ public class Robot extends TimedRobot {
       launcher.updatePose();
       launcher.setLauncherOff();
       launcher.setFlickOff();
-
+      litty.setBlue();
     }
 
     // *CLIMBER CONTROLS */

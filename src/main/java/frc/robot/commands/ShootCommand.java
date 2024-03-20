@@ -53,7 +53,7 @@ public class ShootCommand extends Command {
   public void end(boolean interrupted) {
     launcher.setFlickOff();
     launcher.setLauncherOff();
-    // litty.setRed();
+    litty.setRed();
   }
 
   @Override

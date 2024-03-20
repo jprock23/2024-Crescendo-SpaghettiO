@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3,
-      "y": 5.56
+      "x": 0.79,
+      "y": 4.44
     },
     "rotation": -60.0
   },
@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "P2 Intake Second"
+                  "pathName": "P3 Intake Second"
                 }
               }
             ]

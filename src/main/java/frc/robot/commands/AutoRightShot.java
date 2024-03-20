@@ -25,7 +25,7 @@ public class AutoRightShot extends Command {
   public void initialize() {
     ended = false;
 
-    launcher.setLauncherState(LauncherState.AUTOLEFTSHOT);
+    launcher.setLauncherState(LauncherState.AUTORIGHTSHOT);
     startTime = -1;
     elapsedTime = 0;
     // launcher.setLauncherOn();

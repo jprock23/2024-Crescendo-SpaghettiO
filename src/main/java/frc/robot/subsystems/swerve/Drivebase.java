@@ -105,7 +105,7 @@ public class Drivebase extends SubsystemBase {
 
   public void periodic() {
 
-    if (visTables.getTagVisible1()) {
+    // if (visTables.getTagVisible1()) {
       // cam1
       // Transform3d[] transformsCam1 = visTables.getCam1Transforms(-gyro.getAngle());
       // double[] cam1IDs = visTables.getCam1IDs();
@@ -114,41 +114,41 @@ public class Drivebase extends SubsystemBase {
       // for(int i = 0; i < transformsCam1.length; i++) {
       // Pose3d tagPos1 = visTables.getBestTagAbsPos((int)cam1IDs[i]);
       // Pose2d robotPos1 = tagPos.transformBy(transformsCam1[i]).toPose2d();
-      Pose3d tagPos1 = visTables.getBestTagAbsPos((int) visTables.getCam1IDs()[0]);
-      Pose2d robotPos1 = tagPos1.transformBy(visTables.getCam1Transforms(-gyro.getAngle())[0]).toPose2d();
+    //   Pose3d tagPos1 = visTables.getBestTagAbsPos((int) visTables.getCam1IDs()[0]);
+    //   Pose2d robotPos1 = tagPos1.transformBy(visTables.getCam1Transforms(-gyro.getAngle())[0]).toPose2d();
 
-      poseEstimator.addVisionMeasurement(robotPos1, visTables.getCam1Timestamps()[0]);
-    }
+    //   poseEstimator.addVisionMeasurement(robotPos1, visTables.getCam1Timestamps()[0]);
+    // }
 
-    if (visTables.getTagVisible2()) {
-      // cam1
-      // Transform3d[] transformsCam2 = visTables.getCam2Transforms(-gyro.getAngle());
-      // double[] cam2IDs = visTables.getCam2IDs();
-      // double[] timestampsCam2 = visTables.getCam2Timestamps();
+    // if (visTables.getTagVisible2()) {
+    //   // cam1
+    //   // Transform3d[] transformsCam2 = visTables.getCam2Transforms(-gyro.getAngle());
+    //   // double[] cam2IDs = visTables.getCam2IDs();
+    //   // double[] timestampsCam2 = visTables.getCam2Timestamps();
 
-      // for(int i = 0; i < transformsCam2.length; i++) {
-      // Pose3d tagPos2 = visTables.getBestTagAbsPos((int)cam2IDs[i]);
-      // Pose2d robotPos2 = tagPos.transformBy(transformsCam2[i]).toPose2d();
-      Pose3d tagPos2 = visTables.getBestTagAbsPos((int) visTables.getCam2IDs()[0]);
-      Pose2d robotPos2 = tagPos2.transformBy(visTables.getCam2Transforms(-gyro.getAngle())[0]).toPose2d();
+    //   // for(int i = 0; i < transformsCam2.length; i++) {
+    //   // Pose3d tagPos2 = visTables.getBestTagAbsPos((int)cam2IDs[i]);
+    //   // Pose2d robotPos2 = tagPos.transformBy(transformsCam2[i]).toPose2d();
+    //   Pose3d tagPos2 = visTables.getBestTagAbsPos((int) visTables.getCam2IDs()[0]);
+    //   Pose2d robotPos2 = tagPos2.transformBy(visTables.getCam2Transforms(-gyro.getAngle())[0]).toPose2d();
 
-      poseEstimator.addVisionMeasurement(robotPos2, visTables.getCam1Timestamps()[0]);
-    }
+    //   poseEstimator.addVisionMeasurement(robotPos2, visTables.getCam1Timestamps()[0]);
+    // }
 
-    if (visTables.getTagVisible3()) {
-      // cam1
-      // Transform3d[] transformsCam3 = visTables.getCam3Transforms(-gyro.getAngle());
-      // double[] cam3IDs = visTables.getCam3IDs();
-      // double[] timestampsCam3 = visTables.getCam3Timestamps();
+    // if (visTables.getTagVisible3()) {
+    //   // cam1
+    //   // Transform3d[] transformsCam3 = visTables.getCam3Transforms(-gyro.getAngle());
+    //   // double[] cam3IDs = visTables.getCam3IDs();
+    //   // double[] timestampsCam3 = visTables.getCam3Timestamps();
 
-      // for(int i = 0; i < transformsCam3.length; i++) {
-      // Pose3d tagPos3 = visTables.getBestTagAbsPos((int)cam3IDs[i]);
-      // Pose2d robotPos3 = tagPos.transformBy(transformsCam3[i]).toPose2d();
-      Pose3d tagPos3 = visTables.getBestTagAbsPos((int) visTables.getCam2IDs()[0]);
-      Pose2d robotPos3 = tagPos3.transformBy(visTables.getCam2Transforms(-gyro.getAngle())[0]).toPose2d();
+    //   // for(int i = 0; i < transformsCam3.length; i++) {
+    //   // Pose3d tagPos3 = visTables.getBestTagAbsPos((int)cam3IDs[i]);
+    //   // Pose2d robotPos3 = tagPos.transformBy(transformsCam3[i]).toPose2d();
+    //   Pose3d tagPos3 = visTables.getBestTagAbsPos((int) visTables.getCam2IDs()[0]);
+    //   Pose2d robotPos3 = tagPos3.transformBy(visTables.getCam2Transforms(-gyro.getAngle())[0]).toPose2d();
 
-      poseEstimator.addVisionMeasurement(robotPos3, visTables.getCam1Timestamps()[0]);
-    }
+    //   poseEstimator.addVisionMeasurement(robotPos3, visTables.getCam1Timestamps()[0]);
+    // }
 
     poseEstimator.updateWithTime(Timer.getFPGATimestamp(), Rotation2d.fromDegrees(-gyro.getAngle()), getPositions());
 

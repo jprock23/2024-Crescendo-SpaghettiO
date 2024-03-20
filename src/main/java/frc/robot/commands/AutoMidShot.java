@@ -25,7 +25,7 @@ public class AutoMidShot extends Command {
   public void initialize() {
     ended = false;
 
-    launcher.setLauncherState(LauncherState.AUTOLEFTSHOT);
+    launcher.setLauncherState(LauncherState.AUTOMIDSHOT);
     startTime = -1;
     elapsedTime = 0;
     // launcher.setLauncherOn();

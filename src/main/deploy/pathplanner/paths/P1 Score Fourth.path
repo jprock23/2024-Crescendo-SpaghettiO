@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7856804503014655,
-        "y": 4.43569076167173
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 1.5946854355183215,
-        "y": 4.079882185098084
-      },
-      "isLocked": false,
-      "linkedName": "P3 Start"
-    },
-    {
-      "anchor": {
         "x": 2.41,
         "y": 4.09
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.3868732130920187,
+        "y": 4.117893375273021
+      },
+      "isLocked": false,
+      "linkedName": "RightRingFront"
+    },
+    {
+      "anchor": {
+        "x": 2.37,
+        "y": 4.422318106371823
+      },
       "prevControl": {
-        "x": 1.6456170099891096,
-        "y": 4.210792873829703
+        "x": 1.8712847239999089,
+        "y": 4.2183769595313345
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "RightRingFront"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 145.0,
     "rotateFast": true
   },
   "reversed": false,
   "folder": "Competition",
   "previewStartingState": {
-    "rotation": -59.70830389968272,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true

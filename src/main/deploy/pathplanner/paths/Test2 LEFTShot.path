@@ -3,39 +3,39 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.51,
-        "y": 6.66
+        "x": 2.9,
+        "y": 6.45
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.502882469494073,
-        "y": 6.932585633763668
+        "x": 2.899942954441865,
+        "y": 6.45218471836611
       },
-      "isLocked": false,
-      "linkedName": null
+      "isLocked": true,
+      "linkedName": "LeftRingRight"
     },
     {
       "anchor": {
-        "x": 2.51,
-        "y": 6.66
+        "x": 2.458627224946759,
+        "y": 7.0
       },
       "prevControl": {
-        "x": 2.5056021835771616,
-        "y": 6.408049265876475
+        "x": 2.4650518833363932,
+        "y": 6.861105799257382
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "P2 Left Shot"
+      "linkedName": "Left Shot"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.5,
-    "maxAcceleration": 1.75,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 360.0
+    "maxVelocity": 3.5,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 720.0,
+    "maxAngularAcceleration": 540.0
   },
   "goalEndState": {
     "velocity": 0,

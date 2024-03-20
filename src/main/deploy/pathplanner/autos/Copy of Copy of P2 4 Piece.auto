@@ -22,9 +22,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "P2 Intake Second"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "P3 Intake Second"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Test2 RIGHTShot"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -34,12 +47,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Test2 RIGHTShot"
           }
         },
         {
@@ -53,24 +60,31 @@
           "data": {
             "commands": [
               {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "P2 Intake Third"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "P2 Score Third"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
                 "type": "named",
                 "data": {
                   "name": "Handoff"
                 }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "P2 Intake Third"
-                }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "P2 Score Third"
           }
         },
         {
@@ -90,28 +104,22 @@
                 }
               },
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "P2 Intake Fourth"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Test2 LEFTShot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Celebrate"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "P2 Intake Fourth"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "P2 Score Fourth"
+                      }
+                    }
+                  ]
                 }
               }
             ]

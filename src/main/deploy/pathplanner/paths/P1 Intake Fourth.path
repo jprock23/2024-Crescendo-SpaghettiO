@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7856804503014655,
-        "y": 4.43569076167173
+        "x": 2.91,
+        "y": 5.56
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5946854355183215,
-        "y": 4.079882185098084
+        "x": 2.1567376248364063,
+        "y": 4.98201330083678
       },
       "isLocked": false,
-      "linkedName": "P3 Start"
+      "linkedName": "Midshot"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 4.09
       },
       "prevControl": {
-        "x": 1.6456170099891096,
-        "y": 4.210792873829703
+        "x": 1.7085779562093761,
+        "y": 4.989906855085427
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 0,
     "rotateFast": true
   },
   "reversed": false,
   "folder": "Competition",
   "previewStartingState": {
-    "rotation": -59.70830389968272,
+    "rotation": 179.80326257887674,
     "velocity": 0
   },
   "useDefaultConstraints": true

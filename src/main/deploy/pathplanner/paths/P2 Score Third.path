@@ -16,26 +16,26 @@
     },
     {
       "anchor": {
-        "x": 2.41,
+        "x": 2.91,
         "y": 5.56
       },
       "prevControl": {
-        "x": 2.4122152987313377,
+        "x": 2.9122152987313377,
         "y": 5.562756494059608
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "P2 Midshot"
+      "linkedName": "Midshot"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.5,
-    "maxAcceleration": 1.75,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 360.0
+    "maxVelocity": 3.5,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 720.0,
+    "maxAngularAcceleration": 540.0
   },
   "goalEndState": {
     "velocity": 0,

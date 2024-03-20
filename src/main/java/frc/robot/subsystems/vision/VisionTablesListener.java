@@ -81,19 +81,19 @@ public class VisionTablesListener {
         yaw1Sub = visionTable.getDoubleArrayTopic("Yaws").subscribe(new double[] {});
         timestamp1Sub = visionTable.getDoubleArrayTopic("Timestamps").subscribe(new double[] {});
         
-        tagID2Sub = visionTable.getIntegerArrayTopic("IDs 2").subscribe(new long[] {});
-        x2Sub = visionTable.getDoubleArrayTopic("X Coords 2").subscribe(new double[] {});
-        y2Sub = visionTable.getDoubleArrayTopic("Y Coords 2").subscribe(new double[] {});
-        z2Sub = visionTable.getDoubleArrayTopic("Z Coords 2").subscribe(new double[] {});
-        yaw2Sub = visionTable.getDoubleArrayTopic("Yaws 2").subscribe(new double[] {});
-        timestamp2Sub = visionTable.getDoubleArrayTopic("Timestamps 2").subscribe(new double[] {});
+        // tagID2Sub = visionTable.getIntegerArrayTopic("IDs 2").subscribe(new long[] {});
+        // x2Sub = visionTable.getDoubleArrayTopic("X Coords 2").subscribe(new double[] {});
+        // y2Sub = visionTable.getDoubleArrayTopic("Y Coords 2").subscribe(new double[] {});
+        // z2Sub = visionTable.getDoubleArrayTopic("Z Coords 2").subscribe(new double[] {});
+        // yaw2Sub = visionTable.getDoubleArrayTopic("Yaws 2").subscribe(new double[] {});
+        // timestamp2Sub = visionTable.getDoubleArrayTopic("Timestamps 2").subscribe(new double[] {});
 
-        tagID3Sub = visionTable.getIntegerArrayTopic("IDs 3").subscribe(new long[] {});
-        x3Sub = visionTable.getDoubleArrayTopic("X Coords 3").subscribe(new double[] {});
-        y3Sub = visionTable.getDoubleArrayTopic("Y Coords 3").subscribe(new double[] {});
-        z3Sub = visionTable.getDoubleArrayTopic("Z Coords 3").subscribe(new double[] {});
-        yaw3Sub = visionTable.getDoubleArrayTopic("Yaws 3").subscribe(new double[] {});
-        timestamp3Sub = visionTable.getDoubleArrayTopic("Timestamps 3").subscribe(new double[] {});
+        // tagID3Sub = visionTable.getIntegerArrayTopic("IDs 3").subscribe(new long[] {});
+        // x3Sub = visionTable.getDoubleArrayTopic("X Coords 3").subscribe(new double[] {});
+        // y3Sub = visionTable.getDoubleArrayTopic("Y Coords 3").subscribe(new double[] {});
+        // z3Sub = visionTable.getDoubleArrayTopic("Z Coords 3").subscribe(new double[] {});
+        // yaw3Sub = visionTable.getDoubleArrayTopic("Yaws 3").subscribe(new double[] {});
+        // timestamp3Sub = visionTable.getDoubleArrayTopic("Timestamps 3").subscribe(new double[] {});
 
         // zRotsSub = visionTable.getIntegerArrayTopic("Z Euler Angles").subscribe(new long[] {});
         // ringCenterXSub = visionTable.getIntegerArrayTopic("Ring Center X Coords").subscribe(new long[] {});
@@ -202,25 +202,25 @@ public class VisionTablesListener {
         return convertArray(tagIDSub1.get());
     }
 
-    public double[] getCam2IDs() {
-        return convertArray(tagID2Sub.get());
-    }
+    // public double[] getCam2IDs() {
+    //     return convertArray(tagID2Sub.get());
+    // }
 
-    public double[] getCam3IDs() {
-        return convertArray(tagID3Sub.get());
-    }
+    // public double[] getCam3IDs() {
+    //     return convertArray(tagID3Sub.get());
+    // }
 
     public double[] getCam1Timestamps() {
         return timestamp1Sub.get();
     }
 
-    public double[] getCam2Timestamps() {
-        return timestamp2Sub.get();
-    }
+    // public double[] getCam2Timestamps() {
+    //     return timestamp2Sub.get();
+    // }
 
-    public double[] getCam3Timestamps() {
-        return timestamp3Sub.get();
-    }
+    // public double[] getCam3Timestamps() {
+    //     return timestamp3Sub.get();
+    // }
 
     // public double getRot() {
     //     return zRot;
@@ -269,43 +269,43 @@ public class VisionTablesListener {
         return transforms;
     }
 
-    public Transform3d[] getCam2Transforms(double yaw) {
-        double[] ids = convertArray(tagID2Sub.get());
-        double[] xPoses = x2Sub.get();
-        double[] yPoses = y2Sub.get();
-        double[] zPoses = z2Sub.get();
-        double[] yaws = yaw2Sub.get();
+    // public Transform3d[] getCam2Transforms(double yaw) {
+    //     double[] ids = convertArray(tagID2Sub.get());
+    //     double[] xPoses = x2Sub.get();
+    //     double[] yPoses = y2Sub.get();
+    //     double[] zPoses = z2Sub.get();
+    //     double[] yaws = yaw2Sub.get();
         
-        Transform3d[] transforms = new Transform3d[ids.length];
-        for(int i = 0; i < ids.length; i++) {
-            Translation3d translate = new Translation3d(-xPoses[i], -yPoses[i], zPoses[i]);
-            Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
-            Transform3d transform = new Transform3d(translate, rotation);
+    //     Transform3d[] transforms = new Transform3d[ids.length];
+    //     for(int i = 0; i < ids.length; i++) {
+    //         Translation3d translate = new Translation3d(-xPoses[i], -yPoses[i], zPoses[i]);
+    //         Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
+    //         Transform3d transform = new Transform3d(translate, rotation);
 
-            transform.plus(new Transform3d(cam2Translate, new Rotation3d(0, Math.toRadians(35), yaw + Math.toRadians(90))));
-            transforms[i] = transform;
-        }
-        return transforms;
-    }
+    //         transform.plus(new Transform3d(cam2Translate, new Rotation3d(0, Math.toRadians(35), yaw + Math.toRadians(90))));
+    //         transforms[i] = transform;
+    //     }
+    //     return transforms;
+    // }
 
-    public Transform3d[] getCam3Transforms(double yaw) {
-        double[] ids = convertArray(tagID3Sub.get());
-        double[] xPoses = x3Sub.get();
-        double[] yPoses = y3Sub.get();
-        double[] zPoses = z3Sub.get();
-        double[] yaws = yaw3Sub.get();
+    // public Transform3d[] getCam3Transforms(double yaw) {
+    //     double[] ids = convertArray(tagID3Sub.get());
+    //     double[] xPoses = x3Sub.get();
+    //     double[] yPoses = y3Sub.get();
+    //     double[] zPoses = z3Sub.get();
+    //     double[] yaws = yaw3Sub.get();
         
-        Transform3d[] transforms = new Transform3d[ids.length];
-        for(int i = 0; i < ids.length; i++) {
-            Translation3d translate = new Translation3d(-xPoses[i], -yPoses[i], zPoses[i]);
-            Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
-            Transform3d transform = new Transform3d(translate, rotation);
+    //     Transform3d[] transforms = new Transform3d[ids.length];
+    //     for(int i = 0; i < ids.length; i++) {
+    //         Translation3d translate = new Translation3d(-xPoses[i], -yPoses[i], zPoses[i]);
+    //         Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
+    //         Transform3d transform = new Transform3d(translate, rotation);
 
-            transform.plus(new Transform3d(cam3Translate, new Rotation3d(0, Math.toRadians(35), yaw + Math.toRadians(-90))));
-            transforms[i] = transform;
-        }
-        return transforms;
-    }
+    //         transform.plus(new Transform3d(cam3Translate, new Rotation3d(0, Math.toRadians(35), yaw + Math.toRadians(-90))));
+    //         transforms[i] = transform;
+    //     }
+    //     return transforms;
+    // }
 
     public Pose3d getBestTagAbsPos(int id) {
 

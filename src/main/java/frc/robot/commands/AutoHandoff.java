@@ -23,6 +23,12 @@ public class AutoHandoff extends Command {
 
   private double startTime;
   private double duration = 0.5;
+  private double timeout = 0.75;
+
+  private double intakeStarttime;
+  private double launcherStarttime;
+
+  private double timeElapsed;
 
   private boolean intakeHasRing;
 
@@ -31,8 +37,12 @@ public class AutoHandoff extends Command {
     intake = Intake.getInstance();
     litty = LED.getInstance();
 
-        launcherHasRing = false;
+    launcherHasRing = false;
     ended = false;
+
+    intakeStarttime = -1;
+    launcherStarttime = -1;
+    timeElapsed = -1;
 
     intakeHasRing = false;
   }
@@ -45,7 +55,7 @@ public class AutoHandoff extends Command {
     launcher.updatePose();
 
     startTime = -1;
-
+    intakeStarttime = -1;
 
     launcherHasRing = false;
     ended = false;
@@ -66,6 +76,15 @@ public class AutoHandoff extends Command {
       launcher.setFlickerReverse();
     }
 
+    if (intake.getBreakBeam() && intakeHasRing) {
+      if (intakeStarttime == -1) {
+        intakeStarttime = Timer.getFPGATimestamp();
+      }
+      if (Timer.getFPGATimestamp() - intakeStarttime > timeout) {
+        litty.setYellow();
+      }
+    }
+
     if (intake.getIntakeState() == IntakeState.HANDOFF && intake.hasReachedPose(3.0)) {
       intake.setRollerPower();
 
@@ -75,23 +94,32 @@ public class AutoHandoff extends Command {
 
       if (!launcherHasRing && launcher.getBreakBeam()) {
         launcherHasRing = true;
+        intakeHasRing = false;
+      }
+
+      if (launcher.getBreakBeam() && !launcherHasRing) {
+        if (launcherStarttime == -1) {
+          launcherStarttime = Timer.getFPGATimestamp();
+        }
+        if (Timer.getFPGATimestamp() - launcherStarttime > timeout) {
+          litty.setYellow();
+        }
       }
 
       if (launcherHasRing && !launcher.getBreakBeam()) {
         launcher.setLauncherOff();
-            intake.setRollerOff();
+        intake.setRollerOff();
 
-
-        if(startTime == -1){
+        if (startTime == -1) {
           startTime = Timer.getFPGATimestamp();
         }
 
-        if(Timer.getFPGATimestamp() - startTime > duration){
+        if (Timer.getFPGATimestamp() - startTime > duration) {
           ended = true;
         }
       }
     }
-////////////////////////////////////////////
+    ////////////////////////////////////////////
     // if (intake.getRollerCurrent() > threshold) {
     // if (!beganIntaking) {
     // startTime = Timer.getFPGATimestamp();
@@ -141,7 +169,6 @@ public class AutoHandoff extends Command {
   public void end(boolean interrupted) {
     launcher.setFlickOff();
     intake.setIntakeState(IntakeState.STOP);
-    launcher.updatePose();
     litty.setGreen();
   }
 

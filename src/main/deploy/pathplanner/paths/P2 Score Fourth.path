@@ -8,38 +8,38 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6934604638440063,
-        "y": 6.565463746312109
+        "x": 2.8996561021340344,
+        "y": 6.479896310049032
       },
       "isLocked": false,
       "linkedName": "LeftRingRight"
     },
     {
       "anchor": {
-        "x": 2.51,
-        "y": 6.66
+        "x": 2.458627224946759,
+        "y": 7.0
       },
       "prevControl": {
-        "x": 2.685566909595359,
-        "y": 6.585197631933726
+        "x": 2.4641712266709455,
+        "y": 6.935339179510305
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "P2 Left Shot"
+      "linkedName": "Left Shot"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.5,
-    "maxAcceleration": 1.75,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 360.0
+    "maxVelocity": 3.5,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 720.0,
+    "maxAngularAcceleration": 540.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -155.0,
+    "rotation": -140.0,
     "rotateFast": true
   },
   "reversed": false,

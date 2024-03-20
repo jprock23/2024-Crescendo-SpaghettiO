@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 2.41,
+        "x": 2.91,
         "y": 5.56
       },
       "prevControl": {
-        "x": 2.8996436642529235,
-        "y": 4.998007527138899
+        "x": 2.8826078109640636,
+        "y": 5.271296574353854
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "P2 Midshot"
+      "linkedName": "Midshot"
     }
   ],
   "rotationTargets": [],

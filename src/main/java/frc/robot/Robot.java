@@ -114,13 +114,14 @@ public class Robot extends TimedRobot {
     //     m_chooser.addOption("Test2 Right", new PathPlannerAuto("Test2 Right"));
     m_chooser.addOption("P2 4 Piece", new PathPlannerAuto("P2 4 Piece"));
     m_chooser.addOption("P3 4 Piece", new PathPlannerAuto("P3 4 Piece"));
-
+    m_chooser.addOption("Handoff Test", new PathPlannerAuto("Handoff Test"));
+    m_chooser.addOption("Copy of P2 4 Piece", new PathPlannerAuto("Copy of P2 4 Piece"));
 
     SmartDashboard.putData("Auto choices", m_chooser);
 
     useCurrentSpike = false;
 
-    CameraServer.startAutomaticCapture();
+    // CameraServer.startAutomaticCapture();
 
   }
 

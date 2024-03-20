@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.79,
-      "y": 4.44
+      "x": 0.76,
+      "y": 6.67
     },
-    "rotation": -60.0
+    "rotation": 60.0
   },
   "command": {
     "type": "sequential",
@@ -24,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "P2 Intake Second"
+                  "pathName": "P1 Intake Second"
                 }
               },
               {
@@ -39,13 +39,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Test2 RIGHTShot"
+            "pathName": "Test2 LEFTShot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "AutoRightShot"
+            "name": "AutoLeftShot"
           }
         },
         {
@@ -61,7 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "P2 Intake Third"
+                  "pathName": "P1 Intake Third"
                 }
               }
             ]
@@ -70,7 +70,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "P2 Score Third"
+            "pathName": "P1 Score Third"
           }
         },
         {
@@ -92,35 +92,22 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "P2 Intake Fourth"
+                  "pathName": "P1 Intake Fourth"
                 }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Test2 LEFTShot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Celebrate"
-                }
-              }
-            ]
+            "pathName": "P1 Score Fourth"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "AutoLeftShot"
+            "name": "AutoRightShot"
           }
         }
       ]

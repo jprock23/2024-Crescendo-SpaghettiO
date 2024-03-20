@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.41,
+        "x": 2.91,
         "y": 5.56
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7090756820798245,
-        "y": 6.119814048426908
+        "x": 2.876985600125048,
+        "y": 6.038569000214923
       },
       "isLocked": false,
-      "linkedName": "P2 Midshot"
+      "linkedName": "Midshot"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 6.45
       },
       "prevControl": {
-        "x": 2.6890756820798245,
-        "y": 6.106586029308563
+        "x": 2.880932377249371,
+        "y": 6.0346222230906
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,10 +32,10 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.5,
-    "maxAcceleration": 1.75,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 360.0
+    "maxVelocity": 3.5,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 720.0,
+    "maxAngularAcceleration": 540.0
   },
   "goalEndState": {
     "velocity": 0,

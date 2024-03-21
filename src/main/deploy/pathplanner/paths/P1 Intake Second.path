@@ -12,7 +12,7 @@
         "y": 6.991096528218987
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "P1 Start"
     },
     {
       "anchor": {
@@ -43,7 +43,7 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "Competition",
+  "folder": "P1",
   "previewStartingState": {
     "rotation": 60.113473059576016,
     "velocity": 0

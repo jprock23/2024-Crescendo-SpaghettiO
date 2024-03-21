@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3868732130920187,
-        "y": 4.117893375273021
+        "x": 1.9793840773921174,
+        "y": 4.138731883632214
       },
       "isLocked": false,
       "linkedName": "RightRingFront"
@@ -20,8 +20,8 @@
         "y": 4.422318106371823
       },
       "prevControl": {
-        "x": 1.8712847239999089,
-        "y": 4.2183769595313345
+        "x": 1.940431306722638,
+        "y": 4.119255498297474
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,7 +43,7 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "Competition",
+  "folder": "P1",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

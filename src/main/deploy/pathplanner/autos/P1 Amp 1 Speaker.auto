@@ -12,34 +12,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "AutoSpeaker"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Handoff"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "P1 Intake Second"
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "P1 Amp Score Second"
+            "pathName": "P1 Amp Score First"
           }
         },
         {
@@ -59,12 +34,31 @@
                 }
               },
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "P1 Amp Intake Third"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "P1 Amp Intake Second"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "P1 Amp Score Second"
+                      }
+                    }
+                  ]
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoAmp"
           }
         }
       ]

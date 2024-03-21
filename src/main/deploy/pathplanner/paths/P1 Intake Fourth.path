@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.91,
+        "x": 2.85,
         "y": 5.56
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1567376248364063,
+        "x": 2.0967376248364062,
         "y": 4.98201330083678
       },
       "isLocked": false,
@@ -43,7 +43,7 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "Competition",
+  "folder": "P1",
   "previewStartingState": {
     "rotation": 179.80326257887674,
     "velocity": 0

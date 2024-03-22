@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.79,
-      "y": 4.44
+      "x": 0.76,
+      "y": 6.67
     },
-    "rotation": -60.0
+    "rotation": 60.0
   },
   "command": {
     "type": "sequential",
@@ -18,15 +18,21 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Q33 Clear"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 11.0
+            "waitTime": 9.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Q7 Leave"
+            "pathName": "Q33 Leave"
           }
         }
       ]

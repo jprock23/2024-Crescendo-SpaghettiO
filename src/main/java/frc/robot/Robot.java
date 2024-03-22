@@ -290,6 +290,13 @@ public class Robot extends TimedRobot {
       launcher.setReverseLauncherOn();
     }
 
+    if(operator.getYButton()){
+      launcher.setLauncherState(LauncherState.AUTOLEFTSHOT);
+    } 
+    if(operator.getAButton()){
+      launcher.setLauncherState(LauncherState.AUTORIGHTSHOT);
+    }
+
     if (operator.getRightTriggerAxis() > 0) {
       if (launcher.getLaunchState() == LauncherState.AMP) {
         ampCommand.initialize();

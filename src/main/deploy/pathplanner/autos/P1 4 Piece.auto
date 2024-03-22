@@ -18,13 +18,26 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "P1 Intake Second"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "P1 Intake Second"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "P1 Score Second"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -34,12 +47,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Test2 LEFTShot"
           }
         },
         {
@@ -49,28 +56,35 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "P1 Intake Third"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "P1 Score Third"
+                      }
+                    }
+                  ]
+                }
+              },
               {
                 "type": "named",
                 "data": {
                   "name": "Handoff"
                 }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "P1 Intake Third"
-                }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "P1 Score Third"
           }
         },
         {
@@ -80,28 +94,35 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "P1 Intake Fourth"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "P1 Score Fourth"
+                      }
+                    }
+                  ]
+                }
+              },
               {
                 "type": "named",
                 "data": {
                   "name": "Handoff"
                 }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "P1 Intake Fourth"
-                }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "P1 Score Fourth"
           }
         },
         {

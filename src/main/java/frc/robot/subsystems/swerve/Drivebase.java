@@ -31,6 +31,20 @@ import frc.robot.subsystems.vision.VisionTablesListener;
 public class Drivebase extends SubsystemBase {
   private static Drivebase instance;
 
+  public enum DriveState {
+    NORMAL(1),
+    SLOW(0.5);
+
+
+    public double driveSpeed;
+
+    private DriveState(double driveSpeed) {
+        this.driveSpeed = driveSpeed;
+    }
+}
+
+private DriveState driveState = DriveState.NORMAL;
+
   private VisionTablesListener visTables;
 
   public SwerveModule frontLeft;
@@ -207,9 +221,9 @@ public class Drivebase extends SubsystemBase {
     rotationCommanded = rot;
 
     // Convert the commanded speeds into the correct units for the drivetrain
-    double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
-    double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
-    double rotDelivered = rotationCommanded * DriveConstants.kMaxAngularSpeed;
+    double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond * driveState.driveSpeed;
+    double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond * driveState.driveSpeed;
+    double rotDelivered = rotationCommanded * DriveConstants.kMaxAngularSpeed * driveState.driveSpeed;
 
     var chassisspeeds = ChassisSpeeds.fromRobotRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
         Rotation2d.fromDegrees(gyro.getAngle()));
@@ -358,6 +372,10 @@ public class Drivebase extends SubsystemBase {
     SmartDashboard.putNumber("Back Left TranslationalVelo", backLeft.getTranslationalVelocity());
     SmartDashboard.putNumber("Back Right TranslationalVelo", backRight.getTranslationalVelocity());
 
+  }
+
+  public void setDriveState(DriveState state){
+    driveState = state;
   }
 
   public double[] getModuleRotations() {

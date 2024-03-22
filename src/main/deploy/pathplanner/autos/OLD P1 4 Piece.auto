@@ -22,22 +22,9 @@
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "P1 Intake Second"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "P1 Score Second"
-                      }
-                    }
-                  ]
+                  "pathName": "P1 Intake Second"
                 }
               },
               {
@@ -47,6 +34,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Test2 LEFTShot"
           }
         },
         {
@@ -66,25 +59,18 @@
                 }
               },
               {
-                "type": "sequential",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "P1 Intake Third"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "P1 Score Third"
-                      }
-                    }
-                  ]
+                  "pathName": "P1 Intake Third"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "P1 Score Third"
           }
         },
         {
@@ -104,25 +90,18 @@
                 }
               },
               {
-                "type": "sequential",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "P1 Intake Fourth"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "P1 Score Fourth"
-                      }
-                    }
-                  ]
+                  "pathName": "P1 Intake Fourth"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "P1 Score Fourth"
           }
         },
         {

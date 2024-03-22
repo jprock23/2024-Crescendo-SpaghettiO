@@ -20,18 +20,18 @@ import frc.robot.Ports;
 public class Launcher {
 
     public enum LauncherState {
-        AMP(-48, .9),
+        AMP(-42, 0.9),
         START(0, 0.0),
         TRAP(-70.04991149902344, 0.8),
-        LONG(-15, 1.0),
-        HANDOFF(7.5,0.5),
-        HOVER(-8, 1.0),
+        LONG(-13.5, 1.0),
+        HANDOFF(5.5,0.5),
+        HOVER(-3, 1.0),
         TOSS(-18, .9),
         AUTOMIDSHOT(-11.5, 1.0),
         AUTOLEFTSHOT(-13.5, 1.0),
         AUTORIGHTSHOT(-14.5, 1.0),
         // drift: -4.26 L:-13.5 R:-12 R:-13.5 
-        SPEAKER(-53.0, 1.0);
+        SPEAKER(-55.0, 1.0);
 
         public double position;
         public double launchSpeed;

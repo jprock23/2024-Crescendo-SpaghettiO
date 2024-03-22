@@ -3,32 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7856804503014655,
-        "y": 4.43569076167173
+        "x": 0.7595396729271964,
+        "y": 6.672026728663196
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5946854355183215,
-        "y": 4.079882185098084
+        "x": 1.9932481519741916,
+        "y": 7.003080254377342
       },
       "isLocked": false,
-      "linkedName": "P3 Start"
+      "linkedName": "P1 Start"
     },
     {
       "anchor": {
-        "x": 2.41,
-        "y": 4.09
+        "x": 2.894982565999367,
+        "y": 6.991369417831561
       },
       "prevControl": {
-        "x": 1.6456170099891096,
-        "y": 4.210792873829703
+        "x": 1.8175856037874687,
+        "y": 6.956236908194216
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "RightRingFront"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -39,13 +45,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
-    "rotateFast": true
+    "rotation": 0,
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": "P3",
+  "folder": "Dallas",
   "previewStartingState": {
-    "rotation": -59.70830389968272,
+    "rotation": 60.60454496057214,
     "velocity": 0
   },
   "useDefaultConstraints": true

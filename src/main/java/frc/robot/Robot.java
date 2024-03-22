@@ -28,7 +28,10 @@ import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.launcher.Launcher;
 import frc.robot.subsystems.launcher.Launcher.LauncherState;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import frc.robot.subsystems.swerve.Drivebase;
+import frc.robot.subsystems.swerve.Drivebase.DriveState;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -111,7 +114,9 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("P2 4 Piece", new PathPlannerAuto("P2 4 Piece"));
     m_chooser.addOption("P3 4 Piece", new PathPlannerAuto("P3 4 Piece"));
     m_chooser.addOption("Handoff Test", new PathPlannerAuto("Handoff Test"));
-    m_chooser.addOption("Copy of P2 4 Piece", new PathPlannerAuto("Copy of P2 4 Piece"));
+    m_chooser.addOption("P1 4 Piece", new PathPlannerAuto("P1 4 Piece"));
+        m_chooser.addOption("Q7", new PathPlannerAuto("Q7"));
+
 
     SmartDashboard.putData("Auto choices", m_chooser);
 
@@ -207,6 +212,12 @@ public class Robot extends TimedRobot {
       drivebase.drive(xSpeed, ySpeed, rot, true);
     }
 
+    if(driver.getRightTriggerAxis() > 0){
+      drivebase.setDriveState(DriveState.SLOW);
+    } else if (!CommandScheduler.getInstance().isScheduled(autoAmp)){
+      drivebase.setDriveState(DriveState.NORMAL);
+    }
+
     /* INTAKE CONTROLS */
 
     if (driver.getAButton()) {
@@ -283,6 +294,7 @@ public class Robot extends TimedRobot {
       if (launcher.getLaunchState() == LauncherState.AMP) {
         ampCommand.initialize();
         ampCommand.schedule();
+        drivebase.setDriveState(DriveState.SLOW);
       } else {
         shootCommand.initialize();
         shootCommand.schedule();
@@ -295,6 +307,10 @@ public class Robot extends TimedRobot {
       handoffCommand.cancel();
       // litty.setBlue();
 
+    }
+
+    if(autoAmp.isFinished()){
+      driver.setRumble(RumbleType.kBothRumble, 0.5);
     }
 
   }

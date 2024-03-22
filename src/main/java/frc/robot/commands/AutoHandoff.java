@@ -23,7 +23,7 @@ public class AutoHandoff extends Command {
 
   private double startTime;
   private double duration = 0.5;
-  private double timeout = 0.75;
+  private double timeout = 1;
 
   private double intakeStarttime;
   private double launcherStarttime;
@@ -56,6 +56,7 @@ public class AutoHandoff extends Command {
 
     startTime = -1;
     intakeStarttime = -1;
+    launcherStarttime = -1;
 
     launcherHasRing = false;
     ended = false;
@@ -97,12 +98,13 @@ public class AutoHandoff extends Command {
         intakeHasRing = false;
       }
 
-      if (launcher.getBreakBeam() && !launcherHasRing) {
+      if (launcher.getBreakBeam() && launcherHasRing) {
         if (launcherStarttime == -1) {
           launcherStarttime = Timer.getFPGATimestamp();
         }
         if (Timer.getFPGATimestamp() - launcherStarttime > timeout) {
           litty.setYellow();
+          launcher.eject();
         }
       }
 
@@ -126,6 +128,8 @@ public class AutoHandoff extends Command {
   public void end(boolean interrupted) {
     launcher.setFlickOff();
     intake.setIntakeState(IntakeState.STOP);
+    launcher.setLauncherOff();
+    intake.setRollerOff();
     litty.setGreen();
   }
 

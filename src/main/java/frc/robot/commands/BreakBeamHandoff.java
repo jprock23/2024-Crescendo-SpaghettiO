@@ -23,7 +23,7 @@ public class BreakBeamHandoff extends Command {
 
   private double startTime;
   private double duration = 0.5;
-  private double timeout = 0.75;
+  private double timeout = 1;
 
   private double intakeStarttime;
   private double launcherStarttime;
@@ -55,6 +55,7 @@ public class BreakBeamHandoff extends Command {
 
     startTime = -1;
     intakeStarttime = -1;
+    launcherStarttime = -1;
 
     launcherHasRing = false;
     ended = false;
@@ -96,7 +97,7 @@ public class BreakBeamHandoff extends Command {
         intakeHasRing = false;
       }
 
-      if (launcher.getBreakBeam() && !launcherHasRing) {
+      if (launcher.getBreakBeam() && launcherHasRing) {
         if (launcherStarttime == -1) {
           launcherStarttime = Timer.getFPGATimestamp();
         }

@@ -4,17 +4,19 @@
   "holonomicMode": true,
   "pathFolders": [
     "Competition",
-    "P3",
+    "Dallas",
     "P1",
     "P2",
+    "P3",
     "Test"
   ],
   "autoFolders": [
     "Competition",
+    "Dallas",
     "Test"
   ],
   "defaultMaxVel": 3.5,
-  "defaultMaxAccel": 2.0,
+  "defaultMaxAccel": 2.25,
   "defaultMaxAngVel": 720.0,
   "defaultMaxAngAccel": 540.0,
   "maxModuleSpeed": 3.0

@@ -29,7 +29,7 @@ public class Launcher {
         TOSS(-18, .9),
         AUTOMIDSHOT(-11.5, 1.0),
         AUTOLEFTSHOT(-13.5, 1.0),
-        AUTORIGHTSHOT(-13.5, 1.0),
+        AUTORIGHTSHOT(-14.5, 1.0),
         // drift: -4.26 L:-13.5 R:-12 R:-13.5 
         SPEAKER(-53.0, 1.0);
 

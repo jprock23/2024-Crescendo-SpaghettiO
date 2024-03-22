@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1900209712877623,
-        "y": 3.8920407012808678
+        "x": 2.424206936858951,
+        "y": 3.3165089097653224
       },
       "isLocked": false,
       "linkedName": "RightRingFront"
     },
     {
       "anchor": {
-        "x": 2.35,
-        "y": 4.12
+        "x": 2.249122072107978,
+        "y": 4.258060168046155
       },
       "prevControl": {
-        "x": 2.1443989067838936,
-        "y": 4.249552781884614
+        "x": 2.0435209788918716,
+        "y": 4.3876129499307694
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 155.0,
+    "rotation": 150.0,
     "rotateFast": true
   },
   "reversed": false,

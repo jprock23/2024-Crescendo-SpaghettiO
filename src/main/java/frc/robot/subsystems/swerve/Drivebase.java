@@ -213,7 +213,6 @@ public class Drivebase extends SubsystemBase {
 
     var chassisspeeds = ChassisSpeeds.fromRobotRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
         Rotation2d.fromDegrees(gyro.getAngle()));
-    new ChassisSpeeds();
 
     setChassisSpeed(chassisspeeds);
   }

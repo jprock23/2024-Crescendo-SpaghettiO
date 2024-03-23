@@ -72,6 +72,7 @@ public class Robot extends TimedRobot {
   private AmpCommand ampCommand;
 
   private boolean useCurrentSpike;
+  private boolean hasBrownedOut;
 
   private SendableChooser<Command> m_chooser;
 
@@ -167,6 +168,12 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
     SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
+
+    SmartDashboard.putBoolean("Brownout", hasBrownedOut);
+
+    if(launcher.hasBrownedOut()){
+      hasBrownedOut = true;
+    }
   }
 
   @Override
@@ -224,17 +231,19 @@ public class Robot extends TimedRobot {
       drivebase.zeroHeading();
     }
 
+    if(operator.getAButton()){
+      launcher.setLauncherState(LauncherState.AUTORIGHTSHOT);
+    }
+
+  if(operator.getYButton()){
+    launcher.setLauncherState(LauncherState.AUTOLEFTSHOT);
+  }
+
 
     if (operator.getRightBumper() && !useCurrentSpike) {
       handoffCommand.schedule();
     } else if (operator.getRightBumper()) {
       currentSpikeHandoff.schedule();
-    }
-
-    if (operator.getYButton()) {
-      intake.setIntakeState(IntakeState.GROUND);
-      launcher.setLauncherState(LauncherState.LONG);
-      launcher.updatePose();
     }
 
     if (operator.getBButton()) {
@@ -290,12 +299,12 @@ public class Robot extends TimedRobot {
       launcher.setReverseLauncherOn();
     }
 
-    if(operator.getYButton()){
-      launcher.setLauncherState(LauncherState.AUTOLEFTSHOT);
-    } 
-    if(operator.getAButton()){
-      launcher.setLauncherState(LauncherState.AUTORIGHTSHOT);
-    }
+    // if(operator.getYButton()){
+    //   launcher.setLauncherState(LauncherState.AUTOLEFTSHOT);
+    // } 
+    // if(operator.getAButton()){
+    //   launcher.setLauncherState(LauncherState.AUTORIGHTSHOT);
+    // }
 
     if (operator.getRightTriggerAxis() > 0) {
       if (launcher.getLaunchState() == LauncherState.AMP) {

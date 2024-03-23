@@ -10,6 +10,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -23,14 +24,16 @@ public class Launcher {
         AMP(-42, 0.9),
         START(0, 0.0),
         TRAP(-70.04991149902344, 0.8),
-        LONG(-12, 1.0),
+        LONG(-13.25, 1.0),
         HANDOFF(5.5,0.5),
-        HOVER(-3, 1.0),
+        HOVER(-3, 1.0), 
         TOSS(-18, .9),
-        AUTOMIDSHOT(-15.5, 1.0),
-        AUTOLEFTSHOT(-15.5, 1.0),
-        AUTORIGHTSHOT(-15, 1.0),
-        // drift: -4.26 L:-13.5 R:-12 R:-13.5 
+        AUTOMIDSHOT(-14.25, 1.0),
+        //height: ?
+        AUTOLEFTSHOT(-13.5, 1.0),
+        //height: 20.75
+        AUTORIGHTSHOT(-13.5, 1.0),
+        //height: 20.75
         SPEAKER(-55.0, 1.0);
 
         public double position;
@@ -282,6 +285,10 @@ public class Launcher {
         }
 
         return connections;
+    }
+
+    public boolean hasBrownedOut(){
+        return pivotMotor.getFault(FaultID.kBrownout);
     }
 
     public void printConnections() {

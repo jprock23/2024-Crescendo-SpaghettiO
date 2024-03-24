@@ -117,12 +117,13 @@ private DriveState driveState = DriveState.NORMAL;
   }
 
   public void periodic() {
-
+    //remove gyro stuff!!!
+    
     // if (visTables.getTagVisible1()) {
       // cam1
       // Transform3d[] transformsCam1 = visTables.getCam1Transforms(-gyro.getAngle());
       // double[] cam1IDs = visTables.getCam1IDs();
-      // double[] timestampsCam1 = visTables.getCam1Timestamps();
+      // double[]t timesampsCam1 = visTables.getCam1Timestamps();
 
       // for(int i = 0; i < transformsCam1.length; i++) {
       // Pose3d tagPos1 = visTables.getBestTagAbsPos((int)cam1IDs[i]);

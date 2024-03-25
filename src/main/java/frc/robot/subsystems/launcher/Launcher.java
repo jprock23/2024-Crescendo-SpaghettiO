@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.subsystems.IO.DigitalInputs;
+import frc.robot.subsystems.swerve.Drivebase;
 import frc.robot.Ports;
 
 public class Launcher {
@@ -28,12 +29,12 @@ public class Launcher {
         HANDOFF(5.5,0.5),
         HOVER(-3, 1.0), 
         TOSS(-18, .9),
-        AUTOMIDSHOT(-14.25, 1.0),
+        AUTOMIDSHOT(-13.75, 1.0),
         //height: ?
         AUTOLEFTSHOT(-13.5, 1.0),
         //height: 20.75
         AUTORIGHTSHOT(-13.5, 1.0),
-        //height: 20.75
+        //height: ?7
         SPEAKER(-55.0, 1.0);
 
         public double position;
@@ -49,6 +50,7 @@ public class Launcher {
 
     private CANSparkMax shootMotor1;
     private CANSparkMax shootMotor2;
+    private CANSparkMax sushiMotor;
 
     private CANSparkMax flicker;
 
@@ -109,6 +111,13 @@ public class Launcher {
         pivotMotor.setInverted(true);
         pivotMotor.setOpenLoopRampRate(1);
 
+        sushiMotor = new CANSparkMax(Ports.sushi, MotorType.kBrushless);
+        sushiMotor.restoreFactoryDefaults();
+
+        sushiMotor.setSmartCurrentLimit(40);
+        sushiMotor.setIdleMode(IdleMode.kCoast);
+        sushiMotor.burnFlash();
+
         feedForward = new ArmFeedforward(0.0, 0.4
 
                 , 0.1, 0.0);
@@ -142,6 +151,15 @@ public class Launcher {
         pivotController1.setReference(launchState.position, CANSparkMax.ControlType.kPosition, 0,
                 feedForward.calculate(encoder.getPosition(), 0));
 
+    }
+
+    public double linearInterprolation(){
+        double delta = Drivebase.getPose2d().getX();
+        double position;
+
+        position = (0.0 * Math.pow(delta, 2)) + (0.0 * delta) + 0.0;
+
+        return position;
     }
 
     public void setPivotPower() {
@@ -199,6 +217,18 @@ public class Launcher {
 
     public void setFlickOff() {
         flicker.set(0);
+    }
+
+    public void setSushiOn(){
+        sushiMotor.set(1);
+    }
+
+    public void setSushiReverse(){
+        sushiMotor.set(-1);
+    }
+
+    public void setSushiOff(){
+        sushiMotor.set(0);
     }
 
     public double getPosition() {

@@ -27,6 +27,8 @@ public class AutoAmp extends Command {
     launcher.setLauncherState(LauncherState.AMP);
     startTime = Timer.getFPGATimestamp();
     launcher.setLauncherOn();
+    launcher.setSushiOn();
+
   }
 
   @Override
@@ -48,6 +50,7 @@ public class AutoAmp extends Command {
   public void end(boolean interrupted) {
     launcher.setFlickOff();
     launcher.setLauncherOff();
+    launcher.setSushiOff();
   }
 
   @Override

@@ -30,12 +30,6 @@ public class SwerveModule {
         private double chassisAngularOffset = 0;
         private SwerveModuleState desiredState = new SwerveModuleState(0.0, new Rotation2d());
 
-        /**
-         * Constructs a MAXSwerveModule and configures the driving and turning motor,
-         * encoder, and PID controller. This configuration is specific to the REV
-         * MAXSwerve Module built with NEOs, SPARKS MAX, and a Through Bore
-         * Encoder.
-         */
         public SwerveModule(int drivingCANId, int turningCANId, double newChassisAngularOffset, boolean invert) {
                 drivingSparkMax = new CANSparkMax(drivingCANId, MotorType.kBrushless);
                 steerSparkMax = new CANSparkMax(turningCANId, MotorType.kBrushless);

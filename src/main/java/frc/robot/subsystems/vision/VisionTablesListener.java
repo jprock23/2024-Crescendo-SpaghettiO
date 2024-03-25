@@ -36,9 +36,9 @@ public class VisionTablesListener {
     private DoubleArraySubscriber yaw3Sub;
     private DoubleArraySubscriber timestamp3Sub;
 
-    private Translation3d cam1Translate = new Translation3d(0, 0.3115, 0.359283);
-    private Translation3d cam2Translate = new Translation3d(0.2762504, -0.3121152, 0.2306066);
-    private Translation3d cam3Translate = new Translation3d(0.2762504, 0.3121152, 0.2306066);
+    private Transform3d cam1Transform = new Transform3d(new Translation3d(0, 0.3115, 0.359283), new Rotation3d(0, Math.toRadians(30), 0));
+    private Transform3d cam2Transform = new Transform3d(new Translation3d(0.2762504, -0.3121152, 0.2306066), new Rotation3d(0, Math.toRadians(35), Math.toRadians(-90)));
+    private Transform3d cam3Transofrm = new Transform3d(new Translation3d(0.2762504, 0.3121152, 0.2306066), new Rotation3d(0, Math.toRadians(35), Math.toRadians(90)));
     // private IntegerArraySubscriber zRotsSub;
     // private IntegerSubscriber bestIDSub;
     // private IntegerSubscriber bestXSub;
@@ -250,7 +250,7 @@ public class VisionTablesListener {
     //     return new Translation3d(bestTagX, bestTagY, bestTagZ);
     // }
 
-    public Transform3d[] getCam1Transforms(double yaw) {
+    public Transform3d[] getCam1Transforms() {
         double[] ids = convertArray(tagIDSub1.get());
         double[] xPoses = x1Sub.get();
         double[] yPoses = y1Sub.get();
@@ -263,13 +263,13 @@ public class VisionTablesListener {
             Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
             Transform3d transform = new Transform3d(translate, rotation);
 
-            transform.plus(new Transform3d(cam1Translate, new Rotation3d(0, Math.toRadians(30), yaw)));
+            transform.plus(cam1Transform);
             transforms[i] = transform;
         }
         return transforms;
     }
 
-    // public Transform3d[] getCam2Transforms(double yaw) {
+    // public Transform3d[] getCam2Transforms() {
     //     double[] ids = convertArray(tagID2Sub.get());
     //     double[] xPoses = x2Sub.get();
     //     double[] yPoses = y2Sub.get();
@@ -282,13 +282,13 @@ public class VisionTablesListener {
     //         Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
     //         Transform3d transform = new Transform3d(translate, rotation);
 
-    //         transform.plus(new Transform3d(cam2Translate, new Rotation3d(0, Math.toRadians(35), yaw + Math.toRadians(90))));
+    //         transform.plus(cam2Transform);
     //         transforms[i] = transform;
     //     }
     //     return transforms;
     // }
 
-    // public Transform3d[] getCam3Transforms(double yaw) {
+    // public Transform3d[] getCam3Transforms() {
     //     double[] ids = convertArray(tagID3Sub.get());
     //     double[] xPoses = x3Sub.get();
     //     double[] yPoses = y3Sub.get();
@@ -301,7 +301,7 @@ public class VisionTablesListener {
     //         Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
     //         Transform3d transform = new Transform3d(translate, rotation);
 
-    //         transform.plus(new Transform3d(cam3Translate, new Rotation3d(0, Math.toRadians(35), yaw + Math.toRadians(-90))));
+    //         transform.plus(cam3Transform);
     //         transforms[i] = transform;
     //     }
     //     return transforms;

@@ -60,7 +60,7 @@ private DriveState driveState = DriveState.NORMAL;
 
   Field2d fieldmap = new Field2d();
 
-  private SwerveDrivePoseEstimator poseEstimator;
+  private static SwerveDrivePoseEstimator poseEstimator;
 
   private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
   private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10));
@@ -129,7 +129,7 @@ private DriveState driveState = DriveState.NORMAL;
       // Pose3d tagPos1 = visTables.getBestTagAbsPos((int)cam1IDs[i]);
       // Pose2d robotPos1 = tagPos.transformBy(transformsCam1[i]).toPose2d();
     //   Pose3d tagPos1 = visTables.getBestTagAbsPos((int) visTables.getCam1IDs()[0]);
-    //   Pose2d robotPos1 = tagPos1.transformBy(visTables.getCam1Transforms(-gyro.getAngle())[0]).toPose2d();
+    //   Pose2d robotPos1 = tagPos1.transformBy(visTables.getCam1Transforms()[0]).toPose2d();
 
     //   poseEstimator.addVisionMeasurement(robotPos1, visTables.getCam1Timestamps()[0]);
     // }
@@ -144,7 +144,7 @@ private DriveState driveState = DriveState.NORMAL;
     //   // Pose3d tagPos2 = visTables.getBestTagAbsPos((int)cam2IDs[i]);
     //   // Pose2d robotPos2 = tagPos.transformBy(transformsCam2[i]).toPose2d();
     //   Pose3d tagPos2 = visTables.getBestTagAbsPos((int) visTables.getCam2IDs()[0]);
-    //   Pose2d robotPos2 = tagPos2.transformBy(visTables.getCam2Transforms(-gyro.getAngle())[0]).toPose2d();
+    //   Pose2d robotPos2 = tagPos2.transformBy(visTables.getCam2Transforms()[0]).toPose2d();
 
     //   poseEstimator.addVisionMeasurement(robotPos2, visTables.getCam1Timestamps()[0]);
     // }
@@ -159,7 +159,7 @@ private DriveState driveState = DriveState.NORMAL;
     //   // Pose3d tagPos3 = visTables.getBestTagAbsPos((int)cam3IDs[i]);
     //   // Pose2d robotPos3 = tagPos.transformBy(transformsCam3[i]).toPose2d();
     //   Pose3d tagPos3 = visTables.getBestTagAbsPos((int) visTables.getCam2IDs()[0]);
-    //   Pose2d robotPos3 = tagPos3.transformBy(visTables.getCam2Transforms(-gyro.getAngle())[0]).toPose2d();
+    //   Pose2d robotPos3 = tagPos3.transformBy(visTables.getCam2Transforms()[0]).toPose2d();
 
     //   poseEstimator.addVisionMeasurement(robotPos3, visTables.getCam1Timestamps()[0]);
     // }
@@ -177,6 +177,11 @@ private DriveState driveState = DriveState.NORMAL;
     // fieldmap.setRobotPose(odometry.getPoseMeters().getX(),
     // odometry.getPoseMeters().getY(),
     // odometry.getPoseMeters().getRotation());
+
+  }
+
+  public static Pose2d getPose2d(){
+    return poseEstimator.getEstimatedPosition();
   }
 
   // Returns the currently-estimated pose of the robot

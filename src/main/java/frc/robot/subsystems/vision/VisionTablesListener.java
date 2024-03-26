@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.DoubleArraySubscriber;
 import edu.wpi.first.networktables.IntegerArraySubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionTablesListener {
     private static VisionTablesListener instance;
@@ -69,7 +70,7 @@ public class VisionTablesListener {
 
     // private double timestamp;
 
-    // private boolean tagVisible;
+    private boolean tagVisible;
 
 
     public VisionTablesListener() {
@@ -108,6 +109,14 @@ public class VisionTablesListener {
     }
 
     public void putInfoOnDashboard() {
+        if(getTagVisible1() || getTagVisible2() || getTagVisible3()) {
+            tagVisible = true;
+        }
+        else {
+            tagVisible = false;
+        }
+
+        SmartDashboard.putBoolean("Tag in Sight", tagVisible);
         // double ringCenterX[];
         // double ringCenterY[];
         //double[] xPoses;

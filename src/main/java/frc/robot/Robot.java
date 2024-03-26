@@ -26,6 +26,7 @@ import frc.robot.commands.AutoSpeaker;
 import frc.robot.commands.BreakBeamHandoff;
 import frc.robot.commands.Celebrate;
 import frc.robot.commands.HandoffCommand;
+import frc.robot.commands.RotationCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.IO.LED;
 import frc.robot.subsystems.climber.Climber;
@@ -108,6 +109,12 @@ public class Robot extends LoggedRobot {
     NamedCommands.registerCommand("AutoRightShot", new AutoRightShot());
     NamedCommands.registerCommand("AutoMidShot", new AutoMidShot());
     NamedCommands.registerCommand("Celebrate", new Celebrate());
+    NamedCommands.registerCommand("Rotate150", new RotationCommand(150));
+    NamedCommands.registerCommand("Rotate220", new RotationCommand(220));
+    NamedCommands.registerCommand("Rotate180", new RotationCommand(180));
+
+
+
 
     m_chooser = AutoBuilder.buildAutoChooser();
     // m_chooser.addOption("Test1", new PathPlannerAuto("Test1"));
@@ -134,21 +141,6 @@ public class Robot extends LoggedRobot {
   @Override
 
   public void robotPeriodic() {
-    Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
-
-if (isReal()) {
-    Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
-    Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-    new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
-} else {
-    setUseTiming(false); // Run as fast as possible
-    String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-    Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-    Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
-}
-
-// Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
-Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
 
     CommandScheduler.getInstance().run();
     drivebase.periodic();
@@ -223,6 +215,7 @@ Logger.start(); // Start logging! No more data receivers, replay sources, or met
   @Override
   public void teleopPeriodic() {
     intake.updatePose();
+    // launcher.updatePose();
 
     /* DRIVE CONTROLS */
     double ySpeed;
@@ -234,11 +227,8 @@ Logger.start(); // Start logging! No more data receivers, replay sources, or met
     rot = drivebase.inputDeadband(-driver.getRightX());
 
     if(operator.getAButton()){
-      launcher.setSushiOn();
+      intake.setIntakeState(IntakeState.GROUND);
     } 
-    if(operator.getYButton()){
-      launcher.setSushiOff();
-    }
 
     if (driver.getXButton()) {
       drivebase.lockWheels();
@@ -348,12 +338,13 @@ Logger.start(); // Start logging! No more data receivers, replay sources, or met
       intake.setRollerOff();
       shootCommand.cancel();
       handoffCommand.cancel();
+      launcher.setSushiOff();
       // litty.setBlue();
 
     }
 
-    if(autoAmp.isFinished()){
-      driver.setRumble(RumbleType.kBothRumble, 0.5);
+    if(driver.getYButton()){
+      driver.setRumble(RumbleType.kLeftRumble, 0.8);
     }
 
   }

@@ -23,16 +23,15 @@ public class AutoAmp extends Command {
   @Override
   public void initialize() {
     ended = false;
-
-    launcher.setLauncherState(LauncherState.AMP);
     startTime = Timer.getFPGATimestamp();
+    launcher.setLauncherState(LauncherState.AMP);
     launcher.setLauncherOn();
-    launcher.setSushiOn();
 
   }
 
   @Override
   public void execute() {
+    launcher.setSushiOn();
     if (launcher.hasReachedPose(8.0)) {
       double elapsedTime = Timer.getFPGATimestamp() - startTime;
 

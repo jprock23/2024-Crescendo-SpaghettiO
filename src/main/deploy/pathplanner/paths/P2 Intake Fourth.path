@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.011176022352046,
-        "y": 6.127371485512202
+        "x": 3.080244622027707,
+        "y": 6.097770657079776
       },
       "isLocked": false,
       "linkedName": "Midshot"
@@ -20,12 +20,12 @@
         "y": 6.45
       },
       "prevControl": {
-        "x": 3.021042965162855,
-        "y": 6.127371485512202
+        "x": 3.050643793595281,
+        "y": 6.078036771458159
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LeftRingRight"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -33,12 +33,12 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.5,
-    "maxAcceleration": 2.25,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 720.0,
     "maxAngularAcceleration": 540.0
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 0.0,
     "rotation": 90.0,
     "rotateFast": true
   },

@@ -149,7 +149,8 @@ public final class Constants {
     public static final double launchICoefficient = 0.0;
     public static final double launchDCoefficient = 0.0;
 
-    public static final double pivotPCoefficient = 0.08;
+    public static final double pivotPCoefficient = 0.02;
+    // public static final double pivotPCoefficient = 5.0;
     // .02
     public static final double pivotICoefficient = 0.0;
     public static final double pivotDCoefficient = 0.0;

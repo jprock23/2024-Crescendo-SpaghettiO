@@ -28,6 +28,7 @@ public class AmpCommand extends Command {
 
       launcher.updatePose();
       launcher.setReverseLauncherOn();
+      launcher.setSushiOn();
   }
 
   @Override
@@ -53,6 +54,7 @@ public class AmpCommand extends Command {
   public void end(boolean interrupted) {
     launcher.setFlickOff();
     launcher.setLauncherOff();
+    launcher.setSushiOff();
   }
 
   @Override

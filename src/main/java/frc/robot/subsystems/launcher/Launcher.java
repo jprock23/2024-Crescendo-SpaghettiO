@@ -1,6 +1,7 @@
 package frc.robot.subsystems.launcher;
 
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -10,9 +11,12 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.subsystems.IO.DigitalInputs;
@@ -22,7 +26,7 @@ import frc.robot.Ports;
 public class Launcher {
 
     public enum LauncherState {
-        AMP(-42, 0.9),
+        AMP(-49, 0.9),
         START(0, 0.0),
         TRAP(-70.04991149902344, 0.8),
         LONG(-13.25, 1.0),
@@ -36,7 +40,7 @@ public class Launcher {
         AUTORIGHTSHOT(-13.5, 1.0),
         //height: ?7
         SPEAKER(-55.0, 1.0),
-        INTERLOPE(0.0, 0.0);
+        INTERLOPE(0.0, 1.0);
 
         public double position;
         public double launchSpeed;
@@ -68,6 +72,7 @@ public class Launcher {
     private double maxAccel = 3000;
 
     private static RelativeEncoder encoder;
+    private static AbsoluteEncoder absEncoder;
 
     private DigitalInputs breakBeam;
 
@@ -110,6 +115,8 @@ public class Launcher {
         pivotMotor.setSmartCurrentLimit(60);
         pivotMotor.setIdleMode(IdleMode.kBrake);
         pivotMotor.setInverted(true);
+        // pivotMotor.setInverted(false);
+
         pivotMotor.setOpenLoopRampRate(1);
 
         sushiMotor = new CANSparkMax(Ports.sushi, MotorType.kBrushless);
@@ -119,15 +126,16 @@ public class Launcher {
         sushiMotor.setIdleMode(IdleMode.kCoast);
         sushiMotor.burnFlash();
 
-        feedForward = new ArmFeedforward(0.0, 0.4
-
-                , 0.1, 0.0);
+        feedForward = new ArmFeedforward(0.012, 0.017, 0.0, 0.0);
         motionProfile = new TrapezoidProfile(new Constraints(veloSP, maxAccel));
+        //u:.023 l:.011 mid:.017 ks:.012
 
         // Prototype numbers
         // upper: .045 lower: .0285 ks:.0085 kg:.037
 
         encoder = pivotMotor.getEncoder();
+        // absEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
+        // absEncoder.setInverted(true);
 
         pivotController1 = pivotMotor.getPIDController();
 
@@ -136,8 +144,11 @@ public class Launcher {
         pivotController1.setD(LauncherConstants.pivotDCoefficient);
 
         pivotController1.setFeedbackDevice(encoder);
+        // pivotController1.setFeedbackDevice(absEncoder);
 
         pivotController1.setOutputRange(-1, 1);
+
+        // pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
         pivotMotor.burnFlash();
 
@@ -147,10 +158,13 @@ public class Launcher {
 
     public void updatePose() {
 
-        setPoint = motionProfile.calculate(0.02, setPoint, goal);
-
         pivotController1.setReference(launchState.position, CANSparkMax.ControlType.kPosition, 0,
                 feedForward.calculate(encoder.getPosition(), 0));
+
+        // pivotController1.setReference(0.23, ControlType.kPosition, 0,
+        // feedForward.calculate(absEncoder.getPosition()* (2* Math.PI) + .349, 0));
+
+        // pivotMotor.set(feedForward.calculate(absEncoder.getPosition()* (2* Math.PI) + .349, 0, 0));
 
     }
 
@@ -165,11 +179,15 @@ public class Launcher {
     }
 
     public void setPivotPower() {
-        pivotMotor.set(anglePower + feedForward.calculate(encoder.getPosition(), veloSP));
+        // pivotMotor.set(anglePower + feedForward.calculate(encoder.getPosition(), veloSP));
+                pivotMotor.set(anglePower + feedForward.calculate(absEncoder.getPosition(), veloSP));
+
     }
 
     public void setReversePivotPower() {
-        pivotMotor.set(-anglePower + feedForward.calculate(encoder.getPosition(), veloSP));
+        // pivotMotor.set(-anglePower + feedForward.calculate(encoder.getPosition(), veloSP));
+            pivotMotor.set(anglePower + feedForward.calculate(absEncoder.getPosition(), veloSP));
+
 
     }
 
@@ -234,7 +252,9 @@ public class Launcher {
     }
 
     public double getPosition() {
-        return encoder.getPosition();
+                return encoder.getPosition();
+
+        // return absEncoder.getPosition();
     }
 
     public boolean getBreakBeam() {
@@ -255,15 +275,6 @@ public class Launcher {
 
     public void setLauncherState(LauncherState state) {
         launchState = state;
-        goal = new TrapezoidProfile.State(launchState.position, 0);
-    }
-
-    public double getVelocity() {
-        return encoder.getVelocity();
-    }
-
-    public double getVelocityGoal() {
-        return setPoint.velocity;
     }
 
     public boolean[] launcherConnections() {

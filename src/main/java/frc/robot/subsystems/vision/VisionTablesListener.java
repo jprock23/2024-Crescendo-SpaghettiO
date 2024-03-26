@@ -83,19 +83,19 @@ public class VisionTablesListener {
         yaw1Sub = visionTable.getDoubleArrayTopic("Yaws").subscribe(new double[] {});
         timestamp1Sub = visionTable.getDoubleArrayTopic("Timestamps").subscribe(new double[] {});
         
-        // tagID2Sub = visionTable.getIntegerArrayTopic("IDs 2").subscribe(new long[] {});
-        // x2Sub = visionTable.getDoubleArrayTopic("X Coords 2").subscribe(new double[] {});
-        // y2Sub = visionTable.getDoubleArrayTopic("Y Coords 2").subscribe(new double[] {});
-        // z2Sub = visionTable.getDoubleArrayTopic("Z Coords 2").subscribe(new double[] {});
-        // yaw2Sub = visionTable.getDoubleArrayTopic("Yaws 2").subscribe(new double[] {});
-        // timestamp2Sub = visionTable.getDoubleArrayTopic("Timestamps 2").subscribe(new double[] {});
+        tagID2Sub = visionTable.getIntegerArrayTopic("IDs 2").subscribe(new long[] {});
+        x2Sub = visionTable.getDoubleArrayTopic("X Coords 2").subscribe(new double[] {});
+        y2Sub = visionTable.getDoubleArrayTopic("Y Coords 2").subscribe(new double[] {});
+        z2Sub = visionTable.getDoubleArrayTopic("Z Coords 2").subscribe(new double[] {});
+        yaw2Sub = visionTable.getDoubleArrayTopic("Yaws 2").subscribe(new double[] {});
+        timestamp2Sub = visionTable.getDoubleArrayTopic("Timestamps 2").subscribe(new double[] {});
 
-        // tagID3Sub = visionTable.getIntegerArrayTopic("IDs 3").subscribe(new long[] {});
-        // x3Sub = visionTable.getDoubleArrayTopic("X Coords 3").subscribe(new double[] {});
-        // y3Sub = visionTable.getDoubleArrayTopic("Y Coords 3").subscribe(new double[] {});
-        // z3Sub = visionTable.getDoubleArrayTopic("Z Coords 3").subscribe(new double[] {});
-        // yaw3Sub = visionTable.getDoubleArrayTopic("Yaws 3").subscribe(new double[] {});
-        // timestamp3Sub = visionTable.getDoubleArrayTopic("Timestamps 3").subscribe(new double[] {});
+        tagID3Sub = visionTable.getIntegerArrayTopic("IDs 3").subscribe(new long[] {});
+        x3Sub = visionTable.getDoubleArrayTopic("X Coords 3").subscribe(new double[] {});
+        y3Sub = visionTable.getDoubleArrayTopic("Y Coords 3").subscribe(new double[] {});
+        z3Sub = visionTable.getDoubleArrayTopic("Z Coords 3").subscribe(new double[] {});
+        yaw3Sub = visionTable.getDoubleArrayTopic("Yaws 3").subscribe(new double[] {});
+        timestamp3Sub = visionTable.getDoubleArrayTopic("Timestamps 3").subscribe(new double[] {});
 
         // zRotsSub = visionTable.getIntegerArrayTopic("Z Euler Angles").subscribe(new long[] {});
         // ringCenterXSub = visionTable.getIntegerArrayTopic("Ring Center X Coords").subscribe(new long[] {});

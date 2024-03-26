@@ -165,6 +165,8 @@ private DriveState driveState = DriveState.NORMAL;
         Logger.recordOutput("Cam2 Timestamp", timestampsCam2[i]);
         poseEstimator.addVisionMeasurement(robotPos2, timestampsCam2[i]);
       }
+      SmartDashboard.putNumber("X Position", getPose2d().getX());
+      SmartDashboard.putNumber("Y Position", getPose2d().getY());
       //Pose3d tagPos2 = visTables.getBestTagAbsPos((int) visTables.getCam2IDs()[0]);
       //Pose2d robotPos2 = tagPos2.transformBy(visTables.getCam2Transforms()[0]).toPose2d();
 
@@ -185,6 +187,8 @@ private DriveState driveState = DriveState.NORMAL;
         Logger.recordOutput("Cam3 Timestamp", timestampsCam3[i]);
         poseEstimator.addVisionMeasurement(robotPos3, timestampsCam3[i]);
       }
+      SmartDashboard.putNumber("X Position", getPose2d().getX());
+      SmartDashboard.putNumber("Y Position", getPose2d().getY());
 
       //Pose3d tagPos3 = visTables.getBestTagAbsPos((int) visTables.getCam2IDs()[0]);
       //Pose2d robotPos3 = tagPos3.transformBy(visTables.getCam2Transforms()[0]).toPose2d();      

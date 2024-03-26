@@ -1,5 +1,7 @@
 package frc.robot.subsystems.vision;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -38,7 +40,7 @@ public class VisionTablesListener {
 
     private Transform3d cam1Transform = new Transform3d(new Translation3d(0, 0.3115, 0.359283), new Rotation3d(0, Math.toRadians(30), 0));
     private Transform3d cam2Transform = new Transform3d(new Translation3d(0.2762504, -0.3121152, 0.2306066), new Rotation3d(0, Math.toRadians(35), Math.toRadians(-90)));
-    private Transform3d cam3Transofrm = new Transform3d(new Translation3d(0.2762504, 0.3121152, 0.2306066), new Rotation3d(0, Math.toRadians(35), Math.toRadians(90)));
+    private Transform3d cam3Transform = new Transform3d(new Translation3d(0.2762504, 0.3121152, 0.2306066), new Rotation3d(0, Math.toRadians(35), Math.toRadians(90)));
     // private IntegerArraySubscriber zRotsSub;
     // private IntegerSubscriber bestIDSub;
     // private IntegerSubscriber bestXSub;
@@ -202,25 +204,25 @@ public class VisionTablesListener {
         return convertArray(tagIDSub1.get());
     }
 
-    // public double[] getCam2IDs() {
-    //     return convertArray(tagID2Sub.get());
-    // }
+    public double[] getCam2IDs() {
+        return convertArray(tagID2Sub.get());
+    }
 
-    // public double[] getCam3IDs() {
-    //     return convertArray(tagID3Sub.get());
-    // }
+    public double[] getCam3IDs() {
+        return convertArray(tagID3Sub.get());
+    }
 
     public double[] getCam1Timestamps() {
         return timestamp1Sub.get();
     }
 
-    // public double[] getCam2Timestamps() {
-    //     return timestamp2Sub.get();
-    // }
+    public double[] getCam2Timestamps() {
+        return timestamp2Sub.get();
+    }
 
-    // public double[] getCam3Timestamps() {
-    //     return timestamp3Sub.get();
-    // }
+    public double[] getCam3Timestamps() {
+        return timestamp3Sub.get();
+    }
 
     // public double getRot() {
     //     return zRot;
@@ -253,9 +255,13 @@ public class VisionTablesListener {
     public Transform3d[] getCam1Transforms() {
         double[] ids = convertArray(tagIDSub1.get());
         double[] xPoses = x1Sub.get();
+        Logger.recordOutput("Tag 1 X", xPoses);
         double[] yPoses = y1Sub.get();
+        Logger.recordOutput("Tag 1 Y", yPoses);
         double[] zPoses = z1Sub.get();
+        Logger.recordOutput("Tag 1 Z", zPoses);
         double[] yaws = yaw1Sub.get();
+        Logger.recordOutput("Tag 1 Yaws", yaws);
         
         Transform3d[] transforms = new Transform3d[ids.length];
         for(int i = 0; i < ids.length; i++) {
@@ -269,43 +275,51 @@ public class VisionTablesListener {
         return transforms;
     }
 
-    // public Transform3d[] getCam2Transforms() {
-    //     double[] ids = convertArray(tagID2Sub.get());
-    //     double[] xPoses = x2Sub.get();
-    //     double[] yPoses = y2Sub.get();
-    //     double[] zPoses = z2Sub.get();
-    //     double[] yaws = yaw2Sub.get();
+    public Transform3d[] getCam2Transforms() {
+        double[] ids = convertArray(tagID2Sub.get());
+        double[] xPoses = x2Sub.get();
+        Logger.recordOutput("Tag 2 X", xPoses);
+        double[] yPoses = y2Sub.get();
+        Logger.recordOutput("Tag 2 Y", yPoses);
+        double[] zPoses = z2Sub.get();
+        Logger.recordOutput("Tag 2 Z", zPoses);
+        double[] yaws = yaw2Sub.get();
+        Logger.recordOutput("Tag 2 Yaws", yaws);
         
-    //     Transform3d[] transforms = new Transform3d[ids.length];
-    //     for(int i = 0; i < ids.length; i++) {
-    //         Translation3d translate = new Translation3d(-xPoses[i], -yPoses[i], zPoses[i]);
-    //         Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
-    //         Transform3d transform = new Transform3d(translate, rotation);
+        Transform3d[] transforms = new Transform3d[ids.length];
+        for(int i = 0; i < ids.length; i++) {
+            Translation3d translate = new Translation3d(-xPoses[i], -yPoses[i], zPoses[i]);
+            Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
+            Transform3d transform = new Transform3d(translate, rotation);
 
-    //         transform.plus(cam2Transform);
-    //         transforms[i] = transform;
-    //     }
-    //     return transforms;
-    // }
+            transform.plus(cam2Transform);
+            transforms[i] = transform;
+        }
+        return transforms;
+    }
 
-    // public Transform3d[] getCam3Transforms() {
-    //     double[] ids = convertArray(tagID3Sub.get());
-    //     double[] xPoses = x3Sub.get();
-    //     double[] yPoses = y3Sub.get();
-    //     double[] zPoses = z3Sub.get();
-    //     double[] yaws = yaw3Sub.get();
+    public Transform3d[] getCam3Transforms() {
+        double[] ids = convertArray(tagID3Sub.get());
+        double[] xPoses = x3Sub.get();
+        Logger.recordOutput("Tag 3 X", xPoses);
+        double[] yPoses = y3Sub.get();
+        Logger.recordOutput("Tag 3 Y", yPoses);
+        double[] zPoses = z3Sub.get();
+        Logger.recordOutput("Tag 3 Z", zPoses);
+        double[] yaws = yaw3Sub.get();
+        Logger.recordOutput("Tag 3 Yaws", yaws);
         
-    //     Transform3d[] transforms = new Transform3d[ids.length];
-    //     for(int i = 0; i < ids.length; i++) {
-    //         Translation3d translate = new Translation3d(-xPoses[i], -yPoses[i], zPoses[i]);
-    //         Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
-    //         Transform3d transform = new Transform3d(translate, rotation);
+        Transform3d[] transforms = new Transform3d[ids.length];
+        for(int i = 0; i < ids.length; i++) {
+            Translation3d translate = new Translation3d(-xPoses[i], -yPoses[i], zPoses[i]);
+            Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
+            Transform3d transform = new Transform3d(translate, rotation);
 
-    //         transform.plus(cam3Transform);
-    //         transforms[i] = transform;
-    //     }
-    //     return transforms;
-    // }
+            transform.plus(cam3Transform);
+            transforms[i] = transform;
+        }
+        return transforms;
+    }
 
     public Pose3d getBestTagAbsPos(int id) {
 

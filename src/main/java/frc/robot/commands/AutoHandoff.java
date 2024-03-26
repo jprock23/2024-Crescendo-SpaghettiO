@@ -28,8 +28,6 @@ public class AutoHandoff extends Command {
   private double intakeStarttime;
   private double launcherStarttime;
 
-  private double timeElapsed;
-
   private boolean intakeHasRing;
 
   public AutoHandoff() {
@@ -42,7 +40,6 @@ public class AutoHandoff extends Command {
 
     intakeStarttime = -1;
     launcherStarttime = -1;
-    timeElapsed = -1;
 
     intakeHasRing = false;
   }

@@ -35,7 +35,8 @@ public class Launcher {
         //height: 20.75
         AUTORIGHTSHOT(-13.5, 1.0),
         //height: ?7
-        SPEAKER(-55.0, 1.0);
+        SPEAKER(-55.0, 1.0),
+        INTERLOPE(0.0, 0.0);
 
         public double position;
         public double launchSpeed;
@@ -153,13 +154,14 @@ public class Launcher {
 
     }
 
-    public double linearInterprolation(){
+    public void interpolateAngle(){
         double delta = Drivebase.getPose2d().getX();
         double position;
 
         position = (0.0 * Math.pow(delta, 2)) + (0.0 * delta) + 0.0;
 
-        return position;
+        LauncherState.INTERLOPE.position = position;
+        setLauncherState(LauncherState.INTERLOPE);
     }
 
     public void setPivotPower() {

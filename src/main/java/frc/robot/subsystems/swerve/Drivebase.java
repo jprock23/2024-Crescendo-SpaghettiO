@@ -8,6 +8,8 @@ import com.pathplanner.lib.util.*;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,6 +19,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
@@ -25,6 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.vision.VisionTablesListener;
 
@@ -61,6 +65,8 @@ private DriveState driveState = DriveState.NORMAL;
   Field2d fieldmap = new Field2d();
 
   private static SwerveDrivePoseEstimator poseEstimator;
+
+  private ProfiledPIDController headingController;
 
   private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
   private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10));
@@ -107,6 +113,9 @@ private DriveState driveState = DriveState.NORMAL;
         new ReplanningConfig());
 
     SmartDashboard.putData("FIELD", fieldmap);
+
+    headingController = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0, 0), .02);
+    headingController.enableContinuousInput(-Math.PI, Math.PI);
 
     AutoBuilder.configureHolonomic(this::getPose, this::resetOdometry, this::getSpeeds, this::setChassisSpeed, config,
         shouldFlipPath(), this);
@@ -277,6 +286,15 @@ private DriveState driveState = DriveState.NORMAL;
     return DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
   }
 
+  public void rotateTo(double goal){
+    double reqOmega = headingController.calculate(
+            getPose().getRotation().getRadians(),
+            new TrapezoidProfile.State(Math.toRadians(goal), 0),
+            new TrapezoidProfile.Constraints(AutoConstants.kMaxAngularSpeedRadiansPerSecond, AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared));
+
+        setChassisSpeed(new ChassisSpeeds(0, 0, reqOmega));
+  }
+
   public void lockWheels() {
     frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
@@ -323,7 +341,7 @@ private DriveState driveState = DriveState.NORMAL;
 
   // Returns the heading of the robot(=180 to 180)
   public double getHeading() {
-    return Rotation2d.fromDegrees(-gyro.getAngle()).getDegrees();
+    return -gyro.getAngle();
   }
 
   public BooleanSupplier shouldFlipPath() {

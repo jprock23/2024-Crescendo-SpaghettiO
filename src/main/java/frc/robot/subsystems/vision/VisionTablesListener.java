@@ -198,7 +198,7 @@ public class VisionTablesListener {
         double[] newArr = new double[arr.length];
 
         for (int i = 0; i < arr.length; i++)
-            newArr[i] = (double) (arr[i]) / 1000.0;
+            newArr[i] = (double) (arr[i]) / 1.0;
 
         return newArr;
     }

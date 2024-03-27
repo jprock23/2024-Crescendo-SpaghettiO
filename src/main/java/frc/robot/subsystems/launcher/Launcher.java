@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -143,12 +144,14 @@ public class Launcher {
         pivotController1.setI(LauncherConstants.pivotICoefficient);
         pivotController1.setD(LauncherConstants.pivotDCoefficient);
 
+        absEncoder.setAverageDepth(0);
+
         pivotController1.setFeedbackDevice(encoder);
         // pivotController1.setFeedbackDevice(absEncoder);
 
         pivotController1.setOutputRange(-1, 1);
 
-        // pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+        pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
         pivotMotor.burnFlash();
 
@@ -174,7 +177,7 @@ public class Launcher {
 
         position = (0.0 * Math.pow(delta, 2)) + (0.0 * delta) + 0.0;
 
-        LauncherState.INTERLOPE.position = position;
+        LauncherState.INTERLOPE.position = MathUtil.clamp(position, 0.0, 0.0);
         setLauncherState(LauncherState.INTERLOPE);
     }
 

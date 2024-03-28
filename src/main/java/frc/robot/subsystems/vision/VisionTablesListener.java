@@ -261,74 +261,74 @@ public class VisionTablesListener {
     //     return new Translation3d(bestTagX, bestTagY, bestTagZ);
     // }
 
-    public Transform3d[] getCam1Transforms() {
-        double[] ids = convertArray(tagIDSub1.get());
-        double[] xPoses = x1Sub.get();
-        Logger.recordOutput("Tag 1 X", xPoses);
-        double[] yPoses = y1Sub.get();
-        Logger.recordOutput("Tag 1 Y", yPoses);
-        double[] zPoses = z1Sub.get();
-        Logger.recordOutput("Tag 1 Z", zPoses);
-        double[] yaws = yaw1Sub.get();
-        Logger.recordOutput("Tag 1 Yaws", yaws);
+    // public Transform3d[] getCam1Transforms() {
+    //     double[] ids = convertArray(tagIDSub1.get());
+    //     double[] xPoses = x1Sub.get();
+    //     Logger.recordOutput("Tag 1 X", xPoses);
+    //     double[] yPoses = y1Sub.get();
+    //     Logger.recordOutput("Tag 1 Y", yPoses);
+    //     double[] zPoses = z1Sub.get();
+    //     Logger.recordOutput("Tag 1 Z", zPoses);
+    //     double[] yaws = yaw1Sub.get();
+    //     Logger.recordOutput("Tag 1 Yaws", yaws);
         
-        Transform3d[] transforms = new Transform3d[ids.length];
-        for(int i = 0; i < ids.length; i++) {
-            Translation3d translate = new Translation3d(-xPoses[i], -yPoses[i], zPoses[i]);
-            Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
-            Transform3d transform = new Transform3d(translate, rotation);
+    //     Transform3d[] transforms = new Transform3d[ids.length];
+    //     for(int i = 0; i < ids.length; i++) {
+    //         Translation3d translate = new Translation3d(xPoses[i], yPoses[i], zPoses[i]);
+    //         Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
+    //         Transform3d transform = new Transform3d(translate, rotation);
 
-            transform.plus(cam1Transform);
-            transforms[i] = transform;
-        }
-        return transforms;
-    }
+    //         transform.plus(cam1Transform);
+    //         transforms[i] = transform;
+    //     }
+    //     return transforms;
+    // }
 
-    public Transform3d[] getCam2Transforms() {
-        double[] ids = convertArray(tagID2Sub.get());
-        double[] xPoses = x2Sub.get();
-        Logger.recordOutput("Tag 2 X", xPoses);
-        double[] yPoses = y2Sub.get();
-        Logger.recordOutput("Tag 2 Y", yPoses);
-        double[] zPoses = z2Sub.get();
-        Logger.recordOutput("Tag 2 Z", zPoses);
-        double[] yaws = yaw2Sub.get();
-        Logger.recordOutput("Tag 2 Yaws", yaws);
+    // public Transform3d[] getCam2Transforms() {
+    //     double[] ids = convertArray(tagID2Sub.get());
+    //     double[] xPoses = x2Sub.get();
+    //     Logger.recordOutput("Tag 2 X", xPoses);
+    //     double[] yPoses = y2Sub.get();
+    //     Logger.recordOutput("Tag 2 Y", yPoses);
+    //     double[] zPoses = z2Sub.get();
+    //     Logger.recordOutput("Tag 2 Z", zPoses);
+    //     double[] yaws = yaw2Sub.get();
+    //     Logger.recordOutput("Tag 2 Yaws", yaws);
         
-        Transform3d[] transforms = new Transform3d[ids.length];
-        for(int i = 0; i < ids.length; i++) {
-            Translation3d translate = new Translation3d(-xPoses[i], -yPoses[i], zPoses[i]);
-            Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
-            Transform3d transform = new Transform3d(translate, rotation);
+    //     Transform3d[] transforms = new Transform3d[ids.length];
+    //     for(int i = 0; i < ids.length; i++) {
+    //         Translation3d translate = new Translation3d(xPoses[i], yPoses[i], zPoses[i]);
+    //         Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
+    //         Transform3d transform = new Transform3d(translate, rotation);
 
-            transform.plus(cam2Transform);
-            transforms[i] = transform;
-        }
-        return transforms;
-    }
+    //         transform.plus(cam2Transform);
+    //         transforms[i] = transform;
+    //     }
+    //     return transforms;
+    // }
 
-    public Transform3d[] getCam3Transforms() {
-        double[] ids = convertArray(tagID3Sub.get());
-        double[] xPoses = x3Sub.get();
-        Logger.recordOutput("Tag 3 X", xPoses);
-        double[] yPoses = y3Sub.get();
-        Logger.recordOutput("Tag 3 Y", yPoses);
-        double[] zPoses = z3Sub.get();
-        Logger.recordOutput("Tag 3 Z", zPoses);
-        double[] yaws = yaw3Sub.get();
-        Logger.recordOutput("Tag 3 Yaws", yaws);
+    // public Transform3d[] getCam3Transforms() {
+    //     double[] ids = convertArray(tagID3Sub.get());
+    //     double[] xPoses = x3Sub.get();
+    //     Logger.recordOutput("Tag 3 X", xPoses);
+    //     double[] yPoses = y3Sub.get();
+    //     Logger.recordOutput("Tag 3 Y", yPoses);
+    //     double[] zPoses = z3Sub.get();
+    //     Logger.recordOutput("Tag 3 Z", zPoses);
+    //     double[] yaws = yaw3Sub.get();
+    //     Logger.recordOutput("Tag 3 Yaws", yaws);
         
-        Transform3d[] transforms = new Transform3d[ids.length];
-        for(int i = 0; i < ids.length; i++) {
-            Translation3d translate = new Translation3d(-xPoses[i], -yPoses[i], zPoses[i]);
-            Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
-            Transform3d transform = new Transform3d(translate, rotation);
+    //     Transform3d[] transforms = new Transform3d[ids.length];
+    //     for(int i = 0; i < ids.length; i++) {
+    //         Translation3d translate = new Translation3d(xPoses[i], yPoses[i], zPoses[i]);
+    //         Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
+    //         Transform3d transform = new Transform3d(translate, rotation);
 
-            transform.plus(cam3Transform);
-            transforms[i] = transform;
-        }
-        return transforms;
-    }
+    //         transform.plus(cam3Transform);
+    //         transforms[i] = transform;
+    //     }
+    //     return transforms;
+    // }
 
     public Pose3d getBestTagAbsPos(int id) {
 

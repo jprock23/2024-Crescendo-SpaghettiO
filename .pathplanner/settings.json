@@ -5,6 +5,7 @@
   "pathFolders": [
     "Competition",
     "Dallas",
+    "More Test",
     "P1",
     "P2",
     "P3",
@@ -16,7 +17,7 @@
     "Test"
   ],
   "defaultMaxVel": 3.5,
-  "defaultMaxAccel": 2.75,
+  "defaultMaxAccel": 2.25,
   "defaultMaxAngVel": 800.0,
   "defaultMaxAngAccel": 600.0,
   "maxModuleSpeed": 3.0

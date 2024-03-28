@@ -27,7 +27,6 @@ public class BreakBeamHandoff extends Command {
 
   private double intakeStarttime;
   private double launcherStarttime;
-  private double timeElapsed;
 
   private boolean intakeHasRing;
 
@@ -41,7 +40,6 @@ public class BreakBeamHandoff extends Command {
 
     intakeStarttime = -1;
     launcherStarttime = -1;
-    timeElapsed = -1;
 
     intakeHasRing = false;
   }

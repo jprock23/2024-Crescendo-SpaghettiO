@@ -2,8 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.launcher.Launcher;
 import frc.robot.subsystems.launcher.Launcher.LauncherState;
 
@@ -16,7 +14,7 @@ public class AutoSpeaker extends Command {
   private double startTime;
   private double elapsedTime;
   private double windup = 0.1;
-  private double duration = windup + .15;
+  private double duration = windup + .1;
 
   public AutoSpeaker() {
     launcher = Launcher.getInstance();
@@ -45,9 +43,9 @@ public class AutoSpeaker extends Command {
       }
       elapsedTime = Timer.getFPGATimestamp() - startTime;
 
-      if (elapsedTime > windup) {
-        launcher.setFlickerOn();
-      }
+      // if (elapsedTime > windup) {
+      //   launcher.setFlickerOn();
+      // }
 
       if (elapsedTime > duration) {
         ended = true;

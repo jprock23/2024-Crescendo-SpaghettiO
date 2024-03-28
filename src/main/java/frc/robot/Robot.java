@@ -11,7 +11,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -43,6 +42,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.robot.subsystems.swerve.Drivebase;
 import frc.robot.subsystems.swerve.Drivebase.DriveState;
+import frc.robot.subsystems.vision.VisionTablesListener;
 
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -62,7 +62,7 @@ public class Robot extends LoggedRobot {
   private Intake intake;
   private Launcher launcher;
   private LED litty;
-  // private VisionTablesListener visTables;
+  private VisionTablesListener visTables;
 
   private static XboxController driver;
   private static XboxController operator;
@@ -91,7 +91,7 @@ public class Robot extends LoggedRobot {
     intake = Intake.getInstance();
     climber = Climber.getInstance();
     litty = LED.getInstance();
-    // visTables = VisionTablesListener.getInstance();
+    visTables = VisionTablesListener.getInstance();
 
     driver = new XboxController(0);
     operator = new XboxController(1);
@@ -118,21 +118,9 @@ public class Robot extends LoggedRobot {
     NamedCommands.registerCommand("RevLauncher", new RevLauncher());
     NamedCommands.registerCommand("AutoPreload", new AutoPreload());
 
-
-
-
     m_chooser = AutoBuilder.buildAutoChooser();
     // m_chooser.addOption("Test1", new PathPlannerAuto("Test1"));
-    // m_chooser.addOption("Test2", new PathPlannerAuto("Test2"));
-    // m_chooser.addOption("Test3", new PathPlannerAuto("Test3"));
-    // // m_chooser.addOption("BeepBoop", new PathPlannerAuto("BeepBoop"));
-    // m_chooser.addOption("Test2 Left", new PathPlannerAuto("Test2 Left"));
-    //     m_chooser.addOption("Test2 Right", new PathPlannerAuto("Test2 Right"));
-    m_chooser.addOption("P2 4 Piece", new PathPlannerAuto("P2 4 Piece"));
-    m_chooser.addOption("P3 4 Piece", new PathPlannerAuto("P3 4 Piece"));
-    m_chooser.addOption("Handoff Test", new PathPlannerAuto("Handoff Test"));
-    m_chooser.addOption("P1 4 Piece", new PathPlannerAuto("P1 4 Piece"));
-        m_chooser.addOption("Q7", new PathPlannerAuto("Q7"));
+        m_chooser.addOption("photon p3", new PathPlannerAuto("Photon p3"));
 
 
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -214,6 +202,8 @@ public class Robot extends LoggedRobot {
       m_autoSelected.cancel();
     }
   }
+ 
+ 
 
   @Override
   public void teleopPeriodic() {
@@ -343,12 +333,13 @@ public class Robot extends LoggedRobot {
       shootCommand.cancel();
       handoffCommand.cancel();
       launcher.setSushiOff();
+      ampCommand.cancel();
       // litty.setBlue();
 
     }
 
     if(driver.getYButton()){
-      driver.setRumble(RumbleType.kLeftRumble, 0.8);
+      driver.setRumble(RumbleType.kBothRumble, 1.0);
     }
 
   }

@@ -63,6 +63,9 @@ public class LED {
         PWMLED.set(.67);
     }
     
+    public void setOrange(){
+        PWMLED.set(-.97);
+    }
 
     public static LED getInstance() {
         if (instance == null) {

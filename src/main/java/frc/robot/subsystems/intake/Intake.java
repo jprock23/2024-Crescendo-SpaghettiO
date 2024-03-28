@@ -18,7 +18,7 @@ public class Intake {
         STOP(0.2),
         GROUND(-12.0),
         HANDOFF(-5.5),
-        HOLD(-2);
+        HOLD(-2.5);
 
         public double position;
 

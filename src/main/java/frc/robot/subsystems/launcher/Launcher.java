@@ -8,16 +8,11 @@ import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.subsystems.IO.DigitalInputs;
@@ -64,13 +59,6 @@ public class Launcher {
 
     private ArmFeedforward feedForward;
     private SparkMaxPIDController pivotController1;
-
-    private TrapezoidProfile motionProfile;
-    private TrapezoidProfile.State goal = new TrapezoidProfile.State();
-    private TrapezoidProfile.State setPoint = new TrapezoidProfile.State(LauncherState.START.position, 0);
-
-    private double veloSP = 4000;
-    private double maxAccel = 3000;
 
     private static RelativeEncoder encoder;
     private static AbsoluteEncoder absEncoder;
@@ -128,7 +116,6 @@ public class Launcher {
         sushiMotor.burnFlash();
 
         feedForward = new ArmFeedforward(0.012, 0.017, 0.0, 0.0);
-        motionProfile = new TrapezoidProfile(new Constraints(veloSP, maxAccel));
         //u:.023 l:.011 mid:.017 ks:.012
 
         // Prototype numbers
@@ -175,7 +162,7 @@ public class Launcher {
     }
 
     public void interpolateAngle(){
-        double delta = Drivebase.getPose2d().getX();
+        double delta = Drivebase.getStaticPose().getX();
         double position;
 
         position = (0.0 * Math.pow(delta, 2)) + (0.0 * delta) + 0.0;
@@ -185,14 +172,14 @@ public class Launcher {
     }
 
     public void setPivotPower() {
-        // pivotMotor.set(anglePower + feedForward.calculate(encoder.getPosition(), veloSP));
-                pivotMotor.set(anglePower + feedForward.calculate(absEncoder.getPosition(), veloSP));
+        // pivotMotor.set(anglePower + feedForward.calculate(encoder.getPosition(), 0));
+                pivotMotor.set(anglePower + feedForward.calculate(absEncoder.getPosition(), 0));
 
     }
 
     public void setReversePivotPower() {
-        // pivotMotor.set(-anglePower + feedForward.calculate(encoder.getPosition(), veloSP));
-            pivotMotor.set(anglePower + feedForward.calculate(absEncoder.getPosition(), veloSP));
+        // pivotMotor.set(-anglePower + feedForward.calculate(encoder.getPosition(), 0));
+            pivotMotor.set(anglePower + feedForward.calculate(absEncoder.getPosition(), 0));
 
 
     }
@@ -219,13 +206,13 @@ public class Launcher {
 
     public void setReverseLauncherOn() {
 
-        if(launchState == LauncherState.AMP){
-        shootMotor1.set(-launchState.launchSpeed);
-        shootMotor2.set(launchState.launchSpeed * 0.36);
-        } else {
+        // if(launchState == LauncherState.AMP){
+        // shootMotor1.set(-launchState.launchSpeed);
+        // shootMotor2.set(launchState.launchSpeed * 0.36);
+        // } else {
         shootMotor1.set(-launchState.launchSpeed);
         shootMotor2.set(-launchState.launchSpeed);
-        }
+        // }
     }
 
     public void setLauncherOff() {

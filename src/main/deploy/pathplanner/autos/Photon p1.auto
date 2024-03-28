@@ -14,6 +14,70 @@
         {
           "type": "named",
           "data": {
+            "name": "AutoPreload"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Photon P1 Intake 2nd"
+                      }
+                    },
+                    {
+                      "type": "deadline",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "Photon Score 2"
+                            }
+                          },
+                          {
+                            "type": "sequential",
+                            "data": {
+                              "commands": [
+                                {
+                                  "type": "wait",
+                                  "data": {
+                                    "waitTime": 0.75
+                                  }
+                                },
+                                {
+                                  "type": "named",
+                                  "data": {
+                                    "name": "RevLauncher"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Handoff"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "AutoSpeaker"
           }
         },
@@ -28,17 +92,17 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "P2 Intake Second"
+                        "pathName": "Spectrum Intake 3"
                       }
                     },
                     {
-                      "type": "parallel",
+                      "type": "deadline",
                       "data": {
                         "commands": [
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "P2 Score Second"
+                              "pathName": "Spectrum Score 3"
                             }
                           },
                           {
@@ -48,7 +112,7 @@
                                 {
                                   "type": "wait",
                                   "data": {
-                                    "waitTime": 0.5
+                                    "waitTime": 0.75
                                   }
                                 },
                                 {
@@ -78,7 +142,7 @@
         {
           "type": "named",
           "data": {
-            "name": "AutoRightShot"
+            "name": "AutoSpeaker"
           }
         },
         {
@@ -92,17 +156,17 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "P2 Intake Third"
+                        "pathName": "Photon Intake 4"
                       }
                     },
                     {
-                      "type": "parallel",
+                      "type": "deadline",
                       "data": {
                         "commands": [
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "P2 Score Third"
+                              "pathName": "Spectrum Score 2"
                             }
                           },
                           {
@@ -112,7 +176,7 @@
                                 {
                                   "type": "wait",
                                   "data": {
-                                    "waitTime": 0.5
+                                    "waitTime": 0.75
                                   }
                                 },
                                 {
@@ -142,71 +206,7 @@
         {
           "type": "named",
           "data": {
-            "name": "AutoMidShot"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "P2 Intake Fourth"
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "path",
-                            "data": {
-                              "pathName": "P2 Score Fourth"
-                            }
-                          },
-                          {
-                            "type": "sequential",
-                            "data": {
-                              "commands": [
-                                {
-                                  "type": "wait",
-                                  "data": {
-                                    "waitTime": 0.5
-                                  }
-                                },
-                                {
-                                  "type": "named",
-                                  "data": {
-                                    "name": "RevLauncher"
-                                  }
-                                }
-                              ]
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Handoff"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AutoLeftShot"
+            "name": "AutoSpeaker"
           }
         }
       ]

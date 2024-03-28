@@ -95,7 +95,7 @@ public class Robot extends LoggedRobot {
 
     driver = new XboxController(0);
     operator = new XboxController(1);
-    // drivebase.resetOdometry(new Pose2d(1, 1, new Rotation2d(0)));
+    drivebase.resetOdometry(new Pose2d(1.3, 5.56, new Rotation2d(0)));
 
     handoffCommand = new BreakBeamHandoff();
     shootCommand = new ShootCommand();
@@ -156,6 +156,8 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putNumber("X-coordinate", drivebase.getPose().getX());
     SmartDashboard.putNumber("Y-coordinate", drivebase.getPose().getY());
 
+    SmartDashboard.putNumber("Test Position", launcher.getTestPosition());
+
     // SmartDashboard.putNumber("Flipper Current", intake.getFlipperCurrent());
     // SmartDashboard.putNumber("Pivot Current", launcher.getPivotCurrent());
     // SmartDashboard.putNumber("Roller Current", intake.getRollerCurrent());
@@ -208,7 +210,9 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {
     intake.updatePose();
-    // launcher.updatePose();
+    launcher.updatePose();
+
+    launcher.interpolateAngle();
 
     /* DRIVE CONTROLS */
     double ySpeed;
@@ -219,9 +223,9 @@ public class Robot extends LoggedRobot {
     xSpeed = drivebase.inputDeadband(driver.getLeftY());
     rot = drivebase.inputDeadband(-driver.getRightX());
 
-    if(operator.getAButton()){
-      intake.setIntakeState(IntakeState.GROUND);
-    } 
+    // if(operator.getAButton()){
+    //   intake.setIntakeState(IntakeState.GROUND);
+    // } 
 
     if (driver.getXButton()) {
       drivebase.lockWheels();
@@ -291,6 +295,26 @@ public class Robot extends LoggedRobot {
     // launcher.setPivotOff();
     // }
 
+    if(operator.getLeftStickButton()){
+      launcher.decreaseInrement();
+    }
+    if(operator.getRightStickButton()){
+      launcher.increaseIncrement();
+    }
+
+    if(operator.getYButtonPressed()){
+      launcher.increasePosition();
+    }
+    if(operator.getAButtonPressed()){
+      // launcher.decreasePosition();
+      // launcher.interpolateAngle();
+      launcher.setLauncherState(LauncherState.INTERLOPE);
+    }
+
+    if(driver.getYButton()){
+      launcher.setLauncherState(LauncherState.TEST);
+    }
+
     if (operator.getPOV() == 0) {
       launcher.setLauncherState(LauncherState.SPEAKER);
     }
@@ -338,9 +362,9 @@ public class Robot extends LoggedRobot {
 
     }
 
-    if(driver.getYButton()){
-      driver.setRumble(RumbleType.kBothRumble, 1.0);
-    }
+    // if(driver.getYButton()){
+    //   driver.setRumble(RumbleType.kBothRumble, 1.0);
+    // }
 
   }
 

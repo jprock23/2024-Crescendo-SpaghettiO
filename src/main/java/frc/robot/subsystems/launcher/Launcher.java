@@ -36,7 +36,8 @@ public class Launcher {
         AUTORIGHTSHOT(-13.5, 1.0),
         //height: ?7
         SPEAKER(-59.0, 1.0),
-        INTERLOPE(0.0, 1.0);
+        INTERLOPE(0.0, 1.0),
+        TEST(-13.25, 1.0);
 
         public double position;
         public double launchSpeed;
@@ -56,6 +57,8 @@ public class Launcher {
     private CANSparkMax flicker;
 
     private CANSparkMax pivotMotor;
+
+    private double increment = 1.0;
 
     private ArmFeedforward feedForward;
     private SparkMaxPIDController pivotController1;
@@ -165,10 +168,10 @@ public class Launcher {
         double delta = Drivebase.getStaticPose().getX();
         double position;
 
-        position = (0.0 * Math.pow(delta, 2)) + (0.0 * delta) + 0.0;
+        position = -28.7958/Math.pow(delta, .70833333);
 
-        LauncherState.INTERLOPE.position = MathUtil.clamp(position, 0.0, 0.0);
-        setLauncherState(LauncherState.INTERLOPE);
+        LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position, LauncherState.HOVER.position);
+        // setLauncherState(LauncherState.INTERLOPE);
     }
 
     public void setPivotPower() {
@@ -180,8 +183,6 @@ public class Launcher {
     public void setReversePivotPower() {
         // pivotMotor.set(-anglePower + feedForward.calculate(encoder.getPosition(), 0));
             pivotMotor.set(anglePower + feedForward.calculate(absEncoder.getPosition(), 0));
-
-
     }
 
 
@@ -192,6 +193,10 @@ public class Launcher {
 
     public void setPivotOff() {
         pivotMotor.set(0.0);
+    }
+
+    public double getTestPosition(){
+        return LauncherState.INTERLOPE.position;
     }
 
     public void setLauncherOn() {
@@ -272,6 +277,23 @@ public class Launcher {
 
     public void setLauncherState(LauncherState state) {
         launchState = state;
+    }
+
+    public void increaseIncrement(){
+        increment += 0.5;
+    }
+
+    public void decreaseInrement(){
+        increment -= 0.5;
+    }
+
+    public void increasePosition(){
+        LauncherState.TEST.position = LauncherState.TEST.position + increment;
+    }
+
+    
+    public void decreasePosition(){
+        LauncherState.TEST.position = LauncherState.TEST.position - increment;
     }
 
     public boolean[] launcherConnections() {

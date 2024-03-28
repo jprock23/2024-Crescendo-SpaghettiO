@@ -2,10 +2,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.launcher.Launcher;
 import frc.robot.subsystems.launcher.Launcher.LauncherState;
 
-public class AutoMidShot extends Command {
+public class AutoPreload extends Command {
 
   private Launcher launcher;
 
@@ -13,10 +15,10 @@ public class AutoMidShot extends Command {
 
   private double startTime;
   private double elapsedTime;
-  private double windup = 0.2;
+  private double windup = .1;
   private double duration = windup + .15;
 
-  public AutoMidShot() {
+  public AutoPreload() {
     launcher = Launcher.getInstance();
   }
 
@@ -24,10 +26,10 @@ public class AutoMidShot extends Command {
   public void initialize() {
     ended = false;
 
-    launcher.setLauncherState(LauncherState.AUTOMIDSHOT);
+    launcher.setLauncherState(LauncherState.SPEAKER);
     startTime = -1;
     elapsedTime = 0;
-    // launcher.setLauncherOn();
+    launcher.setLauncherOn();
   }
 
   @Override

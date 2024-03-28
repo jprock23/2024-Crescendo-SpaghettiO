@@ -13,8 +13,8 @@ public class AutoRightShot extends Command {
 
   private double startTime;
   private double elapsedTime;
-  private double windup = 0.5;
-  private double duration = windup + .4;
+  private double windup = 0.25;
+  private double duration = windup + .15;
 
   public AutoRightShot() {
     launcher = Launcher.getInstance();

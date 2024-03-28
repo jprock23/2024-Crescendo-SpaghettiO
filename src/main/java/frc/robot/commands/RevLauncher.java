@@ -11,11 +11,7 @@ public class RevLauncher extends Command {
   private Launcher launcher;
 
   private boolean ended;
-
-  private double startTime;
-  private double elapsedTime;
-  private double windup = 0.5;
-  private double duration = windup + .4;
+;
 
   public RevLauncher() {
     launcher = Launcher.getInstance();
@@ -25,35 +21,19 @@ public class RevLauncher extends Command {
   public void initialize() {
     ended = false;
 
-    startTime = -1;
-    elapsedTime = 0;
+    launcher.setLauncherState(LauncherState.SPEAKER);
     launcher.setLauncherOn();
+    launcher.updatePose();
   }
 
   @Override
   public void execute() {
-    launcher.updatePose();
 
-    if(launcher.hasReachedPose(2.0)){
-    launcher.setLauncherOn();
-
-      if (startTime == -1) {
-        startTime = Timer.getFPGATimestamp();
-      }
-      elapsedTime = Timer.getFPGATimestamp() - startTime;
-
-      if (elapsedTime > windup) {
-        ended = true;
-      }
-    }
   }
 
   @Override
   public void end(boolean interrupted) {
-    launcher.setFlickOff();
-    launcher.setLauncherOff();
-    launcher.setLauncherState(LauncherState.HOVER);
-    launcher.updatePose();  
+
   }
 
   @Override

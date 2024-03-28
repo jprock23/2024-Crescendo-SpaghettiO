@@ -31,7 +31,7 @@ public class Launcher {
         START(0, 0.0),
         TRAP(-70.04991149902344, 0.8),
         LONG(-13.25, 1.0),
-        HANDOFF(5.5,0.5),
+        HANDOFF(9,0.5),
         HOVER(-3, 1.0), 
         TOSS(-18, .9),
         AUTOMIDSHOT(-13.75, 1.0),
@@ -40,7 +40,7 @@ public class Launcher {
         //height: 20.75
         AUTORIGHTSHOT(-13.5, 1.0),
         //height: ?7
-        SPEAKER(-55.0, 1.0),
+        SPEAKER(-59.0, 1.0),
         INTERLOPE(0.0, 1.0);
 
         public double position;
@@ -138,20 +138,20 @@ public class Launcher {
         // absEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
         // absEncoder.setInverted(true);
 
+        // absEncoder.setPositionConversionFactor(197.763157);
+
         pivotController1 = pivotMotor.getPIDController();
 
         pivotController1.setP(LauncherConstants.pivotPCoefficient);
         pivotController1.setI(LauncherConstants.pivotICoefficient);
         pivotController1.setD(LauncherConstants.pivotDCoefficient);
 
-        absEncoder.setAverageDepth(0);
-
         pivotController1.setFeedbackDevice(encoder);
         // pivotController1.setFeedbackDevice(absEncoder);
 
         pivotController1.setOutputRange(-1, 1);
 
-        pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+        // pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 10);
 
         pivotMotor.burnFlash();
 
@@ -164,7 +164,10 @@ public class Launcher {
         pivotController1.setReference(launchState.position, CANSparkMax.ControlType.kPosition, 0,
                 feedForward.calculate(encoder.getPosition(), 0));
 
-        // pivotController1.setReference(0.23, ControlType.kPosition, 0,
+        // pivotController1.setReference(15, CANSparkMax.ControlType.kPosition, 0,
+        // feedForward.calculate(encoder.getPosition(), 0));
+
+        // pivotController1.setReference(20, ControlType.kPosition, 0,
         // feedForward.calculate(absEncoder.getPosition()* (2* Math.PI) + .349, 0));
 
         // pivotMotor.set(feedForward.calculate(absEncoder.getPosition()* (2* Math.PI) + .349, 0, 0));
@@ -253,6 +256,10 @@ public class Launcher {
     public void setSushiOff(){
         sushiMotor.set(0);
     }
+
+    // public double getRelativePosition(){
+    //     return encoder.getPosition() + 16.4;
+    // }
 
     public double getPosition() {
                 return encoder.getPosition();

@@ -124,7 +124,7 @@ public class AutoHandoff extends Command {
   @Override
   public void end(boolean interrupted) {
     launcher.setFlickOff();
-    intake.setIntakeState(IntakeState.STOP);
+    intake.setIntakeState(IntakeState.HOLD);
     launcher.setLauncherOff();
     intake.setRollerOff();
     litty.setGreen();

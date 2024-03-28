@@ -52,7 +52,7 @@
         {
           "type": "named",
           "data": {
-            "name": "AutoRightShot"
+            "name": "AutoSpeaker"
           }
         },
         {
@@ -90,7 +90,7 @@
         {
           "type": "named",
           "data": {
-            "name": "AutoMidShot"
+            "name": "AutoSpeaker"
           }
         },
         {
@@ -128,7 +128,7 @@
         {
           "type": "named",
           "data": {
-            "name": "AutoLeftShot"
+            "name": "AutoSpeaker"
           }
         }
       ]

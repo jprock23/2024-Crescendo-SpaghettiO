@@ -16,8 +16,9 @@ public class Intake {
 
     public enum IntakeState {
         STOP(0.2),
-        GROUND(-8.0),
-        HANDOFF(-1.5);
+        GROUND(-12.0),
+        HANDOFF(-5.5),
+        HOLD(-2);
 
         public double position;
 

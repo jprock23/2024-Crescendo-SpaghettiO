@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8468767706766198,
-        "y": 6.068169828647349
+        "x": 1.9356792559738978,
+        "y": 6.176706199566246
       },
       "isLocked": false,
       "linkedName": "P2 Start"
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 2.4882280533791854,
-        "y": 6.551650026376976
+        "y": 6.610851683241828
       },
       "prevControl": {
-        "x": 1.837009827865811,
-        "y": 6.048435943025733
+        "x": 1.9356792559738978,
+        "y": 6.196440085187864
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,9 +33,9 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.5,
-    "maxAcceleration": 2.5,
-    "maxAngularVelocity": 720.0,
-    "maxAngularAcceleration": 540.0
+    "maxAcceleration": 2.75,
+    "maxAngularVelocity": 800.0,
+    "maxAngularAcceleration": 600.0
   },
   "goalEndState": {
     "velocity": 0.0,

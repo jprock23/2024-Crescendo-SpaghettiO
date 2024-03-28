@@ -12,6 +12,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,11 +22,13 @@ import frc.robot.commands.AutoAmp;
 import frc.robot.commands.AutoHandoff;
 import frc.robot.commands.AutoLeftShot;
 import frc.robot.commands.AutoMidShot;
+import frc.robot.commands.AutoPreload;
 import frc.robot.commands.AutoRightShot;
 import frc.robot.commands.AutoSpeaker;
 import frc.robot.commands.BreakBeamHandoff;
 import frc.robot.commands.Celebrate;
 import frc.robot.commands.HandoffCommand;
+import frc.robot.commands.RevLauncher;
 import frc.robot.commands.RotationCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.IO.LED;
@@ -112,6 +115,8 @@ public class Robot extends LoggedRobot {
     NamedCommands.registerCommand("Rotate150", new RotationCommand(150));
     NamedCommands.registerCommand("Rotate220", new RotationCommand(220));
     NamedCommands.registerCommand("Rotate180", new RotationCommand(180));
+    NamedCommands.registerCommand("RevLauncher", new RevLauncher());
+    NamedCommands.registerCommand("AutoPreload", new AutoPreload());
 
 
 
@@ -163,8 +168,6 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putNumber("X-coordinate", drivebase.getPose().getX());
     SmartDashboard.putNumber("Y-coordinate", drivebase.getPose().getY());
 
-    SmartDashboard.putString("Alliance", DriverStation.getAlliance().toString());
-
     // SmartDashboard.putNumber("Flipper Current", intake.getFlipperCurrent());
     // SmartDashboard.putNumber("Pivot Current", launcher.getPivotCurrent());
     // SmartDashboard.putNumber("Roller Current", intake.getRollerCurrent());
@@ -178,8 +181,8 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putBoolean("Launcher Breakbeam", launcher.getBreakBeam());
     SmartDashboard.putBoolean("Intake Breakbeam", intake.getBreakBeam());
 
-    SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
-    SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
+    // SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
+    // SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
 
     SmartDashboard.putBoolean("Brownout", hasBrownedOut);
 
@@ -274,6 +277,7 @@ public class Robot extends LoggedRobot {
       launcher.updatePose();
       launcher.setLauncherOff();
       launcher.setFlickOff();
+      launcher.setSushiOff();
       litty.setBlue();
     }
 
@@ -351,6 +355,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledInit() {
+    SmartDashboard.putNumber("End Time", Timer.getFPGATimestamp());
   }
 
   @Override

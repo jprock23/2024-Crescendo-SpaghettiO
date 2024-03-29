@@ -1,7 +1,10 @@
 package frc.robot.subsystems.vision;
 
+import java.util.ArrayList;
+
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -328,6 +331,27 @@ public class VisionTablesListener {
             transforms[i] = transform;
         }
         return transforms;
+    }
+    public Pose2d[] getCam1RobotPoses() {
+        double[] xPoses = x1Sub.get();
+        double[] yPoses = y1Sub.get();
+        double[] zPoses = z1Sub.get();
+        double[] yaws = yaw1Sub.get();
+        ArrayList<Pose3d> poses = new ArrayList<Pose3d>();
+        for(int i = 0; i < xPoses.length && i < yPoses.length && i < zPoses.length && i < yaws.length; i++) {
+            poses.add(new Pose3d(
+                new Translation3d(xPoses[i], yPoses[i], zPoses[i]), 
+                new Rotation3d(0, 0, yaws[i])
+            ));
+        }
+
+        Pose2d[] pose2ds = new Pose2d[poses.size()];
+        int i = 0;
+        for(Pose3d pose: poses) {
+            pose2ds[i] = poses.get(i).toPose2d();
+            i++;
+        }
+        return pose2ds;   
     }
 
     public Pose3d getBestTagAbsPos(int id) {

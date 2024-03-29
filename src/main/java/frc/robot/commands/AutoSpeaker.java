@@ -13,7 +13,7 @@ public class AutoSpeaker extends Command {
 
   private double startTime;
   private double elapsedTime;
-  private double windup = 0.1;
+  private double windup = 0.2;
   private double duration = windup + .1;
 
   public AutoSpeaker() {
@@ -28,24 +28,20 @@ public class AutoSpeaker extends Command {
     startTime = -1;
     elapsedTime = 0;
     launcher.setLauncherOn();
-    launcher.setFlickerOn();
   }
 
   @Override
   public void execute() {
     launcher.updatePose();
 
-    if(launcher.hasReachedPose(2.0)){
+    if(launcher.hasReachedPose(1.2)){
     launcher.setLauncherOn();
+    launcher.setFlickerOn();
 
       if (startTime == -1) {
         startTime = Timer.getFPGATimestamp();
       }
       elapsedTime = Timer.getFPGATimestamp() - startTime;
-
-      // if (elapsedTime > windup) {
-      //   launcher.setFlickerOn();
-      // }
 
       if (elapsedTime > duration) {
         ended = true;

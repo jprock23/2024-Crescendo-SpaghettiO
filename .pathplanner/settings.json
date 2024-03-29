@@ -17,7 +17,7 @@
     "Test"
   ],
   "defaultMaxVel": 4.0,
-  "defaultMaxAccel": 2.5,
+  "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 800.0,
   "defaultMaxAngAccel": 600.0,
   "maxModuleSpeed": 3.0

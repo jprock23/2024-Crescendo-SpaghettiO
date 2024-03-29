@@ -208,12 +208,6 @@
           "data": {
             "name": "AutoSpeaker"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Test MidC"
-          }
         }
       ]
     }

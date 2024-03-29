@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AmpCommand;
-import frc.robot.commands.AutoAmp;
 import frc.robot.commands.AutoHandoff;
 import frc.robot.commands.AutoLeftShot;
 import frc.robot.commands.AutoMidShot;
@@ -72,7 +71,6 @@ public class Robot extends LoggedRobot {
   private BreakBeamHandoff handoffCommand;
   private ShootCommand shootCommand;
   private AutoSpeaker autoSpeaker;
-  private AutoAmp autoAmp;
   private HandoffCommand currentSpikeHandoff;
   private AmpCommand ampCommand;
 
@@ -100,12 +98,10 @@ public class Robot extends LoggedRobot {
     handoffCommand = new BreakBeamHandoff();
     shootCommand = new ShootCommand();
     autoSpeaker = new AutoSpeaker();
-    autoAmp = new AutoAmp();
     ampCommand = new AmpCommand();
 
     currentSpikeHandoff = new HandoffCommand();
 
-    NamedCommands.registerCommand("AutoAmp", autoAmp);
     NamedCommands.registerCommand("AutoSpeaker", autoSpeaker);
     NamedCommands.registerCommand("Handoff", new AutoHandoff());
     NamedCommands.registerCommand("AutoLeftShot", new AutoLeftShot());
@@ -242,7 +238,7 @@ public class Robot extends LoggedRobot {
 
     if(driver.getRightTriggerAxis() > 0){
       drivebase.setDriveState(DriveState.SLOW);
-    } else if (!CommandScheduler.getInstance().isScheduled(autoAmp)){
+    } else if (!CommandScheduler.getInstance().isScheduled(ampCommand)){
       drivebase.setDriveState(DriveState.NORMAL);
     }
 
@@ -408,7 +404,6 @@ public class Robot extends LoggedRobot {
     handoffCommand = new BreakBeamHandoff();
     shootCommand = new ShootCommand();
     autoSpeaker = new AutoSpeaker();
-    autoAmp = new AutoAmp();
     ampCommand = new AmpCommand();
 
     currentSpikeHandoff = new HandoffCommand();

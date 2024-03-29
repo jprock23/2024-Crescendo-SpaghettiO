@@ -28,7 +28,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Photon Intake 2"
+                        "pathName": "P2 Intake Second"
                       }
                     },
                     {
@@ -38,7 +38,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Photon Score 2"
+                              "pathName": "Spectrum Score 2"
                             }
                           },
                           {
@@ -112,7 +112,7 @@
                                 {
                                   "type": "wait",
                                   "data": {
-                                    "waitTime": 0.6
+                                    "waitTime": 0.75
                                   }
                                 },
                                 {
@@ -148,90 +148,7 @@
         {
           "type": "deadline",
           "data": {
-            "commands": [
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Photon Intake 4"
-                      }
-                    },
-                    {
-                      "type": "deadline",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "path",
-                            "data": {
-                              "pathName": "Spectrum Score 2"
-                            }
-                          },
-                          {
-                            "type": "sequential",
-                            "data": {
-                              "commands": [
-                                {
-                                  "type": "wait",
-                                  "data": {
-                                    "waitTime": 0.65
-                                  }
-                                },
-                                {
-                                  "type": "named",
-                                  "data": {
-                                    "name": "RevLauncher"
-                                  }
-                                }
-                              ]
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Handoff"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AutoSpeaker"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Test MidC"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Handoff"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Test MidC Return"
+            "commands": []
           }
         }
       ]

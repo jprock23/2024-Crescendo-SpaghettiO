@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.678689357378716,
-        "y": 4.775600320431411
+        "x": 4.836560442351654,
+        "y": 5.347883003458315
       },
       "isLocked": false,
       "linkedName": "P2 Start"
@@ -20,8 +20,8 @@
         "y": 4.09478126648561
       },
       "prevControl": {
-        "x": 5.033899298567829,
-        "y": 4.469725093296342
+        "x": 5.724585295324437,
+        "y": 3.0587522713506967
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 2.5,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 800.0,
     "maxAngularAcceleration": 600.0
   },

@@ -28,7 +28,7 @@ public class Launcher {
         LONG(-13.25, 1.0),
         HANDOFF(9,0.5),
         HOVER(-3, 1.0), 
-        TOSS(-18, .9),
+        TOSS(-20, .80),
         AUTOMIDSHOT(-13.75, 1.0),
         //height: ?
         AUTOLEFTSHOT(-13.5, 1.0),
@@ -203,8 +203,8 @@ public class Launcher {
 
     public void setLauncherOn() {
         if(launchState == LauncherState.AMP){
-        shootMotor1.set(launchState.launchSpeed);
-        shootMotor2.set(launchState.launchSpeed/2);
+        shootMotor1.set(-launchState.launchSpeed);
+        shootMotor2.set(launchState.launchSpeed * 0.36);
         } else {
         shootMotor1.set(launchState.launchSpeed);
         shootMotor2.set(launchState.launchSpeed);

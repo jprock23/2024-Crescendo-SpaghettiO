@@ -27,7 +27,7 @@ public class AmpCommand extends Command {
     ended = false;
 
       launcher.updatePose();
-      launcher.setReverseLauncherOn();
+      launcher.setLauncherOn();
       launcher.setSushiOn();
   }
 

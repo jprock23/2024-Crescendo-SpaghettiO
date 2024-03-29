@@ -39,7 +39,7 @@ public class VisionTablesListener {
     private DoubleArraySubscriber yaw3Sub;
     private DoubleArraySubscriber timestamp3Sub;
 
-    private Transform3d cam1Transform = new Transform3d(new Translation3d(0, 0.3115, 0.359283), new Rotation3d(0, Math.toRadians(30), 0));
+    private Transform3d cam1Transform = new Transform3d(new Translation3d(-0.3115, 0.0127, 0.368), new Rotation3d(Math.toRadians(1.5), Math.toRadians(30), Math.toRadians(180)));
     private Transform3d cam2Transform = new Transform3d(new Translation3d(0.2762504, -0.3121152, 0.2306066), new Rotation3d(0, Math.toRadians(35), Math.toRadians(-90)));
     private Transform3d cam3Transform = new Transform3d(new Translation3d(0.2762504, 0.3121152, 0.2306066), new Rotation3d(0, Math.toRadians(35), Math.toRadians(90)));
     // private IntegerArraySubscriber zRotsSub;
@@ -273,7 +273,7 @@ public class VisionTablesListener {
         Logger.recordOutput("Tag 1 Yaws", yaws);
         
         Transform3d[] transforms = new Transform3d[ids.length];
-        for(int i = 0; i < ids.length; i++) {
+        for(int i = 0; i < ids.length && i < xPoses.length && i < yPoses.length && i < zPoses.length; i++) {
             Translation3d translate = new Translation3d(xPoses[i], yPoses[i], zPoses[i]);
             Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
             Transform3d transform = new Transform3d(translate, rotation);

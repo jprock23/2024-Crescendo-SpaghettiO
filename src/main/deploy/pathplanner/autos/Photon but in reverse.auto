@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.76,
-      "y": 6.67
+      "x": 1.3,
+      "y": 5.56
     },
-    "rotation": 60.0
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
@@ -207,6 +207,31 @@
           "type": "named",
           "data": {
             "name": "AutoSpeaker"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Test MidC"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Handoff"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Test MidC Return"
           }
         }
       ]

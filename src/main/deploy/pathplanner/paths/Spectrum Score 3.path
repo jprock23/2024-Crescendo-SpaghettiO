@@ -16,24 +16,24 @@
     },
     {
       "anchor": {
-        "x": 1.32,
+        "x": 1.28,
         "y": 5.53
       },
       "prevControl": {
-        "x": 1.8666106562982372,
+        "x": 1.8266106562982372,
         "y": 5.535354916863679
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "P2 Start"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.5,
-    "maxAcceleration": 2.25,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 800.0,
     "maxAngularAcceleration": 600.0
   },

@@ -95,7 +95,7 @@ public class Robot extends LoggedRobot {
 
     driver = new XboxController(0);
     operator = new XboxController(1);
-    drivebase.resetOdometry(new Pose2d(1.3, 5.56, new Rotation2d(0)));
+    // drivebase.resetOdometry(new Pose2d(15.19, 5.56, new Rotation2d(0)));
 
     handoffCommand = new BreakBeamHandoff();
     shootCommand = new ShootCommand();
@@ -150,7 +150,7 @@ public class Robot extends LoggedRobot {
 
     // drivebase.printTranslationalVelocities();
 
-    // visTables.putInfoOnDashboard();
+    visTables.putInfoOnDashboard();
 
     SmartDashboard.putNumber("Gyro Angle:", (drivebase.getHeading() + 90)%360);
     SmartDashboard.putNumber("X-coordinate", drivebase.getPose().getX());
@@ -171,8 +171,10 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putBoolean("Launcher Breakbeam", launcher.getBreakBeam());
     SmartDashboard.putBoolean("Intake Breakbeam", intake.getBreakBeam());
 
-    // SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
+    SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
     // SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
+
+    SmartDashboard.putNumber("Velo Goal", 3.5);
 
     SmartDashboard.putBoolean("Brownout", hasBrownedOut);
 
@@ -209,10 +211,13 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopPeriodic() {
+    SmartDashboard.putNumber("Gyro Angle:", (drivebase.getHeading() + 90)%360);
+    SmartDashboard.putNumber("X-coordinate", drivebase.getPose().getX());
+    SmartDashboard.putNumber("Y-coordinate", drivebase.getPose().getY());
     intake.updatePose();
-    launcher.updatePose();
+    // launcher.updatePose();
 
-    launcher.interpolateAngle();
+    // launcher.interpolateAngle();
 
     /* DRIVE CONTROLS */
     double ySpeed;
@@ -222,6 +227,8 @@ public class Robot extends LoggedRobot {
     ySpeed = drivebase.inputDeadband(-driver.getLeftX());
     xSpeed = drivebase.inputDeadband(driver.getLeftY());
     rot = drivebase.inputDeadband(-driver.getRightX());
+
+    SmartDashboard.putNumber("Y Stick", xSpeed);
 
     // if(operator.getAButton()){
     //   intake.setIntakeState(IntakeState.GROUND);
@@ -307,7 +314,7 @@ public class Robot extends LoggedRobot {
     }
     if(operator.getAButtonPressed()){
       // launcher.decreasePosition();
-      // launcher.interpolateAngle();
+      launcher.interpolateAngle();
       launcher.setLauncherState(LauncherState.INTERLOPE);
     }
 
@@ -464,17 +471,24 @@ publisher.set(new Pose3d(5, 5, 1, new Rotation3d(0, 0, 0)));
     // SmartDashboard.putNumber("Pivot Current", launcher.getPivotCurrent());
     // SmartDashboard.putNumber("Roller Current", intake.getRollerCurrent());
 
-    SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
-    SmartDashboard.putNumber("Launcher Position", launcher.getPosition());
+    // SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
+    // SmartDashboard.putNumber("Launcher Position", launcher.getPosition());
 
-    SmartDashboard.putString("Intake State", intake.getIntakeState().toString());
-    SmartDashboard.putString("Launcher State", launcher.getLaunchState().toString());
+    // SmartDashboard.putString("Intake State", intake.getIntakeState().toString());
+    // SmartDashboard.putString("Launcher State", launcher.getLaunchState().toString());
 
-    SmartDashboard.putBoolean("Launcher Breakbeam", launcher.getBreakBeam());
-    SmartDashboard.putBoolean("Intake Breakbeam", intake.getBreakBeam());
+    // SmartDashboard.putBoolean("Launcher Breakbeam", launcher.getBreakBeam());
+    // SmartDashboard.putBoolean("Intake Breakbeam", intake.getBreakBeam());
 
     SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
     SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
+
+    // drivebase.printTranslationalVelocities();
+
+    SmartDashboard.putNumber("Front Left TranslationalVelo", drivebase.getFLVelo());
+    SmartDashboard.putNumber("Front Right TranslationalVelo", drivebase.getFRVelo());
+    SmartDashboard.putNumber("Back Left TranslationalVelo", drivebase.getBLVelo());
+    SmartDashboard.putNumber("Back Right TranslationalVelo", drivebase.getBRVelo());
 
     SmartDashboard.putBoolean("Brownout", hasBrownedOut);
 

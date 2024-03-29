@@ -3,44 +3,44 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 1.0
+        "x": 1.32,
+        "y": 5.53
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4483630177708955,
-        "y": 1.0005244764700683
+        "x": 4.678689357378716,
+        "y": 4.775600320431411
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "P2 Start"
     },
     {
       "anchor": {
-        "x": 0.14,
-        "y": 6.33
+        "x": 7.717707743107796,
+        "y": 4.09478126648561
       },
       "prevControl": {
-        "x": -0.2533686328911098,
-        "y": 8.418353099783122
+        "x": 5.033899298567829,
+        "y": 4.469725093296342
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "MidC Front"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.5,
-    "maxAcceleration": 2.25,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 800.0,
     "maxAngularAcceleration": 600.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
-    "rotateFast": true
+    "rotation": 0,
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "Test",

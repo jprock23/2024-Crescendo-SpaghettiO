@@ -7,6 +7,7 @@ package frc.robot.subsystems.swerve;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -15,6 +16,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
 public class SwerveModule {
@@ -167,13 +169,35 @@ public class SwerveModule {
                 SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
                                 new Rotation2d(turningEncoder.getPosition()));
 
+                double desiredSpeed = optimizedDesiredState.speedMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond;
+
                 // Command driving and turning SPARKS MAX towards their respective setpoints.
-                veloPIDController.setReference(optimizedDesiredState.speedMetersPerSecond,
-                                CANSparkMax.ControlType.kVelocity);
+                drivingSparkMax.set(desiredSpeed);
+                
                 anglePIDController.setReference(optimizedDesiredState.angle.getRadians(),
                                 CANSparkMax.ControlType.kPosition);
 
-                desiredState = desiredState;
+                // desiredState = desiredState;
+        }
+
+            public void setAutoSpeeds(SwerveModuleState desiredState) {
+                // Apply chassis angular offset to the desired state.
+                SwerveModuleState correctedDesiredState = new SwerveModuleState();
+                correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
+                correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(chassisAngularOffset));
+
+                // Optimize the reference state to avoid spinning further than 90 degrees.
+                SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
+                                new Rotation2d(turningEncoder.getPosition()));
+
+                // Command driving and turning SPARKS MAX towards their respective setpoints.
+                veloPIDController.setReference(optimizedDesiredState.speedMetersPerSecond,
+                                CANSparkMax.ControlType.kVelocity);
+                
+                anglePIDController.setReference(optimizedDesiredState.angle.getRadians(),
+                                CANSparkMax.ControlType.kPosition);
+
+                // desiredState = desiredState;
         }
 
         /** Zeroes all the SwerveModule encoders. */

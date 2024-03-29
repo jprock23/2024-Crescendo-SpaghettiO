@@ -110,7 +110,7 @@ private DriveState driveState = DriveState.NORMAL;
     headingController = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0, 0), .02);
     headingController.enableContinuousInput(-Math.PI, Math.PI);
 
-    AutoBuilder.configureHolonomic(this::getPose, this::resetOdometry, this::getSpeeds, this::setChassisSpeed, config,
+    AutoBuilder.configureHolonomic(this::getPose, this::resetOdometry, this::getSpeeds, this::setAutoSpeeds, config,
         shouldFlipPath(), this);
   }
 
@@ -121,23 +121,25 @@ private DriveState driveState = DriveState.NORMAL;
   public void periodic() {
     //remove gyro stuff!!!
     
-    // if (visTables.getTagVisible1()) {
-    //   Transform3d[] transformsCam1 = visTables.getCam1Transforms();
-    //   double[] cam1IDs = visTables.getCam1IDs();
-    //   double[] timesampsCam1 = visTables.getCam1Timestamps();
+    if (visTables.getTagVisible1()) {
+      Transform3d[] transformsCam1 = visTables.getCam1Transforms();
+      double[] cam1IDs = visTables.getCam1IDs();
+      double[] timesampsCam1 = visTables.getCam1Timestamps();
 
-    //   for(int i = 0; i < transformsCam1.length; i++) {
-    //     Logger.recordOutput("Pre Cam1 Pos", getPose());
-    //     Pose3d tagPos1 = visTables.getBestTagAbsPos((int)cam1IDs[i]);
-    //     Pose2d robotPos1 = tagPos1.transformBy(transformsCam1[i]).toPose2d();
-    //     Logger.recordOutput("Cam1 Pos", robotPos1);
-    //     Logger.recordOutput("Cam1 Timestamp", timesampsCam1[i]);
-    //     poseEstimator.addVisionMeasurement(robotPos1, timesampsCam1[0]);
-    //   }
-    //   //Pose3d tagPos1 = visTables.getBestTagAbsPos((int) visTables.getCam1IDs()[0]);
-    //   //Pose2d robotPos1 = tagPos1.transformBy(visTables.getCam1Transforms()[0]).toPose2d();
-    //   //poseEstimator.addVisionMeasurement(robotPos1, visTables.getCam1Timestamps()[0]);
-    // }
+      for(int i = 0; i < transformsCam1.length && i < cam1IDs.length; i++) {
+        Logger.recordOutput("Pre Cam1 Pos", getPose());
+        if(visTables.getBestTagAbsPos((int)cam1IDs[i]) != null && transformsCam1[i] != null) {
+          Pose3d tagPos1 = visTables.getBestTagAbsPos((int)cam1IDs[i]);
+          Pose2d robotPos1 = tagPos1.transformBy(transformsCam1[i]).toPose2d();
+          Logger.recordOutput("Cam1 Pos", robotPos1);
+          Logger.recordOutput("Cam1 Timestamp", timesampsCam1[i]);
+          // poseEstimator.addVisionMeasurement(robotPos1, Timer.getFPGATimestamp());
+        }
+      }
+      // Pose3d tagPos1 = visTables.getBestTagAbsPos((int) visTables.getCam1IDs()[0]);
+      // Pose2d robotPos1 = tagPos1.transformBy(visTables.getCam1Transforms()[0]).toPose2d();
+      // poseEstimator.addVisionMeasurement(robotPos1, visTables.getCam1Timestamps()[0]);
+    }
 
     // if (visTables.getTagVisible2()) {
     //   Transform3d[] transformsCam2 = visTables.getCam2Transforms();
@@ -256,6 +258,21 @@ private DriveState driveState = DriveState.NORMAL;
     backRight.setDesiredState(swerveModuleStates[3]);
   }
 
+  
+  public void setAutoSpeeds(ChassisSpeeds input) {
+    var speeds = ChassisSpeeds.discretize(input, 0.02);
+
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+
+    SwerveDriveKinematics.desaturateWheelSpeeds(
+        swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+
+    frontLeft.setAutoSpeeds(swerveModuleStates[0]);
+    frontRight.setAutoSpeeds(swerveModuleStates[1]);
+    backLeft.setAutoSpeeds(swerveModuleStates[2]);
+    backRight.setAutoSpeeds(swerveModuleStates[3]);
+  }
+
   public SwerveModulePosition[] getPositions() {
     return new SwerveModulePosition[] {
         frontLeft.getPosition(),
@@ -266,7 +283,7 @@ private DriveState driveState = DriveState.NORMAL;
   }
 
   public double getTranslationalVelocity() {
-    return frontLeft.getTranslationalVelocity();
+    return backRight.getTranslationalVelocity();
   }
 
   public SwerveModuleState[] getModuleStates() {
@@ -392,6 +409,22 @@ private DriveState driveState = DriveState.NORMAL;
     SmartDashboard.putNumber("Back Left TranslationalVelo", backLeft.getTranslationalVelocity());
     SmartDashboard.putNumber("Back Right TranslationalVelo", backRight.getTranslationalVelocity());
 
+  }
+
+  public double getFLVelo(){
+    return frontLeft.getTranslationalVelocity();
+  }
+
+  public double getFRVelo(){
+    return frontRight.getTranslationalVelocity();
+  }
+
+    public double getBLVelo(){
+    return backLeft.getTranslationalVelocity();
+  }
+
+    public double getBRVelo(){
+    return backRight.getTranslationalVelocity();
   }
 
   public void setDriveState(DriveState state){

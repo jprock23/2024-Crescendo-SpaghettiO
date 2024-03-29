@@ -165,10 +165,12 @@ public class Launcher {
     }
 
     public void interpolateAngle(){
-        double delta = Drivebase.getStaticPose().getX();
+        double deltaX = Drivebase.getStaticPose().getX() + .0381;
+        double deltaY = Drivebase.getStaticPose().getY() - 5.56;
+        double delta = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
         double position;
 
-        position = -28.7958/Math.pow(delta, .70833333);
+        position = -28.7232/Math.pow(delta, .8333);
 
         LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position, LauncherState.HOVER.position);
         // setLauncherState(LauncherState.INTERLOPE);
@@ -280,11 +282,11 @@ public class Launcher {
     }
 
     public void increaseIncrement(){
-        increment += 0.5;
+        increment += 0.25;
     }
 
     public void decreaseInrement(){
-        increment -= 0.5;
+        increment -= 0.25;
     }
 
     public void increasePosition(){

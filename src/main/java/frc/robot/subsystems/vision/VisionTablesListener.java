@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.ComputerVisionUtil;
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.geometry.CoordinateSystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -45,8 +47,9 @@ public class VisionTablesListener {
     private DoubleArraySubscriber timestamp3Sub;
 
     private Transform3d cam1Transform = new Transform3d(new Translation3d(-0.3115, 0.0127, 0.368), new Rotation3d(Math.toRadians(1.5), Math.toRadians(30), Math.toRadians(180)));
-    private Transform3d cam2Transform = new Transform3d(new Translation3d(0.2762504, -0.3121152, 0.2306066), new Rotation3d(0, Math.toRadians(35), Math.toRadians(-90)));
-    private Transform3d cam3Transform = new Transform3d(new Translation3d(0.2762504, 0.3121152, 0.2306066), new Rotation3d(0, Math.toRadians(35), Math.toRadians(90)));
+    private Transform3d cam2Transform = new Transform3d(new Translation3d(0.3121152, 0.2762504, 0.2306066), new Rotation3d(0, Math.toRadians(-35), Math.toRadians(-90)));
+    private Transform3d cam3Transform = new Transform3d(new Translation3d(0.3121152, -0.2762504, 0.2306066), new Rotation3d(0, Math.toRadians(-35), Math.toRadians(90)));
+    private Rotation3d coordConvert = new Rotation3d(MatBuilder.fill(Nat.N3(), Nat.N3(), 0, 0, 1, -1, 0, 0, 0, -1, 0));
     // private IntegerArraySubscriber zRotsSub;
     // private IntegerSubscriber bestIDSub;
     // private IntegerSubscriber bestXSub;
@@ -282,11 +285,15 @@ public class VisionTablesListener {
             Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
             Transform3d transform = new Transform3d(translate, rotation);
             transform = new Transform3d(
-                CoordinateSystem.convert(transform.getTranslation(), CoordinateSystem.EDN(), CoordinateSystem.NWU()),
-                CoordinateSystem.convert(new Rotation3d(), CoordinateSystem.EDN(), CoordinateSystem.NWU()).plus(
-                    CoordinateSystem.convert(transform.getRotation(), CoordinateSystem.EDN(), CoordinateSystem.NWU())
-                )
+                transform.getTranslation().rotateBy(coordConvert),
+                coordConvert.unaryMinus().plus(transform.getRotation().plus(coordConvert))
             );
+            // transform = new Transform3d(
+            //     CoordinateSystem.convert(transform.getTranslation(), CoordinateSystem.EDN(), CoordinateSystem.NWU()),
+            //     CoordinateSystem.convert(new Rotation3d(), CoordinateSystem.EDN(), CoordinateSystem.NWU()).plus(
+            //         CoordinateSystem.convert(transform.getRotation(), CoordinateSystem.EDN(), CoordinateSystem.NWU())
+            //     )
+            // );
             poses[i] = ComputerVisionUtil.objectToRobotPose(getBestTagAbsPos((int)ids[i]), transform, cam1Transform).toPose2d();
         }
         return poses;

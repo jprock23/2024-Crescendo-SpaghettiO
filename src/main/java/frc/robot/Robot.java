@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+<<<<<<< Updated upstream
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,10 +12,14 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
+=======
+import edu.wpi.first.wpilibj.TimedRobot;
+>>>>>>> Stashed changes
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+<<<<<<< Updated upstream
 import frc.robot.commands.AmpCommand;
 import frc.robot.commands.AutoHandoff;
 import frc.robot.commands.AutoLeftShot;
@@ -27,42 +32,62 @@ import frc.robot.commands.HandoffCommand;
 import frc.robot.commands.RotationCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.IO.LED;
+=======
+import frc.robot.subsystems.launcher.*;
+>>>>>>> Stashed changes
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.Intake.IntakeState;
-import frc.robot.subsystems.launcher.Launcher;
-import frc.robot.subsystems.launcher.Launcher.LauncherState;
+import frc.robot.subsystems.intake.IntakeStates.IntakePosition;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.robot.subsystems.swerve.Drivebase;
+<<<<<<< Updated upstream
 import frc.robot.subsystems.swerve.Drivebase.DriveState;
-
-import org.littletonrobotics.junction.LogFileUtil;
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+=======
+import frc.robot.subsystems.vision.AutoAlign;
+import frc.robot.subsystems.vision.VisionTablesListener;
+>>>>>>> Stashed changes
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-public class Robot extends LoggedRobot {
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
+/**
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the
+ * name of this class or
+ * the package after creating this project, you must also update the
+ * build.gradle file in the
+ * project.
+ */
+public class Robot extends TimedRobot {
+  /**
+   * This function is run when the robot is first started up and should be used
+   * for any
+   * initialization code.
+   */
+  // private Launcher launcher;
   private Drivebase drivebase;
-  private Climber climber;
+  // private Climber climber;
   private Intake intake;
+<<<<<<< Updated upstream
   private Launcher launcher;
   private LED litty;
   // private VisionTablesListener visTables;
+=======
+
+  // private VisionTablesListener visionTables;
+  // private AutoAlign visAlign;
+>>>>>>> Stashed changes
 
   private static XboxController driver;
   private static XboxController operator;
 
   private Command m_autoSelected;
+<<<<<<< Updated upstream
 
   private BreakBeamHandoff handoffCommand;
   private ShootCommand shootCommand;
@@ -73,16 +98,17 @@ public class Robot extends LoggedRobot {
   private boolean useCurrentSpike;
   private boolean hasBrownedOut;
 
+=======
+>>>>>>> Stashed changes
   private SendableChooser<Command> m_chooser;
-
-     StructPublisher<Pose3d> publisher = NetworkTableInstance.getDefault()
-    .getStructTopic("Pose", Pose3d.struct).publish();
 
   @Override
   public void robotInit() {
     drivebase = Drivebase.getInstance();
-    launcher = Launcher.getInstance();
+    // launcher = Launcher.getInstance();
+    // climber = Climber.getInstance();
     intake = Intake.getInstance();
+<<<<<<< Updated upstream
     climber = Climber.getInstance();
     litty = LED.getInstance();
     // visTables = VisionTablesListener.getInstance();
@@ -114,26 +140,33 @@ public class Robot extends LoggedRobot {
     m_chooser = AutoBuilder.buildAutoChooser();
     // m_chooser.addOption("Test1", new PathPlannerAuto("Test1"));
 
+=======
+
+    driver = new XboxController(0);
+    operator = new XboxController(1);
+    drivebase.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0)));
+
+    // visionTables = VisionTablesListener.getInstance();
+    // visAlign = AutoAlign.getInstance();
+
+    m_chooser = AutoBuilder.buildAutoChooser();
+>>>>>>> Stashed changes
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    useCurrentSpike = false;
-
-    // CameraServer.startAutomaticCapture();
+    CameraServer.startAutomaticCapture(0);
 
   }
 
   @Override
-
   public void robotPeriodic() {
-
     CommandScheduler.getInstance().run();
     drivebase.periodic();
+    intake.periodic();
 
-    // launcher.launcherConnections();
-    // intake.intakeConnections();
-    // climber.climberConnections();
-  
+    // visionTables.putInfoOnDashboard();
+    // SmartDashboard.putNumber("Laucnh power", launcher.getPower());
 
+<<<<<<< Updated upstream
     // launcher.printConnections();
     // intake.printConnections();
     // climber.printConnections();
@@ -170,34 +203,35 @@ public class Robot extends LoggedRobot {
     if(launcher.hasBrownedOut()){
       hasBrownedOut = true;
     }
+=======
+>>>>>>> Stashed changes
   }
 
   @Override
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
 
-    drivebase.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile(m_chooser.getSelected().getName()));
-
     if (m_autoSelected != null) {
       m_autoSelected.schedule();
     }
+
+    // visionTables.putInfoOnDashboard();
   }
 
   @Override
   public void autonomousPeriodic() {
-    intake.updatePose();
   }
 
   @Override
   public void teleopInit() {
-    litty.setRed();
-    if (m_autoSelected != null) {
-      m_autoSelected.cancel();
-    }
+    // if (m_autoSelected != null) {
+    // m_autoSelected.cancel();
+    // }
   }
 
   @Override
   public void teleopPeriodic() {
+<<<<<<< Updated upstream
     intake.updatePose();
     // launcher.updatePose();
 
@@ -205,21 +239,51 @@ public class Robot extends LoggedRobot {
     double ySpeed;
     double xSpeed;
     double rot;
+=======
 
-    ySpeed = drivebase.inputDeadband(-driver.getLeftX());
-    xSpeed = drivebase.inputDeadband(driver.getLeftY());
-    rot = drivebase.inputDeadband(-driver.getRightX());
+    boolean fieldRelative = true;
+    boolean climbingMode = false;
 
+    /* Drive Controls */
+    // double
+    // ySpeed = -driver.getRoll();
+    // double xSpeed = -driver.getPitch();
+>>>>>>> Stashed changes
+
+    double ySpeed = driver.getLeftY();
+    double xSpeed = driver.getLeftX();
+    double rot = driver.getRightX();
+    // double rot = 0;
+
+<<<<<<< Updated upstream
     if(operator.getAButton()){
       intake.setIntakeState(IntakeState.GROUND);
     } 
+=======
+    SmartDashboard.putNumber("Xspeed", xSpeed);
+    SmartDashboard.putNumber("Yspeed", ySpeed);
+    // SmartDashboard.putNumber("Vision yPose", visAlign.getY());
+    SmartDashboard.putNumber("rot", rot);
+>>>>>>> Stashed changes
 
+    // if (driver.getTrigger()) {
+    // rot = driver.getYaw();
+    // }
     if (driver.getXButton()) {
+      fieldRelative = !fieldRelative;
+    }
+    if (driver.getBButton()) {
       drivebase.lockWheels();
-    } else {
-      drivebase.drive(xSpeed, ySpeed, rot, true);
+    }
+    // else if (driver.getButtonByIndex(2)) {
+    // drivebase.drive(0, 0, visAlign.getRotSpeed(), fieldRelative);
+    // drivebase.drive(visAlign.getXSpeed(), visAlign.getYSpeed(),
+    // visAlign.getRotSpeed(), fieldRelative);
+    else {
+      drivebase.drive(xSpeed, ySpeed, rot, fieldRelative);
     }
 
+<<<<<<< Updated upstream
     if(driver.getRightTriggerAxis() > 0){
       drivebase.setDriveState(DriveState.SLOW);
     } else if (!CommandScheduler.getInstance().isScheduled(ampCommand)){
@@ -331,6 +395,21 @@ public class Robot extends LoggedRobot {
       driver.setRumble(RumbleType.kLeftRumble, 0.8);
     }
 
+=======
+    if (operator.getRightBumper()) {
+      intake.setRollerPower();
+    } else if (operator.getLeftBumper()) {
+      intake.setRollerOff();
+    }
+
+    if (operator.getAButton()) {
+      intake.setIntakeState(IntakePosition.GROUND);
+    } else if (operator.getBButton()) {
+      intake.setIntakeState(IntakePosition.HANDOFF);
+    } else if (operator.getYButton()) {
+      intake.setIntakeState(IntakePosition.RETRACTED);
+    }
+>>>>>>> Stashed changes
   }
 
   @Override
@@ -350,9 +429,19 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
+<<<<<<< Updated upstream
   public void simulationInit() {}
 
   @Override
   public void simulationPeriodic() {}
 
 }
+=======
+  public void simulationInit() {
+  }
+
+  @Override
+  public void simulationPeriodic() {
+  }
+}
+>>>>>>> Stashed changes

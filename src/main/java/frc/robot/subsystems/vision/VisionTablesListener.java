@@ -42,7 +42,7 @@ public class VisionTablesListener {
     private DoubleArraySubscriber yaw3Sub;
     private DoubleArraySubscriber timestamp3Sub;
 
-    private Transform3d cam1Transform = new Transform3d(new Translation3d(-0.3115, 0.0127, 0.368), new Rotation3d(Math.toRadians(1.5), Math.toRadians(30), Math.toRadians(180)));
+    private Transform3d cam1Transform = new Transform3d(new Translation3d(-0.3115, 0.0127, 0.368), new Rotation3d(0, Math.toRadians(-30), Math.toRadians(180)));
     private Transform3d cam2Transform = new Transform3d(new Translation3d(0.2762504, -0.3121152, 0.2306066), new Rotation3d(0, Math.toRadians(35), Math.toRadians(-90)));
     private Transform3d cam3Transform = new Transform3d(new Translation3d(0.2762504, 0.3121152, 0.2306066), new Rotation3d(0, Math.toRadians(35), Math.toRadians(90)));
     // private IntegerArraySubscriber zRotsSub;
@@ -332,27 +332,27 @@ public class VisionTablesListener {
         }
         return transforms;
     }
-    public Pose2d[] getCam1RobotPoses() {
-        double[] xPoses = x1Sub.get();
-        double[] yPoses = y1Sub.get();
-        double[] zPoses = z1Sub.get();
-        double[] yaws = yaw1Sub.get();
-        ArrayList<Pose3d> poses = new ArrayList<Pose3d>();
-        for(int i = 0; i < xPoses.length && i < yPoses.length && i < zPoses.length && i < yaws.length; i++) {
-            poses.add(new Pose3d(
-                new Translation3d(xPoses[i], yPoses[i], zPoses[i]), 
-                new Rotation3d(0, 0, yaws[i])
-            ));
-        }
+    // public Pose2d[] getCam1RobotPoses() {
+    //     double[] xPoses = x1Sub.get();
+    //     double[] yPoses = y1Sub.get();
+    //     double[] zPoses = z1Sub.get();
+    //     double[] yaws = yaw1Sub.get();
+    //     ArrayList<Pose3d> poses = new ArrayList<Pose3d>();
+    //     for(int i = 0; i < xPoses.length && i < yPoses.length && i < zPoses.length && i < yaws.length; i++) {
+    //         poses.add(new Pose3d(
+    //             new Translation3d(xPoses[i], yPoses[i], zPoses[i]), 
+    //             new Rotation3d(0, 0, yaws[i])
+    //         ));
+    //     }
 
-        Pose2d[] pose2ds = new Pose2d[poses.size()];
-        int i = 0;
-        for(Pose3d pose: poses) {
-            pose2ds[i] = poses.get(i).toPose2d();
-            i++;
-        }
-        return pose2ds;   
-    }
+    //     Pose2d[] pose2ds = new Pose2d[poses.size()];
+    //     int i = 0;
+    //     for(Pose3d pose: poses) {
+    //         pose2ds[i] = poses.get(i).toPose2d();
+    //         i++;
+    //     }
+    //     return pose2ds;   
+    // }
 
     public Pose3d getBestTagAbsPos(int id) {
 

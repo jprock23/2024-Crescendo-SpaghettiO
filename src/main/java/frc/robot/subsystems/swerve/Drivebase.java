@@ -316,6 +316,15 @@ private DriveState driveState = DriveState.NORMAL;
         setChassisSpeed(new ChassisSpeeds(0, 0, reqOmega));
   }
 
+  public void alignToTarget(){
+    Pose2d speakerPos = visTables.getBestTagAbsPos((int)visTables.getCam2IDs()[0]).toPose2d();
+
+    double xDelta = getPose().getX() - speakerPos.getX();
+    double yDelta = getPose().getY() - speakerPos.getY();
+
+    rotateTo(Math.atan(xDelta/yDelta));
+  }
+
   public void lockWheels() {
     frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.76,
-      "y": 6.67
+      "x": 1.3,
+      "y": 5.56
     },
-    "rotation": 60.0
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
@@ -28,13 +28,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "P1 Intake Second"
+                        "pathName": "P2 Intake Second"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "P1 Score Second"
+                        "pathName": "P2 Score Second"
                       }
                     }
                   ]
@@ -52,7 +52,7 @@
         {
           "type": "named",
           "data": {
-            "name": "AutoLeftShot"
+            "name": "AutoRightShot"
           }
         },
         {
@@ -66,13 +66,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "P1 Intake Third"
+                        "pathName": "P2 Intake Third"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "P1 Score Third"
+                        "pathName": "P2 Score Third"
                       }
                     }
                   ]
@@ -104,13 +104,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "P1 Intake Fourth"
+                        "pathName": "P2 Intake Fourth"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "P1 Score Fourth"
+                        "pathName": "P2 Score Fourth"
                       }
                     }
                   ]
@@ -128,12 +128,12 @@
         {
           "type": "named",
           "data": {
-            "name": "AutoRightShot"
+            "name": "AutoLeftShot"
           }
         }
       ]
     }
   },
-  "folder": "Competition",
+  "folder": "P2",
   "choreoAuto": false
 }

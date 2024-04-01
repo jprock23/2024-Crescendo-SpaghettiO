@@ -11,7 +11,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,13 +19,11 @@ import frc.robot.commands.AmpCommand;
 import frc.robot.commands.AutoHandoff;
 import frc.robot.commands.AutoLeftShot;
 import frc.robot.commands.AutoMidShot;
-import frc.robot.commands.AutoPreload;
 import frc.robot.commands.AutoRightShot;
 import frc.robot.commands.AutoSpeaker;
 import frc.robot.commands.BreakBeamHandoff;
 import frc.robot.commands.Celebrate;
 import frc.robot.commands.HandoffCommand;
-import frc.robot.commands.RevLauncher;
 import frc.robot.commands.RotationCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.IO.LED;
@@ -41,7 +38,6 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.robot.subsystems.swerve.Drivebase;
 import frc.robot.subsystems.swerve.Drivebase.DriveState;
-import frc.robot.subsystems.vision.VisionTablesListener;
 
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -61,7 +57,7 @@ public class Robot extends LoggedRobot {
   private Intake intake;
   private Launcher launcher;
   private LED litty;
-  private VisionTablesListener visTables;
+  // private VisionTablesListener visTables;
 
   private static XboxController driver;
   private static XboxController operator;
@@ -89,11 +85,11 @@ public class Robot extends LoggedRobot {
     intake = Intake.getInstance();
     climber = Climber.getInstance();
     litty = LED.getInstance();
-    visTables = VisionTablesListener.getInstance();
+    // visTables = VisionTablesListener.getInstance();
 
     driver = new XboxController(0);
     operator = new XboxController(1);
-    // drivebase.resetOdometry(new Pose2d(15.19, 5.56, new Rotation2d(0)));
+    // drivebase.resetOdometry(new Pose2d(1, 1, new Rotation2d(0)));
 
     handoffCommand = new BreakBeamHandoff();
     shootCommand = new ShootCommand();
@@ -111,13 +107,12 @@ public class Robot extends LoggedRobot {
     NamedCommands.registerCommand("Rotate150", new RotationCommand(150));
     NamedCommands.registerCommand("Rotate220", new RotationCommand(220));
     NamedCommands.registerCommand("Rotate180", new RotationCommand(180));
-    NamedCommands.registerCommand("RevLauncher", new RevLauncher());
-    NamedCommands.registerCommand("AutoPreload", new AutoPreload());
+
+
+
 
     m_chooser = AutoBuilder.buildAutoChooser();
     // m_chooser.addOption("Test1", new PathPlannerAuto("Test1"));
-        m_chooser.addOption("photon p3", new PathPlannerAuto("Photon p3"));
-
 
     SmartDashboard.putData("Auto choices", m_chooser);
 
@@ -146,13 +141,13 @@ public class Robot extends LoggedRobot {
 
     // drivebase.printTranslationalVelocities();
 
-    visTables.putInfoOnDashboard();
+    // visTables.putInfoOnDashboard();
 
     SmartDashboard.putNumber("Gyro Angle:", (drivebase.getHeading() + 90)%360);
     SmartDashboard.putNumber("X-coordinate", drivebase.getPose().getX());
     SmartDashboard.putNumber("Y-coordinate", drivebase.getPose().getY());
 
-    SmartDashboard.putNumber("Test Position", launcher.getTestPosition());
+    SmartDashboard.putString("Alliance", DriverStation.getAlliance().toString());
 
     // SmartDashboard.putNumber("Flipper Current", intake.getFlipperCurrent());
     // SmartDashboard.putNumber("Pivot Current", launcher.getPivotCurrent());
@@ -168,9 +163,7 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putBoolean("Intake Breakbeam", intake.getBreakBeam());
 
     SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
-    // SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
-
-    SmartDashboard.putNumber("Velo Goal", 3.5);
+    SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
 
     SmartDashboard.putBoolean("Brownout", hasBrownedOut);
 
@@ -202,18 +195,11 @@ public class Robot extends LoggedRobot {
       m_autoSelected.cancel();
     }
   }
- 
- 
 
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("Gyro Angle:", (drivebase.getHeading() + 90)%360);
-    SmartDashboard.putNumber("X-coordinate", drivebase.getPose().getX());
-    SmartDashboard.putNumber("Y-coordinate", drivebase.getPose().getY());
     intake.updatePose();
     // launcher.updatePose();
-
-    // launcher.interpolateAngle();
 
     /* DRIVE CONTROLS */
     double ySpeed;
@@ -224,11 +210,9 @@ public class Robot extends LoggedRobot {
     xSpeed = drivebase.inputDeadband(driver.getLeftY());
     rot = drivebase.inputDeadband(-driver.getRightX());
 
-    SmartDashboard.putNumber("Y Stick", xSpeed);
-
-    // if(operator.getAButton()){
-    //   intake.setIntakeState(IntakeState.GROUND);
-    // } 
+    if(operator.getAButton()){
+      intake.setIntakeState(IntakeState.GROUND);
+    } 
 
     if (driver.getXButton()) {
       drivebase.lockWheels();
@@ -274,7 +258,6 @@ public class Robot extends LoggedRobot {
       launcher.updatePose();
       launcher.setLauncherOff();
       launcher.setFlickOff();
-      launcher.setSushiOff();
       litty.setBlue();
     }
 
@@ -297,26 +280,6 @@ public class Robot extends LoggedRobot {
     // } else {
     // launcher.setPivotOff();
     // }
-
-    if(operator.getLeftStickButton()){
-      launcher.decreaseInrement();
-    }
-    if(operator.getRightStickButton()){
-      launcher.increaseIncrement();
-    }
-
-    if(operator.getYButtonPressed()){
-      launcher.increasePosition();
-    }
-    if(operator.getAButtonPressed()){
-      // launcher.decreasePosition();
-      launcher.interpolateAngle();
-      launcher.setLauncherState(LauncherState.INTERLOPE);
-    }
-
-    if(driver.getYButton()){
-      launcher.setLauncherState(LauncherState.TEST);
-    }
 
     if (operator.getPOV() == 0) {
       launcher.setLauncherState(LauncherState.SPEAKER);
@@ -360,20 +323,18 @@ public class Robot extends LoggedRobot {
       shootCommand.cancel();
       handoffCommand.cancel();
       launcher.setSushiOff();
-      ampCommand.cancel();
       // litty.setBlue();
 
     }
 
-    // if(driver.getYButton()){
-    //   driver.setRumble(RumbleType.kBothRumble, 1.0);
-    // }
+    if(driver.getYButton()){
+      driver.setRumble(RumbleType.kLeftRumble, 0.8);
+    }
 
   }
 
   @Override
   public void disabledInit() {
-    SmartDashboard.putNumber("End Time", Timer.getFPGATimestamp());
   }
 
   @Override
@@ -389,120 +350,9 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void simulationInit() {
-        drivebase = Drivebase.getInstance();
-    launcher = Launcher.getInstance();
-    intake = Intake.getInstance();
-    climber = Climber.getInstance();
-    litty = LED.getInstance();
-    // visTables = VisionTablesListener.getInstance();
-
-    driver = new XboxController(0);
-    operator = new XboxController(1);
-    // drivebase.resetOdometry(new Pose2d(1, 1, new Rotation2d(0)));
-
-    handoffCommand = new BreakBeamHandoff();
-    shootCommand = new ShootCommand();
-    autoSpeaker = new AutoSpeaker();
-    ampCommand = new AmpCommand();
-
-    currentSpikeHandoff = new HandoffCommand();
-    useCurrentSpike = false;
-
-    drivebase.resetOdometry(new Pose2d(5, 5, new Rotation2d(0)));
-
-    // CameraServer.startAutomaticCapture();
-
- 
-  }
+  public void simulationInit() {}
 
   @Override
-  public void simulationPeriodic() {
-    Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
+  public void simulationPeriodic() {}
 
-if (isReal()) {
-    Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
-    Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-    new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
-} else {
-    setUseTiming(false); // Run as fast as possible
-    String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-    Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-    Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
-}
-
-// Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
-Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
-
-Logger.recordOutput("Pose", drivebase.getPose());
-publisher.set(new Pose3d(5, 5, 1, new Rotation3d(0, 0, 0)));
-
-    CommandScheduler.getInstance().run();
-    drivebase.periodic();
-
-   
-
-    // launcher.launcherConnections();
-    // intake.intakeConnections();
-    // climber.climberConnections();
-  
-
-    // launcher.printConnections();
-    // intake.printConnections();
-    // climber.printConnections();
-    // drivebase.printConnections();
-
-    // drivebase.printTranslationalVelocities();
-
-    // visTables.putInfoOnDashboard();
-
-    SmartDashboard.putNumber("Gyro Angle:", (drivebase.getHeading() + 90)%360);
-    SmartDashboard.putNumber("X-coordinate", drivebase.getPose().getX());
-    SmartDashboard.putNumber("Y-coordinate", drivebase.getPose().getY());
-
-    SmartDashboard.putString("Alliance", DriverStation.getAlliance().toString());
-
-    // SmartDashboard.putNumber("Flipper Current", intake.getFlipperCurrent());
-    // SmartDashboard.putNumber("Pivot Current", launcher.getPivotCurrent());
-    // SmartDashboard.putNumber("Roller Current", intake.getRollerCurrent());
-
-    // SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
-    // SmartDashboard.putNumber("Launcher Position", launcher.getPosition());
-
-    // SmartDashboard.putString("Intake State", intake.getIntakeState().toString());
-    // SmartDashboard.putString("Launcher State", launcher.getLaunchState().toString());
-
-    // SmartDashboard.putBoolean("Launcher Breakbeam", launcher.getBreakBeam());
-    // SmartDashboard.putBoolean("Intake Breakbeam", intake.getBreakBeam());
-
-    SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
-    SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
-
-    // drivebase.printTranslationalVelocities();
-
-    SmartDashboard.putNumber("Front Left TranslationalVelo", drivebase.getFLVelo());
-    SmartDashboard.putNumber("Front Right TranslationalVelo", drivebase.getFRVelo());
-    SmartDashboard.putNumber("Back Left TranslationalVelo", drivebase.getBLVelo());
-    SmartDashboard.putNumber("Back Right TranslationalVelo", drivebase.getBRVelo());
-
-    SmartDashboard.putBoolean("Brownout", hasBrownedOut);
-
-    if(launcher.hasBrownedOut()){
-      hasBrownedOut = true;
-    }  
-
-      double ySpeed = drivebase.inputDeadband(-driver.getLeftX());
-    double xSpeed = drivebase.inputDeadband(driver.getLeftY());
-    double rot = drivebase.inputDeadband(-driver.getRightX());
-
-    if (driver.getXButton()) {
-      drivebase.lockWheels();
-    } else {
-      drivebase.drive(xSpeed, ySpeed, rot, true);
-    }
-
-  
-  }
-
-    
 }

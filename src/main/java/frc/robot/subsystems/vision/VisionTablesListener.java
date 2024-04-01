@@ -77,7 +77,6 @@ public class VisionTablesListener {
 
     private boolean tagVisible;
 
-
     public VisionTablesListener() {
         networkTable = NetworkTableInstance.getDefault();
         visionTable = networkTable.getTable("Vision");
@@ -282,7 +281,10 @@ public class VisionTablesListener {
             Translation3d translate = new Translation3d(xPoses[i], yPoses[i], zPoses[i]);
             Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
             Transform3d transform = new Transform3d(translate, rotation);
-            transform = CoordinateSystem.convert(transform, CoordinateSystem.EDN(), CoordinateSystem.NWU());
+            transform = new Transform3d(
+                CoordinateSystem.convert(transform.getTranslation(), CoordinateSystem.EDN(), CoordinateSystem.NWU()),
+                CoordinateSystem.convert(transform.getRotation(), CoordinateSystem.EDN(), CoordinateSystem.NWU())
+            );
             poses[i] = ComputerVisionUtil.objectToRobotPose(getBestTagAbsPos((int)ids[i]), transform, cam1Transform).toPose2d();
         }
         return poses;

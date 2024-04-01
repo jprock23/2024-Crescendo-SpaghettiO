@@ -136,7 +136,7 @@ private DriveState driveState = DriveState.NORMAL;
     //       // poseEstimator.addVisionMeasurement(robotPos1, Timer.getFPGATimestamp());
     //     }
     //   }
-
+    if (Math.sqrt(Math.pow(gyro.getVelocityX(), 2) + Math.pow(gyro.getVelocityY(), 2)) <= 1.5) {
       if (visTables.getTagVisible1()) {
         Pose2d[] poses = visTables.getCam1Poses();
         double[] timesampsCam1 = visTables.getCam1Timestamps();
@@ -186,7 +186,7 @@ private DriveState driveState = DriveState.NORMAL;
       //Pose3d tagPos3 = visTables.getBestTagAbsPos((int) visTables.getCam2IDs()[0]);
       //Pose2d robotPos3 = tagPos3.transformBy(visTables.getCam2Transforms()[0]).toPose2d();      
     // }
-
+  }
     poseEstimator.updateWithTime(Timer.getFPGATimestamp(), Rotation2d.fromDegrees(-gyro.getAngle()), getPositions());
 
     // fieldmap.setRobotPose(odometry.getPoseMeters().getX(),

@@ -138,7 +138,7 @@ private DriveState driveState = DriveState.NORMAL;
     //   }
 
       if (visTables.getTagVisible1()) {
-        Pose2d[] poses = visTables.getCam1RobotPoses();
+        Pose2d[] poses = visTables.getCam1Poses();
         double[] timesampsCam1 = visTables.getCam1Timestamps();
         for(int i = 0; i < poses.length && i < timesampsCam1.length; i++) {
           poseEstimator.addVisionMeasurement(poses[i], timesampsCam1[i]);

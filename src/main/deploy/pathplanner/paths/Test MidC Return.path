@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.178464664621639,
-        "y": 2.969949786053419
+        "x": 5.606837836301603,
+        "y": 3.817818502689028
       },
       "isLocked": false,
       "linkedName": "MidC Front"
     },
     {
       "anchor": {
-        "x": 1.32,
-        "y": 5.53
+        "x": 3.21,
+        "y": 5.574358195791998
       },
       "prevControl": {
-        "x": 4.293878587757177,
-        "y": 5.4860202028096365
+        "x": 5.101471210374295,
+        "y": 4.316355849887588
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "P2 Start"
+      "linkedName": "Midshot"
     }
   ],
   "rotationTargets": [],

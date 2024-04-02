@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5802032004064024,
-        "y": 4.420390379242297
+        "x": 2.093550340946837,
+        "y": 4.745999491998984
       },
       "isLocked": false,
       "linkedName": "P2 Start"
     },
     {
       "anchor": {
-        "x": 2.43,
-        "y": 4.09
+        "x": 2.47,
+        "y": 4.499325921728767
       },
       "prevControl": {
-        "x": 2.0540825697036027,
-        "y": 4.3217209511342105
+        "x": 2.0940825697036027,
+        "y": 4.7310468728629775
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "RightRingFront"
+      "linkedName": "RightRingFR"
     }
   ],
   "rotationTargets": [],
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -45.0,
     "rotateFast": false
   },
   "reversed": false,

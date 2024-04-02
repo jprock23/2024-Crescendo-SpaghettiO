@@ -13,9 +13,7 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -52,7 +50,7 @@ public class Drivebase extends SubsystemBase {
 
 private DriveState driveState = DriveState.NORMAL;
 
-  private VisionTablesListener visTables;
+  // private VisionTablesListener visTables;
 
   public SwerveModule frontLeft;
   public SwerveModule backLeft;
@@ -92,13 +90,13 @@ private DriveState driveState = DriveState.NORMAL;
     gyro.setAngleAdjustment(90);
     gyro.zeroYaw();
 
-    visTables = VisionTablesListener.getInstance();
+    // visTables = VisionTablesListener.getInstance();
 
     poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics,
         Rotation2d.fromDegrees(-gyro.getAngle()),
         getPositions(), new Pose2d(), stateStdDevs, visionMeasurementStdDevs);
 
-    config = new HolonomicPathFollowerConfig(new PIDConstants(1.2, 0, 0),
+    config = new HolonomicPathFollowerConfig(new PIDConstants(1.4, 0, 0),
         new PIDConstants(1, 0.0000, 0.0),
         // 0.12, 0.00001, 0.0
         5, Math.sqrt(Math.pow(DriveConstants.kTrackWidth / 2, 2) +
@@ -107,7 +105,7 @@ private DriveState driveState = DriveState.NORMAL;
 
     SmartDashboard.putData("FIELD", fieldmap);
 
-    headingController = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0, 0), .02);
+    headingController = new ProfiledPIDController(4.5, 0, 0, new TrapezoidProfile.Constraints(0, 0), .02);
     headingController.enableContinuousInput(-Math.PI, Math.PI);
 
     AutoBuilder.configureHolonomic(this::getPose, this::resetOdometry, this::getSpeeds, this::setAutoSpeeds, config,
@@ -137,13 +135,13 @@ private DriveState driveState = DriveState.NORMAL;
     //     }
     //   }
 
-      if (visTables.getTagVisible1()) {
-        Pose2d[] poses = visTables.getCam1RobotPoses();
-        double[] timesampsCam1 = visTables.getCam1Timestamps();
-        for(int i = 0; i < poses.length && i < timesampsCam1.length; i++) {
-          poseEstimator.addVisionMeasurement(poses[i], timesampsCam1[i]);
-        }
-      }
+      // // if (visTables.getTagVisible1()) {
+      //   Pose2d[] poses = visTables.getCam1RobotPoses();
+      //   double[] timesampsCam1 = visTables.getCam1Timestamps();
+      //   for(int i = 0; i < poses.length && i < timesampsCam1.length; i++) {
+      //     poseEstimator.addVisionMeasurement(poses[i], timesampsCam1[i]);
+      //   }
+      // }
       // Pose3d tagPos1 = visTables.getBestTagAbsPos((int) visTables.getCam1IDs()[0]);
       // Pose2d robotPos1 = tagPos1.transformBy(visTables.getCam1Transforms()[0]).toPose2d();
       // poseEstimator.addVisionMeasurement(robotPos1, visTables.getCam1Timestamps()[0]);
@@ -231,7 +229,7 @@ private DriveState driveState = DriveState.NORMAL;
     // getPose());
   }
 
-  public void drive(double forward, double side, double rot, boolean fieldRelative) {
+  public void drive(double forward, double side, double rot) {
 
     double xSpeedCommanded;
     double ySpeedCommanded;
@@ -307,22 +305,25 @@ private DriveState driveState = DriveState.NORMAL;
     return DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
   }
 
-  public void rotateTo(double goal){
-    double reqOmega = headingController.calculate(
-            getPose().getRotation().getRadians(),
-            new TrapezoidProfile.State(Math.toRadians(goal), 0),
-            new TrapezoidProfile.Constraints(AutoConstants.kMaxAngularSpeedRadiansPerSecond, AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared));
+  public void rotateTo(double x, double y,double goal){
+        double reqOmega = headingController.calculate(
+            getPose().getRotation().getRadians(), Math.toRadians(goal));
+    // double reqOmega = headingController.calculate(
+    //         getPose().getRotation().getRadians(),
+    //         new TrapezoidProfile.State(Math.toRadians(goal), 0),
+    //         new TrapezoidProfile.Constraints(AutoConstants.kMaxAngularSpeedRadiansPerSecond, AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared));
 
-        setChassisSpeed(new ChassisSpeeds(0, 0, reqOmega));
+            SmartDashboard.putNumber("ReqOmega", reqOmega);
+        setChassisSpeed(new ChassisSpeeds(x, y, reqOmega));
   }
 
   public void alignToTarget(){
-    Pose2d speakerPos = visTables.getBestTagAbsPos((int)visTables.getCam2IDs()[0]).toPose2d();
+    // Pose2d speakerPos = visTables.getBestTagAbsPos((int)visTables.getCam2IDs()[0]).toPose2d();
 
-    double xDelta = getPose().getX() - speakerPos.getX();
-    double yDelta = getPose().getY() - speakerPos.getY();
+    // double xDelta = getPose().getX() - speakerPos.getX();
+    // double yDelta = getPose().getY() - speakerPos.getY();
 
-    rotateTo(Math.atan(xDelta/yDelta));
+    // rotateTo(0, 0, Math.atan(xDelta/yDelta));
   }
 
   public void lockWheels() {

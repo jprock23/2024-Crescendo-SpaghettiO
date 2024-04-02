@@ -29,9 +29,9 @@ public class RotationCommand extends Command {
 
   @Override
   public void execute() {
-    drivebase.rotateTo(goal);
+    drivebase.rotateTo(0, 0, goal);
 
-    if(Math.abs(drivebase.getHeading() - goal) < 1.5){
+    if(Math.abs(((drivebase.getHeading() + 90))) - Math.abs(goal) < 1.5){
       ended = true;
     }
   }

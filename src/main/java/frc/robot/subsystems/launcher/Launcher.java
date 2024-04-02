@@ -28,14 +28,14 @@ public class Launcher {
         LONG(-13.25, 1.0),
         HANDOFF(9,0.5),
         HOVER(-3, 1.0), 
-        TOSS(-20, .80),
+        TOSS(-22, .80),
         AUTOMIDSHOT(-13.75, 1.0),
         //height: ?
         AUTOLEFTSHOT(-13.5, 1.0),
         //height: 20.75
         AUTORIGHTSHOT(-13.5, 1.0),
         //height: ?7
-        SPEAKER(-59.0, 1.0),
+        SPEAKER(-57.0, 1.0),
         INTERLOPE(0.0, 1.0),
         TEST(-13.25, 1.0);
 

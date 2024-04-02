@@ -1,13 +1,6 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -15,15 +8,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AltRevLauncher;
 import frc.robot.commands.AmpCommand;
 import frc.robot.commands.AutoHandoff;
 import frc.robot.commands.AutoLeftShot;
 import frc.robot.commands.AutoMidShot;
+import frc.robot.commands.AutoPreload;
 import frc.robot.commands.AutoRightShot;
 import frc.robot.commands.AutoSpeaker;
 import frc.robot.commands.BreakBeamHandoff;
 import frc.robot.commands.Celebrate;
 import frc.robot.commands.HandoffCommand;
+import frc.robot.commands.RevLauncher;
 import frc.robot.commands.RotationCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.IO.LED;
@@ -33,18 +29,10 @@ import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.launcher.Launcher;
 import frc.robot.subsystems.launcher.Launcher.LauncherState;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.robot.subsystems.swerve.Drivebase;
 import frc.robot.subsystems.swerve.Drivebase.DriveState;
 
-import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -73,10 +61,12 @@ public class Robot extends LoggedRobot {
   private boolean useCurrentSpike;
   private boolean hasBrownedOut;
 
+  private RotationCommand turn;
+
   private SendableChooser<Command> m_chooser;
 
-     StructPublisher<Pose3d> publisher = NetworkTableInstance.getDefault()
-    .getStructTopic("Pose", Pose3d.struct).publish();
+  StructPublisher<Pose3d> publisher = NetworkTableInstance.getDefault()
+      .getStructTopic("Pose", Pose3d.struct).publish();
 
   @Override
   public void robotInit() {
@@ -96,6 +86,8 @@ public class Robot extends LoggedRobot {
     autoSpeaker = new AutoSpeaker();
     ampCommand = new AmpCommand();
 
+    turn = new RotationCommand(-25);
+
     currentSpikeHandoff = new HandoffCommand();
 
     NamedCommands.registerCommand("AutoSpeaker", autoSpeaker);
@@ -104,12 +96,13 @@ public class Robot extends LoggedRobot {
     NamedCommands.registerCommand("AutoRightShot", new AutoRightShot());
     NamedCommands.registerCommand("AutoMidShot", new AutoMidShot());
     NamedCommands.registerCommand("Celebrate", new Celebrate());
-    NamedCommands.registerCommand("Rotate150", new RotationCommand(150));
+    NamedCommands.registerCommand("RotateN155", new RotationCommand(-155));
+    NamedCommands.registerCommand("RotateN25", new RotationCommand(-25));
     NamedCommands.registerCommand("Rotate220", new RotationCommand(220));
     NamedCommands.registerCommand("Rotate180", new RotationCommand(180));
-
-
-
+    NamedCommands.registerCommand("RevLauncher", new RevLauncher());
+    NamedCommands.registerCommand("AutoPreload", new AutoPreload());
+    NamedCommands.registerCommand("AltRevLauncher", new AltRevLauncher());
 
     m_chooser = AutoBuilder.buildAutoChooser();
     // m_chooser.addOption("Test1", new PathPlannerAuto("Test1"));
@@ -132,7 +125,6 @@ public class Robot extends LoggedRobot {
     // launcher.launcherConnections();
     // intake.intakeConnections();
     // climber.climberConnections();
-  
 
     // launcher.printConnections();
     // intake.printConnections();
@@ -143,7 +135,9 @@ public class Robot extends LoggedRobot {
 
     // visTables.putInfoOnDashboard();
 
-    SmartDashboard.putNumber("Gyro Angle:", (drivebase.getHeading() + 90)%360);
+    SmartDashboard.putNumber("Radians", drivebase.getPose().getRotation().getRadians());
+
+    SmartDashboard.putNumber("Gyro Angle:", (drivebase.getHeading() + 90) % 360);
     SmartDashboard.putNumber("X-coordinate", drivebase.getPose().getX());
     SmartDashboard.putNumber("Y-coordinate", drivebase.getPose().getY());
 
@@ -167,7 +161,7 @@ public class Robot extends LoggedRobot {
 
     SmartDashboard.putBoolean("Brownout", hasBrownedOut);
 
-    if(launcher.hasBrownedOut()){
+    if (launcher.hasBrownedOut()) {
       hasBrownedOut = true;
     }
   }
@@ -202,44 +196,48 @@ public class Robot extends LoggedRobot {
     // launcher.updatePose();
 
     /* DRIVE CONTROLS */
-    double ySpeed;
-    double xSpeed;
-    double rot;
 
-    ySpeed = drivebase.inputDeadband(-driver.getLeftX());
-    xSpeed = drivebase.inputDeadband(driver.getLeftY());
-    rot = drivebase.inputDeadband(-driver.getRightX());
+    double ySpeed = drivebase.inputDeadband(-driver.getLeftX());
+    double xSpeed = drivebase.inputDeadband(driver.getLeftY());
+    double rot = drivebase.inputDeadband(-driver.getRightX());
 
-    if(operator.getAButton()){
-      intake.setIntakeState(IntakeState.GROUND);
-    } 
-
-    if (driver.getXButton()) {
-      drivebase.lockWheels();
-    } else {
-      drivebase.drive(xSpeed, ySpeed, rot, true);
+    if (driver.getAButton()) {
+      drivebase.rotateTo(xSpeed, ySpeed, 180);
+    } else if (driver.getBButton()) {
+      drivebase.rotateTo(xSpeed, ySpeed, 270);
+    } else if (driver.getYButton()) {
+      drivebase.rotateTo(xSpeed, ySpeed, 0);
+    } else if (driver.getXButton()) {
+      drivebase.rotateTo(xSpeed, ySpeed, 90);
+    } else{
+      drivebase.drive(xSpeed, ySpeed, rot);
     }
 
-    if(driver.getRightTriggerAxis() > 0){
+    
+    if (driver.getPOV() == 0) {
+      drivebase.zeroHeading();
+    }
+
+    if (operator.getAButton()) {
+      intake.setIntakeState(IntakeState.GROUND);
+    }
+
+    SmartDashboard.putBoolean("YO", turn.isFinished());
+    if (driver.getRightTriggerAxis() > 0) {
       drivebase.setDriveState(DriveState.SLOW);
-    } else if (!CommandScheduler.getInstance().isScheduled(ampCommand)){
+    } else if (!CommandScheduler.getInstance().isScheduled(ampCommand)) {
       drivebase.setDriveState(DriveState.NORMAL);
     }
 
     /* INTAKE CONTROLS */
 
-    if (driver.getAButton()) {
-      drivebase.zeroHeading();
-    }
+    // if(operator.getAButton()){
+    // launcher.setLauncherState(LauncherState.AUTORIGHTSHOT);
+    // }
 
-  //   if(operator.getAButton()){
-  //     launcher.setLauncherState(LauncherState.AUTORIGHTSHOT);
-  //   }
-
-  // if(operator.getYButton()){
-  //   launcher.setLauncherState(LauncherState.AUTOLEFTSHOT);
-  // }
-
+    // if(operator.getYButton()){
+    // launcher.setLauncherState(LauncherState.AUTOLEFTSHOT);
+    // }
 
     if (operator.getRightBumper() && !useCurrentSpike) {
       handoffCommand.schedule();
@@ -301,10 +299,10 @@ public class Robot extends LoggedRobot {
     }
 
     // if(operator.getYButton()){
-    //   launcher.setLauncherState(LauncherState.AUTOLEFTSHOT);
-    // } 
+    // launcher.setLauncherState(LauncherState.AUTOLEFTSHOT);
+    // }
     // if(operator.getAButton()){
-    //   launcher.setLauncherState(LauncherState.AUTORIGHTSHOT);
+    // launcher.setLauncherState(LauncherState.AUTORIGHTSHOT);
     // }
 
     if (operator.getRightTriggerAxis() > 0) {
@@ -321,14 +319,11 @@ public class Robot extends LoggedRobot {
       launcher.setFlickOff();
       intake.setRollerOff();
       shootCommand.cancel();
+      ampCommand.cancel();
       handoffCommand.cancel();
       launcher.setSushiOff();
       // litty.setBlue();
 
-    }
-
-    if(driver.getYButton()){
-      driver.setRumble(RumbleType.kLeftRumble, 0.8);
     }
 
   }
@@ -350,9 +345,11 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+  }
 
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
 
 }

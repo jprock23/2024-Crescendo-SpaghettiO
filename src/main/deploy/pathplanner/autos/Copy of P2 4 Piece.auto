@@ -34,7 +34,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Rotate150"
+                        "name": "RotateN155"
                       }
                     }
                   ]
@@ -78,7 +78,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Rotate180"
+                        "name": "RotateN155"
                       }
                     }
                   ]
@@ -116,7 +116,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Rotate220"
+                        "name": "RotateN155"
                       }
                     }
                   ]

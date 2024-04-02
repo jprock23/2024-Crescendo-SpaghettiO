@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 2.43,
-        "y": 4.09
+        "y": 4.05
       },
       "prevControl": null,
       "nextControl": {
         "x": 2.444206936858951,
-        "y": 3.3165089097653224
+        "y": 3.2765089097653224
       },
       "isLocked": false,
       "linkedName": "RightRingFront"

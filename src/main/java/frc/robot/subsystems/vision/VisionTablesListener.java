@@ -4,6 +4,12 @@ import java.util.ArrayList;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
+
+import edu.wpi.first.math.ComputerVisionUtil;
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.geometry.CoordinateSystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -43,8 +49,9 @@ public class VisionTablesListener {
     private DoubleArraySubscriber timestamp3Sub;
 
     private Transform3d cam1Transform = new Transform3d(new Translation3d(-0.3115, 0.0127, 0.368), new Rotation3d(Math.toRadians(1.5), Math.toRadians(30), Math.toRadians(180)));
-    private Transform3d cam2Transform = new Transform3d(new Translation3d(0.2762504, -0.3121152, 0.2306066), new Rotation3d(0, Math.toRadians(35), Math.toRadians(-90)));
-    private Transform3d cam3Transform = new Transform3d(new Translation3d(0.2762504, 0.3121152, 0.2306066), new Rotation3d(0, Math.toRadians(35), Math.toRadians(90)));
+    private Transform3d cam2Transform = new Transform3d(new Translation3d(0.3121152, 0.2762504, 0.2306066), new Rotation3d(0, Math.toRadians(-35), Math.toRadians(-90)));
+    private Transform3d cam3Transform = new Transform3d(new Translation3d(0.3121152, -0.2762504, 0.2306066), new Rotation3d(0, Math.toRadians(-35), Math.toRadians(90)));
+    private Rotation3d EDNtoNWUMAT = new Rotation3d(MatBuilder.fill(Nat.N3(), Nat.N3(), 0, 0, 1, -1, 0, 0, 0, -1, 0));
     // private IntegerArraySubscriber zRotsSub;
     // private IntegerSubscriber bestIDSub;
     // private IntegerSubscriber bestXSub;
@@ -74,7 +81,6 @@ public class VisionTablesListener {
     // private double timestamp;
 
     private boolean tagVisible;
-
 
     public VisionTablesListener() {
         networkTable = NetworkTableInstance.getDefault();
@@ -264,7 +270,7 @@ public class VisionTablesListener {
     //     return new Translation3d(bestTagX, bestTagY, bestTagZ);
     // }
 
-    public Transform3d[] getCam1Transforms() {
+    public Pose2d[] getCam1Poses() {
         double[] ids = convertArray(tagIDSub1.get());
         double[] xPoses = x1Sub.get();
         Logger.recordOutput("Tag 1 X", xPoses);
@@ -275,16 +281,31 @@ public class VisionTablesListener {
         double[] yaws = yaw1Sub.get();
         Logger.recordOutput("Tag 1 Yaws", yaws);
         
-        Transform3d[] transforms = new Transform3d[ids.length];
+        Pose2d[] poses = new Pose2d[ids.length];
         for(int i = 0; i < ids.length && i < xPoses.length && i < yPoses.length && i < zPoses.length; i++) {
             Translation3d translate = new Translation3d(xPoses[i], yPoses[i], zPoses[i]);
             Rotation3d rotation = new Rotation3d(0, 0, yaws[i]);
             Transform3d transform = new Transform3d(translate, rotation);
-
-            transform.plus(cam1Transform);
-            transforms[i] = transform;
+            Rotation3d tempRot = EDNtoNWUMAT.unaryMinus().plus(transform.getRotation().plus(EDNtoNWUMAT));
+            transform = new Transform3d(
+                transform.getTranslation().rotateBy(EDNtoNWUMAT),
+                new Rotation3d(tempRot.getX(), tempRot.getY(), -tempRot.getZ())
+            );
+            // transform = new Transform3d(
+            //     CoordinateSystem.convert(transform.getTranslation(), CoordinateSystem.EDN(), CoordinateSystem.NWU()),
+            //     CoordinateSystem.convert(new Rotation3d(), CoordinateSystem.EDN(), CoordinateSystem.NWU()).plus(
+            //         CoordinateSystem.convert(transform.getRotation(), CoordinateSystem.EDN(), CoordinateSystem.NWU())
+            //     )
+            // );
+            // transform = transform.plus(cam1Transform);
+            // transform = new Transform3d(
+            //     new Translation3d(transform.getX(), -transform.getY(), -transform.getZ()),
+            //     transform.getRotation()
+            // );
+            // poses[i] = getBestTagAbsPos((int)ids[i]).transformBy(transform).toPose2d();
+            poses[i] = ComputerVisionUtil.objectToRobotPose(getBestTagAbsPos((int)ids[i]), transform, cam1Transform).toPose2d();
         }
-        return transforms;
+        return poses;
     }
 
     public Transform3d[] getCam2Transforms() {
@@ -348,7 +369,7 @@ public class VisionTablesListener {
         Pose2d[] pose2ds = new Pose2d[poses.size()];
         int i = 0;
         for(Pose3d pose: poses) {
-            pose2ds[i] = poses.get(i).toPose2d();
+            pose2ds[i] = pose.toPose2d();
             i++;
         }
         return pose2ds;   

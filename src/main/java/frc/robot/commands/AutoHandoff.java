@@ -21,8 +21,6 @@ public class AutoHandoff extends Command {
   private boolean launcherHasRing;
   private boolean ended;
 
-  private double startTime;
-  private double duration = 0.5;
   private double timeout = 1;
 
   private double intakeStarttime;
@@ -51,7 +49,6 @@ public class AutoHandoff extends Command {
     launcher.setLauncherState(LauncherState.HANDOFF);
     launcher.updatePose();
 
-    startTime = -1;
     intakeStarttime = -1;
     launcherStarttime = -1;
 

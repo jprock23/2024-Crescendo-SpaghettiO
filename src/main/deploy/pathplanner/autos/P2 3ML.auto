@@ -76,6 +76,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "AutoSpeaker"
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [

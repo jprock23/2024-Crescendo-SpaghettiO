@@ -166,7 +166,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Spectrum Score 2"
+                              "pathName": "Photon Score 4"
                             }
                           },
                           {
@@ -210,28 +210,9 @@
           }
         },
         {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Test MidC"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Handoff"
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Test MidC Return"
+            "pathName": "Test MidC"
           }
         }
       ]

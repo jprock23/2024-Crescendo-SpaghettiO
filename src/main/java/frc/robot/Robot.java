@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AltAmpCommand;
 import frc.robot.commands.AltRevLauncher;
 import frc.robot.commands.AmpCommand;
 import frc.robot.commands.AutoHandoff;
@@ -29,6 +30,7 @@ import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.launcher.Launcher;
 import frc.robot.subsystems.launcher.Launcher.LauncherState;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import frc.robot.subsystems.swerve.Drivebase;
 import frc.robot.subsystems.swerve.Drivebase.DriveState;
 
@@ -57,6 +59,7 @@ public class Robot extends LoggedRobot {
   private AutoSpeaker autoSpeaker;
   private HandoffCommand currentSpikeHandoff;
   private AmpCommand ampCommand;
+  private AltAmpCommand altAmpCommand;
 
   private boolean useCurrentSpike;
   private boolean hasBrownedOut;
@@ -85,6 +88,7 @@ public class Robot extends LoggedRobot {
     shootCommand = new ShootCommand();
     autoSpeaker = new AutoSpeaker();
     ampCommand = new AmpCommand();
+    altAmpCommand = new AltAmpCommand();
 
     turn = new RotationCommand(-25);
 
@@ -202,18 +206,24 @@ public class Robot extends LoggedRobot {
     double rot = drivebase.inputDeadband(-driver.getRightX());
 
     if (driver.getAButton()) {
+      drivebase.currHeading = -1;
       drivebase.rotateTo(xSpeed, ySpeed, 180);
     } else if (driver.getBButton()) {
+      drivebase.currHeading = -1;
       drivebase.rotateTo(xSpeed, ySpeed, 270);
     } else if (driver.getYButton()) {
+      drivebase.currHeading = -1;
       drivebase.rotateTo(xSpeed, ySpeed, 0);
     } else if (driver.getXButton()) {
+      drivebase.currHeading = -1;
       drivebase.rotateTo(xSpeed, ySpeed, 90);
-    } else{
+    } else if (driver.getLeftTriggerAxis() > 0) {
+      drivebase.holdHeading(xSpeed, ySpeed);
+    } else {
+      drivebase.currHeading = -1;
       drivebase.drive(xSpeed, ySpeed, rot);
     }
 
-    
     if (driver.getPOV() == 0) {
       drivebase.zeroHeading();
     }
@@ -222,7 +232,6 @@ public class Robot extends LoggedRobot {
       intake.setIntakeState(IntakeState.GROUND);
     }
 
-    SmartDashboard.putBoolean("YO", turn.isFinished());
     if (driver.getRightTriggerAxis() > 0) {
       drivebase.setDriveState(DriveState.SLOW);
     } else if (!CommandScheduler.getInstance().isScheduled(ampCommand)) {
@@ -236,7 +245,7 @@ public class Robot extends LoggedRobot {
     // }
 
     // if(operator.getYButton()){
-    // launcher.setLauncherState(LauncherState.AUTOLEFTSHOT);
+    // launcher.setLauncherState(LauncherState.AUTOMIDSHOT);
     // }
 
     if (operator.getRightBumper() && !useCurrentSpike) {
@@ -292,25 +301,27 @@ public class Robot extends LoggedRobot {
       launcher.setLauncherState(LauncherState.LONG);
     }
 
+    if(operator.getYButton()){
+      launcher.setLauncherState(LauncherState.ALTAMP);
+    }
+
     if (operator.getXButton()) {
       intake.setReverseRollerPower();
       launcher.setFlickerReverse();
       launcher.setReverseLauncherOn();
     }
 
-    // if(operator.getYButton()){
-    // launcher.setLauncherState(LauncherState.AUTOLEFTSHOT);
-    // }
-    // if(operator.getAButton()){
-    // launcher.setLauncherState(LauncherState.AUTORIGHTSHOT);
-    // }
-
     if (operator.getRightTriggerAxis() > 0) {
       if (launcher.getLaunchState() == LauncherState.AMP) {
         ampCommand.initialize();
         ampCommand.schedule();
         drivebase.setDriveState(DriveState.SLOW);
-      } else {
+      } else if(launcher.getLaunchState() == LauncherState.ALTAMP){
+        altAmpCommand.initialize();
+        altAmpCommand.schedule();
+        drivebase.setDriveState(DriveState.SLOW);
+      }
+        else {
         shootCommand.initialize();
         shootCommand.schedule();
       }
@@ -325,7 +336,6 @@ public class Robot extends LoggedRobot {
       // litty.setBlue();
 
     }
-
   }
 
   @Override

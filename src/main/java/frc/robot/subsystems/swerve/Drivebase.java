@@ -36,15 +36,14 @@ public class Drivebase extends SubsystemBase {
     NORMAL(1),
     SLOW(0.5);
 
-
     public double driveSpeed;
 
     private DriveState(double driveSpeed) {
-        this.driveSpeed = driveSpeed;
+      this.driveSpeed = driveSpeed;
     }
-}
+  }
 
-private DriveState driveState = DriveState.NORMAL;
+  private DriveState driveState = DriveState.NORMAL;
 
   // private VisionTablesListener visTables;
 
@@ -67,6 +66,8 @@ private DriveState driveState = DriveState.NORMAL;
 
   private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
   private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10));
+
+  public double currHeading;
 
   public Drivebase() {
 
@@ -93,7 +94,7 @@ private DriveState driveState = DriveState.NORMAL;
         getPositions(), new Pose2d(), stateStdDevs, visionMeasurementStdDevs);
 
     config = new HolonomicPathFollowerConfig(new PIDConstants(1.4, 0, 0),
-        new PIDConstants(1, 0.0000, 0.0),
+        new PIDConstants(1.1, 0.0000, 0.0),
         // 0.12, 0.00001, 0.0
         5, Math.sqrt(Math.pow(DriveConstants.kTrackWidth / 2, 2) +
             Math.pow(DriveConstants.kWheelBase / 2, 2)),
@@ -113,74 +114,78 @@ private DriveState driveState = DriveState.NORMAL;
   }
 
   public void periodic() {
-    //remove gyro stuff!!!
-    
+    // remove gyro stuff!!!
+
     // if (visTables.getTagVisible1()) {
-    //   Transform3d[] transformsCam1 = visTables.getCam1Transforms();
-    //   double[] cam1IDs = visTables.getCam1IDs();
-    //   double[] timesampsCam1 = visTables.getCam1Timestamps();
+    // Transform3d[] transformsCam1 = visTables.getCam1Transforms();
+    // double[] cam1IDs = visTables.getCam1IDs();
+    // double[] timesampsCam1 = visTables.getCam1Timestamps();
 
-    //   for(int i = 0; i < transformsCam1.length && i < cam1IDs.length; i++) {
-    //     Logger.recordOutput("Pre Cam1 Pos", getPose());
-    //     if(visTables.getBestTagAbsPos((int)cam1IDs[i]) != null && transformsCam1[i] != null) {
-    //       Pose3d tagPos1 = visTables.getBestTagAbsPos((int)cam1IDs[i]);
-    //       Pose2d robotPos1 = tagPos1.transformBy(transformsCam1[i]).toPose2d();
-    //       Logger.recordOutput("Cam1 Pos", robotPos1);
-    //       Logger.recordOutput("Cam1 Timestamp", timesampsCam1[i]);
-    //       // poseEstimator.addVisionMeasurement(robotPos1, Timer.getFPGATimestamp());
-    //     }
-    //   }
+    // for(int i = 0; i < transformsCam1.length && i < cam1IDs.length; i++) {
+    // Logger.recordOutput("Pre Cam1 Pos", getPose());
+    // if(visTables.getBestTagAbsPos((int)cam1IDs[i]) != null && transformsCam1[i]
+    // != null) {
+    // Pose3d tagPos1 = visTables.getBestTagAbsPos((int)cam1IDs[i]);
+    // Pose2d robotPos1 = tagPos1.transformBy(transformsCam1[i]).toPose2d();
+    // Logger.recordOutput("Cam1 Pos", robotPos1);
+    // Logger.recordOutput("Cam1 Timestamp", timesampsCam1[i]);
+    // // poseEstimator.addVisionMeasurement(robotPos1, Timer.getFPGATimestamp());
+    // }
+    // }
 
-      // // if (visTables.getTagVisible1()) {
-      //   Pose2d[] poses = visTables.getCam1RobotPoses();
-      //   double[] timesampsCam1 = visTables.getCam1Timestamps();
-      //   for(int i = 0; i < poses.length && i < timesampsCam1.length; i++) {
-      //     poseEstimator.addVisionMeasurement(poses[i], timesampsCam1[i]);
-      //   }
-      // }
-      // Pose3d tagPos1 = visTables.getBestTagAbsPos((int) visTables.getCam1IDs()[0]);
-      // Pose2d robotPos1 = tagPos1.transformBy(visTables.getCam1Transforms()[0]).toPose2d();
-      // poseEstimator.addVisionMeasurement(robotPos1, visTables.getCam1Timestamps()[0]);
-    //}
+    // // if (visTables.getTagVisible1()) {
+    // Pose2d[] poses = visTables.getCam1RobotPoses();
+    // double[] timesampsCam1 = visTables.getCam1Timestamps();
+    // for(int i = 0; i < poses.length && i < timesampsCam1.length; i++) {
+    // poseEstimator.addVisionMeasurement(poses[i], timesampsCam1[i]);
+    // }
+    // }
+    // Pose3d tagPos1 = visTables.getBestTagAbsPos((int) visTables.getCam1IDs()[0]);
+    // Pose2d robotPos1 =
+    // tagPos1.transformBy(visTables.getCam1Transforms()[0]).toPose2d();
+    // poseEstimator.addVisionMeasurement(robotPos1,
+    // visTables.getCam1Timestamps()[0]);
+    // }
 
     // if (visTables.getTagVisible2()) {
-    //   Transform3d[] transformsCam2 = visTables.getCam2Transforms();
-    //   double[] cam2IDs = visTables.getCam2IDs();
-    //   double[] timestampsCam2 = visTables.getCam2Timestamps();
+    // Transform3d[] transformsCam2 = visTables.getCam2Transforms();
+    // double[] cam2IDs = visTables.getCam2IDs();
+    // double[] timestampsCam2 = visTables.getCam2Timestamps();
 
-    //   for(int i = 0; i < transformsCam2.length; i++) {
-    //     Logger.recordOutput("Pre Cam2 Pos", getPose());
-    //     Pose3d tagPos2 = visTables.getBestTagAbsPos((int)cam2IDs[i]);
-    //     Pose2d robotPos2 = tagPos2.transformBy(transformsCam2[i]).toPose2d();
-    //     Logger.recordOutput("Cam2 Pos", robotPos2);
-    //     Logger.recordOutput("Cam2 Timestamp", timestampsCam2[i]);
-    //     poseEstimator.addVisionMeasurement(robotPos2, timestampsCam2[i]);
-    //   }
-    //   Pose3d tagPos2 = visTables.getBestTagAbsPos((int) visTables.getCam2IDs()[0]);
-    //   Pose2d robotPos2 = tagPos2.transformBy(visTables.getCam2Transforms()[0]).toPose2d();
+    // for(int i = 0; i < transformsCam2.length; i++) {
+    // Logger.recordOutput("Pre Cam2 Pos", getPose());
+    // Pose3d tagPos2 = visTables.getBestTagAbsPos((int)cam2IDs[i]);
+    // Pose2d robotPos2 = tagPos2.transformBy(transformsCam2[i]).toPose2d();
+    // Logger.recordOutput("Cam2 Pos", robotPos2);
+    // Logger.recordOutput("Cam2 Timestamp", timestampsCam2[i]);
+    // poseEstimator.addVisionMeasurement(robotPos2, timestampsCam2[i]);
+    // }
+    // Pose3d tagPos2 = visTables.getBestTagAbsPos((int) visTables.getCam2IDs()[0]);
+    // Pose2d robotPos2 =
+    // tagPos2.transformBy(visTables.getCam2Transforms()[0]).toPose2d();
 
-      
     // }
 
     // if (visTables.getTagVisible3()) {
-    //   // cam1
-    //   Transform3d[] transformsCam3 = visTables.getCam3Transforms();
-    //   double[] cam3IDs = visTables.getCam3IDs();
-    //   double[] timestampsCam3 = visTables.getCam3Timestamps();
+    // // cam1
+    // Transform3d[] transformsCam3 = visTables.getCam3Transforms();
+    // double[] cam3IDs = visTables.getCam3IDs();
+    // double[] timestampsCam3 = visTables.getCam3Timestamps();
 
-    //   for(int i = 0; i < transformsCam3.length; i++) {
-    //     Logger.recordOutput("Pre Cam3 Pos", getPose());
-    //     Pose3d tagPos3 = visTables.getBestTagAbsPos((int)cam3IDs[i]);
-    //     Pose2d robotPos3 = tagPos3.transformBy(transformsCam3[i]).toPose2d();
-    //     Logger.recordOutput("Cam3 Pos", robotPos3);
-    //     Logger.recordOutput("Cam3 Timestamp", timestampsCam3[i]);
-    //     poseEstimator.addVisionMeasurement(robotPos3, timestampsCam3[i]);
-    //   }
-
-      //Pose3d tagPos3 = visTables.getBestTagAbsPos((int) visTables.getCam2IDs()[0]);
-      //Pose2d robotPos3 = tagPos3.transformBy(visTables.getCam2Transforms()[0]).toPose2d();      
+    // for(int i = 0; i < transformsCam3.length; i++) {
+    // Logger.recordOutput("Pre Cam3 Pos", getPose());
+    // Pose3d tagPos3 = visTables.getBestTagAbsPos((int)cam3IDs[i]);
+    // Pose2d robotPos3 = tagPos3.transformBy(transformsCam3[i]).toPose2d();
+    // Logger.recordOutput("Cam3 Pos", robotPos3);
+    // Logger.recordOutput("Cam3 Timestamp", timestampsCam3[i]);
+    // poseEstimator.addVisionMeasurement(robotPos3, timestampsCam3[i]);
     // }
-  // }
+
+    // Pose3d tagPos3 = visTables.getBestTagAbsPos((int) visTables.getCam2IDs()[0]);
+    // Pose2d robotPos3 =
+    // tagPos3.transformBy(visTables.getCam2Transforms()[0]).toPose2d();
+    // }
+    // }
     poseEstimator.updateWithTime(Timer.getFPGATimestamp(), Rotation2d.fromDegrees(-gyro.getAngle()), getPositions());
 
     // fieldmap.setRobotPose(odometry.getPoseMeters().getX(),
@@ -195,7 +200,7 @@ private DriveState driveState = DriveState.NORMAL;
     return poseEstimator.getEstimatedPosition();
   }
 
-    public static Pose2d getStaticPose() {
+  public static Pose2d getStaticPose() {
 
     return poseEstimator.getEstimatedPosition();
     // return odometry.getPoseMeters();
@@ -260,7 +265,6 @@ private DriveState driveState = DriveState.NORMAL;
     backRight.setDesiredState(swerveModuleStates[3]);
   }
 
-  
   public void setAutoSpeeds(ChassisSpeeds input) {
     var speeds = ChassisSpeeds.discretize(input, 0.02);
 
@@ -301,20 +305,26 @@ private DriveState driveState = DriveState.NORMAL;
     return DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
   }
 
-  public void rotateTo(double x, double y,double goal){
-        double reqOmega = headingController.calculate(
-            getPose().getRotation().getRadians(), Math.toRadians(goal));
-    // double reqOmega = headingController.calculate(
-    //         getPose().getRotation().getRadians(),
-    //         new TrapezoidProfile.State(Math.toRadians(goal), 0),
-    //         new TrapezoidProfile.Constraints(AutoConstants.kMaxAngularSpeedRadiansPerSecond, AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared));
+  public void rotateTo(double x, double y, double goal) {
+    double reqOmega = headingController.calculate(
+        getPose().getRotation().getRadians(), Math.toRadians(goal));
 
-            SmartDashboard.putNumber("ReqOmega", reqOmega);
-        setChassisSpeed(new ChassisSpeeds(x, y, reqOmega));
+    setChassisSpeed(new ChassisSpeeds(x, y, reqOmega));
   }
 
-  public void alignToTarget(){
-    // Pose2d speakerPos = visTables.getBestTagAbsPos((int)visTables.getCam2IDs()[0]).toPose2d();
+  public void holdHeading(double x, double y) {
+    if (currHeading == -1) {
+      currHeading = ((getHeading()+ 90) % 360);
+    }
+    double reqOmega = headingController.calculate(
+        getPose().getRotation().getRadians(), Math.toRadians(currHeading));
+
+    setChassisSpeed(new ChassisSpeeds(x, y, reqOmega));
+  }
+
+  public void alignToTarget() {
+    // Pose2d speakerPos =
+    // visTables.getBestTagAbsPos((int)visTables.getCam2IDs()[0]).toPose2d();
 
     // double xDelta = getPose().getX() - speakerPos.getX();
     // double yDelta = getPose().getY() - speakerPos.getY();
@@ -327,20 +337,6 @@ private DriveState driveState = DriveState.NORMAL;
     frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
     backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
     backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-  }
-
-  public void wheelsTo90() {
-    frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-90)));
-    frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(90)));
-    backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(90)));
-    backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-90)));
-  }
-
-  public void wheelsTo0() {
-    frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
-    frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
-    backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
-    backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
   }
 
   // sets state for all modules
@@ -425,23 +421,23 @@ private DriveState driveState = DriveState.NORMAL;
 
   }
 
-  public double getFLVelo(){
+  public double getFLVelo() {
     return frontLeft.getTranslationalVelocity();
   }
 
-  public double getFRVelo(){
+  public double getFRVelo() {
     return frontRight.getTranslationalVelocity();
   }
 
-    public double getBLVelo(){
+  public double getBLVelo() {
     return backLeft.getTranslationalVelocity();
   }
 
-    public double getBRVelo(){
+  public double getBRVelo() {
     return backRight.getTranslationalVelocity();
   }
 
-  public void setDriveState(DriveState state){
+  public void setDriveState(DriveState state) {
     driveState = state;
   }
 

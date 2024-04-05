@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.launcher.Launcher;
 
-public class AmpCommand extends Command {
+public class AltAmpCommand extends Command {
 
   private Launcher launcher;
 
@@ -16,7 +16,7 @@ public class AmpCommand extends Command {
 
   private double duration = windup + .75;
 
-  public AmpCommand() {
+  public AltAmpCommand() {
   }
 
   @Override
@@ -28,7 +28,7 @@ public class AmpCommand extends Command {
 
       launcher.updatePose();
       launcher.setLauncherOn();
-      // launcher.setSushiOn();
+      launcher.setSushiOn();
   }
 
   @Override

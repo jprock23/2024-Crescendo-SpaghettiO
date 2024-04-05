@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 1.3,
+        "x": 1.05,
         "y": 5.53
       },
       "prevControl": {
-        "x": 1.9748809128387501,
+        "x": 1.7248809128387501,
         "y": 6.137238428323012
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "P2 Start"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],

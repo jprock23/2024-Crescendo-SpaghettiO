@@ -17,15 +17,15 @@
     {
       "anchor": {
         "x": 2.39,
-        "y": 5.56
+        "y": 5.53
       },
       "prevControl": {
         "x": 1.8567437134874287,
-        "y": 5.564955745296107
+        "y": 5.534955745296108
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "MiddleRingFront"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -40,7 +40,7 @@
   "goalEndState": {
     "velocity": 0.0,
     "rotation": 0,
-    "rotateFast": false
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "Test",

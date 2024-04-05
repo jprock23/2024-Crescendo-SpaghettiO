@@ -22,20 +22,21 @@ import frc.robot.Ports;
 public class Launcher {
 
     public enum LauncherState {
-        AMP(-49, 0.9),
+        AMP(-44, 0.9),
+        ALTAMP(-49, 0.9),
         START(0, 0.0),
         TRAP(-70.04991149902344, 0.8),
         LONG(-13.25, 1.0),
         HANDOFF(9,0.5),
         HOVER(-3, 1.0), 
         TOSS(-22, .80),
-        AUTOMIDSHOT(-13.75, 1.0),
+        AUTOMIDSHOT(-12, 1.0),
         //height: ?
         AUTOLEFTSHOT(-13.5, 1.0),
         //height: 20.75
         AUTORIGHTSHOT(-13.5, 1.0),
         //height: ?7
-        SPEAKER(-57.0, 1.0),
+        SPEAKER(-60, 1.0),
         INTERLOPE(0.0, 1.0),
         TEST(-13.25, 1.0);
 
@@ -81,7 +82,7 @@ public class Launcher {
         shootMotor1.restoreFactoryDefaults();
 
         shootMotor1.setSmartCurrentLimit(60);
-        shootMotor1.setIdleMode(IdleMode.kCoast);
+        shootMotor1.setIdleMode(IdleMode.kBrake);
         shootMotor1.setInverted(false);
         shootMotor1.burnFlash();
 
@@ -89,7 +90,7 @@ public class Launcher {
         shootMotor2.restoreFactoryDefaults();
 
         shootMotor2.setSmartCurrentLimit(60);
-        shootMotor2.setIdleMode(IdleMode.kCoast);
+        shootMotor2.setIdleMode(IdleMode.kBrake);
         shootMotor2.setInverted(false);
         shootMotor2.burnFlash();
 
@@ -115,7 +116,7 @@ public class Launcher {
         sushiMotor.restoreFactoryDefaults();
 
         sushiMotor.setSmartCurrentLimit(40);
-        sushiMotor.setIdleMode(IdleMode.kCoast);
+        sushiMotor.setIdleMode(IdleMode.kBrake);
         sushiMotor.burnFlash();
 
         feedForward = new ArmFeedforward(0.012, 0.017, 0.0, 0.0);
@@ -203,9 +204,15 @@ public class Launcher {
 
     public void setLauncherOn() {
         if(launchState == LauncherState.AMP){
+        // shootMotor1.set(-launchState.launchSpeed);
+        // shootMotor2.set(launchState.launchSpeed * 0.1);
+        shootMotor1.set(launchState.launchSpeed * 0.11);
+        shootMotor2.set(launchState.launchSpeed * 0.11);
+        } else if (launchState == LauncherState.ALTAMP){
         shootMotor1.set(-launchState.launchSpeed);
-        shootMotor2.set(launchState.launchSpeed * 0.36);
-        } else {
+        shootMotor2.set(launchState.launchSpeed * 0.1);
+        }
+        else {
         shootMotor1.set(launchState.launchSpeed);
         shootMotor2.set(launchState.launchSpeed);
         }

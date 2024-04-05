@@ -6,6 +6,7 @@
     "Competition",
     "Dallas",
     "More Test",
+    "State",
     "P1",
     "P2",
     "P3",
@@ -14,9 +15,10 @@
   "autoFolders": [
     "Competition",
     "Dallas",
-    "P3",
+    "State",
     "P1",
     "P2",
+    "P3",
     "Test"
   ],
   "defaultMaxVel": 4.0,

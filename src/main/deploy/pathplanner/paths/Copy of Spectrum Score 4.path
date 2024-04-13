@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.2,
-        "y": 4.67
+        "x": 2.4882280533791854,
+        "y": 6.551650026376976
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.648363017770895,
-        "y": 4.670524476470068
+        "x": 1.9652800844063243,
+        "y": 6.156972313944628
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "LeftRingFR"
     },
     {
       "anchor": {
-        "x": 18.0,
-        "y": 1.0
+        "x": 1.3,
+        "y": 5.53
       },
       "prevControl": {
-        "x": 17.491666829487507,
-        "y": 0.9768273382700619
+        "x": 1.9748809128387501,
+        "y": 6.137238428323012
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,21 +32,21 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.5,
-    "maxAcceleration": 2.75,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 800.0,
     "maxAngularAcceleration": 600.0
   },
   "goalEndState": {
-    "velocity": 3.5,
-    "rotation": 0.0,
+    "velocity": 0.0,
+    "rotation": 0,
     "rotateFast": true
   },
   "reversed": false,
   "folder": "Test",
   "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
+    "rotation": 45.0,
+    "velocity": 2.5
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

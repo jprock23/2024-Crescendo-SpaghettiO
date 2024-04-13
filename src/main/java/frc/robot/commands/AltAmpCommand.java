@@ -28,7 +28,6 @@ public class AltAmpCommand extends Command {
 
       launcher.updatePose();
       launcher.setLauncherOn();
-      launcher.setSushiOn();
   }
 
   @Override
@@ -54,7 +53,6 @@ public class AltAmpCommand extends Command {
   public void end(boolean interrupted) {
     launcher.setFlickOff();
     launcher.setLauncherOff();
-    launcher.setSushiOff();
   }
 
   @Override

@@ -3,7 +3,6 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,9 +29,9 @@ import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.launcher.Launcher;
 import frc.robot.subsystems.launcher.Launcher.LauncherState;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import frc.robot.subsystems.swerve.Drivebase;
 import frc.robot.subsystems.swerve.Drivebase.DriveState;
+import frc.robot.subsystems.vision.VisionTablesListener;
 
 import org.littletonrobotics.junction.LoggedRobot;
 
@@ -47,7 +46,7 @@ public class Robot extends LoggedRobot {
   private Intake intake;
   private Launcher launcher;
   private LED litty;
-  // private VisionTablesListener visTables;
+  private VisionTablesListener visTables;
 
   private static XboxController driver;
   private static XboxController operator;
@@ -62,7 +61,6 @@ public class Robot extends LoggedRobot {
   private AltAmpCommand altAmpCommand;
 
   private boolean useCurrentSpike;
-  private boolean hasBrownedOut;
 
   private RotationCommand turn;
 
@@ -78,7 +76,7 @@ public class Robot extends LoggedRobot {
     intake = Intake.getInstance();
     climber = Climber.getInstance();
     litty = LED.getInstance();
-    // visTables = VisionTablesListener.getInstance();
+    visTables = VisionTablesListener.getInstance();
 
     driver = new XboxController(0);
     operator = new XboxController(1);
@@ -137,37 +135,37 @@ public class Robot extends LoggedRobot {
 
     // drivebase.printTranslationalVelocities();
 
-    // visTables.putInfoOnDashboard();
-
-    SmartDashboard.putNumber("Radians", drivebase.getPose().getRotation().getRadians());
+    visTables.printDetects();
 
     SmartDashboard.putNumber("Gyro Angle:", (drivebase.getHeading() + 90) % 360);
     SmartDashboard.putNumber("X-coordinate", drivebase.getPose().getX());
     SmartDashboard.putNumber("Y-coordinate", drivebase.getPose().getY());
 
-    SmartDashboard.putString("Alliance", DriverStation.getAlliance().toString());
+    // SmartDashboard.putString("Alliance", DriverStation.getAlliance().toString());
 
     // SmartDashboard.putNumber("Flipper Current", intake.getFlipperCurrent());
     // SmartDashboard.putNumber("Pivot Current", launcher.getPivotCurrent());
     // SmartDashboard.putNumber("Roller Current", intake.getRollerCurrent());
 
-    SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
-    SmartDashboard.putNumber("Launcher Position", launcher.getPosition());
+    // SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
+    // SmartDashboard.putNumber("Launcher Position", launcher.getPosition());
 
-    SmartDashboard.putString("Intake State", intake.getIntakeState().toString());
-    SmartDashboard.putString("Launcher State", launcher.getLaunchState().toString());
+    // SmartDashboard.putString("Intake State", intake.getIntakeState().toString());
+    // SmartDashboard.putString("Launcher State",
+    // launcher.getLaunchState().toString());
 
     SmartDashboard.putBoolean("Launcher Breakbeam", launcher.getBreakBeam());
     SmartDashboard.putBoolean("Intake Breakbeam", intake.getBreakBeam());
 
-    SmartDashboard.putNumber("Translational Velocity", drivebase.getTranslationalVelocity());
-    SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
+    // SmartDashboard.putNumber("Translational Velocity",
+    // drivebase.getTranslationalVelocity());
+    // SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
 
-    SmartDashboard.putBoolean("Brownout", hasBrownedOut);
+    // SmartDashboard.putBoolean("Brownout", hasBrownedOut);
 
-    if (launcher.hasBrownedOut()) {
-      hasBrownedOut = true;
-    }
+    // SmartDashboard.putNumber("Target Position", launcher.getTestPosition());
+
+    SmartDashboard.putNumber("LeBron Position", launcher.getLeBronPostion());
   }
 
   @Override
@@ -188,7 +186,8 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
-    litty.setRed();
+    // litty.setRed();
+    litty.setBlue();
     if (m_autoSelected != null) {
       m_autoSelected.cancel();
     }
@@ -200,6 +199,10 @@ public class Robot extends LoggedRobot {
     // launcher.updatePose();
 
     /* DRIVE CONTROLS */
+
+    if (!ampCommand.isScheduled()) {
+      launcher.moveLeBron();
+    }
 
     double ySpeed = drivebase.inputDeadband(-driver.getLeftX());
     double xSpeed = drivebase.inputDeadband(driver.getLeftY());
@@ -256,7 +259,7 @@ public class Robot extends LoggedRobot {
 
     if (operator.getBButton()) {
       launcher.eject();
-      launcher.setFlickerOn();
+      launcher.setFlickerPartial();
     }
 
     if (operator.getLeftBumper()) {
@@ -288,6 +291,12 @@ public class Robot extends LoggedRobot {
     // launcher.setPivotOff();
     // }
 
+    if (operator.getLeftStickButtonPressed()) {
+      launcher.increasePosition();
+    } else if (operator.getRightStickButtonPressed()) {
+      launcher.decreasePosition();
+    }
+
     if (operator.getPOV() == 0) {
       launcher.setLauncherState(LauncherState.SPEAKER);
     }
@@ -301,8 +310,12 @@ public class Robot extends LoggedRobot {
       launcher.setLauncherState(LauncherState.LONG);
     }
 
-    if(operator.getYButton()){
+    if (operator.getYButton()) {
       launcher.setLauncherState(LauncherState.ALTAMP);
+    }
+
+    if (operator.getStartButton()) {
+      launcher.setLauncherState(LauncherState.ALTSPEAKER);
     }
 
     if (operator.getXButton()) {
@@ -316,12 +329,11 @@ public class Robot extends LoggedRobot {
         ampCommand.initialize();
         ampCommand.schedule();
         drivebase.setDriveState(DriveState.SLOW);
-      } else if(launcher.getLaunchState() == LauncherState.ALTAMP){
+      } else if (launcher.getLaunchState() == LauncherState.ALTAMP) {
         altAmpCommand.initialize();
         altAmpCommand.schedule();
         drivebase.setDriveState(DriveState.SLOW);
-      }
-        else {
+      } else {
         shootCommand.initialize();
         shootCommand.schedule();
       }
@@ -332,7 +344,6 @@ public class Robot extends LoggedRobot {
       shootCommand.cancel();
       ampCommand.cancel();
       handoffCommand.cancel();
-      launcher.setSushiOff();
       // litty.setBlue();
 
     }

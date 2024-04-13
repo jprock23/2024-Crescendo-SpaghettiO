@@ -158,9 +158,10 @@ public final class Constants {
     // prototype numbers:
     // P: .1 I: 0 D: 0
 
-    public static final double flickerPCoefficient = 0.0;
-    public static final double flickerICoefficient = 0.0;
-    public static final double flickerDCoefficient = 0.0;
+
+    public static final double lebronPCoefficient = 0.08;
+    public static final double lebronICoefficient = 0.0;
+    public static final double lebronDCoefficient = 0.0;
   }
 
   public static final class IntakeConstants {

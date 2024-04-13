@@ -16,7 +16,7 @@ public class Intake {
 
     public enum IntakeState {
         STOP(0.2),
-        GROUND(-12.0),
+        GROUND(-12.5),
         HANDOFF(-4),
         HOLD(-2.5);
 
@@ -33,7 +33,7 @@ public class Intake {
     public IntakeState intakeState = IntakeState.STOP;
     public static Intake instance;
 
-    private double power = 0.9;
+    private double power = 1.0;
     //.9 shot into the launcher
 
     private double flip = 0.25;

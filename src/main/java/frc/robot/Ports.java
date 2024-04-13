@@ -23,7 +23,7 @@ public class Ports {
     public static final int shootMotor2 = 13;
     public static final int flicker = 14;
     public static final int pivotMotor = 10;
-    public static final int sushi = 17;
+    public static final int lebron = 17;
 
     // climbing
     public static final int climber1 = 11;

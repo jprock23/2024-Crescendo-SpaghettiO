@@ -246,7 +246,7 @@ public class Launcher {
     }
 
     public double getTestPosition() {
-        return launchState.position;
+        return LauncherState.TEST.position;
     }
 
     public double getLeBronPostion(){
@@ -343,22 +343,22 @@ public class Launcher {
     }
 
     public void increasePosition() {
-        // LauncherState.TEST.position = LauncherState.TEST.position + increment;
-        if (launchState == LauncherState.SPEAKER) {
-            LauncherState.SPEAKER.position = LauncherState.SPEAKER.position + increment;
-        } else if (launchState == LauncherState.ALTSPEAKER) {
-            LauncherState.ALTSPEAKER.position = LauncherState.ALTSPEAKER.position + increment;
-        }
+        LauncherState.TEST.position = LauncherState.TEST.position - increment;
+        // if (launchState == LauncherState.SPEAKER) {
+        //     LauncherState.SPEAKER.position = LauncherState.SPEAKER.position + increment;
+        // } else if (launchState == LauncherState.ALTSPEAKER) {
+        //     LauncherState.ALTSPEAKER.position = LauncherState.ALTSPEAKER.position + increment;
+        // }
 
     }
 
     public void decreasePosition() {
-        // LauncherState.TEST.position = LauncherState.TEST.position - increment;
-        if (launchState == LauncherState.SPEAKER) {
-            LauncherState.SPEAKER.position = LauncherState.SPEAKER.position - increment;
-        } else if (launchState == LauncherState.ALTSPEAKER) {
-            LauncherState.ALTSPEAKER.position = LauncherState.ALTSPEAKER.position - increment;
-        }
+        LauncherState.TEST.position = LauncherState.TEST.position + increment;
+        // if (launchState == LauncherState.SPEAKER) {
+        //     LauncherState.SPEAKER.position = LauncherState.SPEAKER.position - increment;
+        // } else if (launchState == LauncherState.ALTSPEAKER) {
+        //     LauncherState.ALTSPEAKER.position = LauncherState.ALTSPEAKER.position - increment;
+        // }
 
     }
 

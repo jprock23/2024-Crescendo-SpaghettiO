@@ -148,11 +148,11 @@ public class Robot extends LoggedRobot {
     // SmartDashboard.putNumber("Roller Current", intake.getRollerCurrent());
 
     // SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
-    // SmartDashboard.putNumber("Launcher Position", launcher.getPosition());
+    SmartDashboard.putNumber("Launcher Position", launcher.getPosition());
 
     // SmartDashboard.putString("Intake State", intake.getIntakeState().toString());
-    // SmartDashboard.putString("Launcher State",
-    // launcher.getLaunchState().toString());
+    SmartDashboard.putString("Launcher State",
+    launcher.getLaunchState().toString());
 
     SmartDashboard.putBoolean("Launcher Breakbeam", launcher.getBreakBeam());
     SmartDashboard.putBoolean("Intake Breakbeam", intake.getBreakBeam());
@@ -163,7 +163,7 @@ public class Robot extends LoggedRobot {
 
     // SmartDashboard.putBoolean("Brownout", hasBrownedOut);
 
-    // SmartDashboard.putNumber("Target Position", launcher.getTestPosition());
+    SmartDashboard.putNumber("Test Position", launcher.getTestPosition());
 
     SmartDashboard.putNumber("LeBron Position", launcher.getLeBronPostion());
   }
@@ -227,13 +227,17 @@ public class Robot extends LoggedRobot {
       drivebase.drive(xSpeed, ySpeed, rot);
     }
 
+    if(driver.getPOV() == 180){
+      launcher.setLauncherState(LauncherState.TEST);
+    }
+
     if (driver.getPOV() == 0) {
       drivebase.zeroHeading();
     }
 
-    if (operator.getAButton()) {
-      intake.setIntakeState(IntakeState.GROUND);
-    }
+    // if (operator.getAButton()) {
+    //   intake.setIntakeState(IntakeState.GROUND);
+    // }
 
     if (driver.getRightTriggerAxis() > 0) {
       drivebase.setDriveState(DriveState.SLOW);
@@ -292,9 +296,11 @@ public class Robot extends LoggedRobot {
     // }
 
     if (operator.getLeftStickButtonPressed()) {
-      launcher.increasePosition();
+      // launcher.increasePosition();
+      launcher.increaseIncrement();
     } else if (operator.getRightStickButtonPressed()) {
-      launcher.decreasePosition();
+      launcher.decreaseInrement();
+      // launcher.decreasePosition();
     }
 
     if (operator.getPOV() == 0) {
@@ -310,8 +316,12 @@ public class Robot extends LoggedRobot {
       launcher.setLauncherState(LauncherState.LONG);
     }
 
-    if (operator.getYButton()) {
-      launcher.setLauncherState(LauncherState.ALTAMP);
+    if (operator.getYButtonPressed()) {
+      launcher.increasePosition();
+    }
+
+    if (operator.getAButtonPressed()) {
+      launcher.decreasePosition();
     }
 
     if (operator.getStartButton()) {

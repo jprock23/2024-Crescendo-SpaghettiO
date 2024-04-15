@@ -116,25 +116,14 @@ public class Drivebase extends SubsystemBase {
   }
 
   public void periodic() {
-    Pose2d[] cam1Poses = visTables.getLauncherPoses();
-    double[] cam1Timestamps = visTables.getLauncherTimeStamps();
-
-    if (visTables.getLauncherDetects()) {
-      for (int i = 0; i < visTables.getLauncherPoses().length && i < visTables.getLauncherTimeStamps().length; i++) {
-        poseEstimator.addVisionMeasurement(visTables.getLauncherPoses()[i], visTables.getLauncherTimeStamps()[i]);
+    if (visTables.getLauncherDetects() && visTables.getLauncherPoses().length != 0) {
+      poseEstimator.addVisionMeasurement(visTables.getLauncherPoses()[0], visTables.getLauncherTimeStamps()[0]);
+      visTables.clearLauncherDetections();
       }
-    }
 
-    if (visTables.getLeftDetects()) {
-      for (int i = 0; i < visTables.getLeftPose().length && i < visTables.getLeftTimeStamps().length; i++) {
-        poseEstimator.addVisionMeasurement(visTables.getLeftPose()[i], visTables.getLeftTimeStamps()[i]);
-      }
-    }
-
-    if (visTables.getRightDetects()) {
-      for (int i = 0; i < visTables.getRightPoses().length && i < visTables.getRightTimeStamps().length; i++) {
-        poseEstimator.addVisionMeasurement(visTables.getRightPoses()[i], visTables.getRightTimeStamps()[i]);
-      }
+    if (visTables.getFrontDetects() && visTables.getFrontPoses().length != 0) {
+      poseEstimator.addVisionMeasurement(visTables.getFrontPoses()[0], visTables.getFrontTimeStamps()[0]);
+      visTables.clearRightDetections();
     }
 
     poseEstimator.updateWithTime(Timer.getFPGATimestamp(), Rotation2d.fromDegrees(-gyro.getAngle()), getPositions());

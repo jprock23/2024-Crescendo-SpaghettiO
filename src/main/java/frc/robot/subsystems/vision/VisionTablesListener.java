@@ -29,7 +29,7 @@ public class VisionTablesListener {
             new Rotation3d(0, 0, Units.degreesToRadians(-179)));
             //Math.toRadians(146.5)
     private Transform3d frontCamTransform = new Transform3d(new Translation3d(0.315, -0.27, 0.22),
-            new Rotation3d(Math.toRadians(26), 0, Math.toRadians(-90)));
+            new Rotation3d(0, Units.degreesToRadians(-35), 0));
 
     private static LinkedList<AprilTagDetection> launcherDetections = new LinkedList<AprilTagDetection>();
     private static LinkedList<AprilTagDetection> frontDetections = new LinkedList<AprilTagDetection>();
@@ -94,7 +94,7 @@ public class VisionTablesListener {
 
         Pose2d[] poses = new Pose2d[launcherDetections.size()];
         for (int i = 0; i < poses.length; i++) {
-            Pose3d tagFieldPos = tagLayout.getTagPose(frontDetections.get(i).getID()).get();
+            Pose3d tagFieldPos = tagLayout.getTagPose(launcherDetections.get(i).getID()).get();
             // Transform3d robotPos = launcherDetections.get(i).getTransform().plus(launcherCamtoRobot);
             // robotPos = new Transform3d(
             //         new Translation3d(
@@ -104,8 +104,8 @@ public class VisionTablesListener {
             //         robotPos.getRotation());
             //poses[i] = tagFieldPos.transformBy(robotPos).toPose2d();
 
-            Pose3d camFieldPos = tagFieldPos.transformBy(frontDetections.get(i).getTransform());
-            Pose3d robotPos = camFieldPos.transformBy(frontCamTransform);
+            Pose3d camFieldPos = tagFieldPos.transformBy(launcherDetections.get(i).getTransform());
+            Pose3d robotPos = camFieldPos.transformBy(launcherCamTransform);
             poses[i] = robotPos.toPose2d();
         }
 
@@ -142,8 +142,11 @@ public class VisionTablesListener {
             //         robotPos.getRotation());
             // poses[i] = tagFieldPos.transformBy(robotPos).toPose2d();
 
-            Pose3d camFieldPos = tagFieldPos.transformBy(launcherDetections.get(i).getTransform());
-            Pose3d robotPos = camFieldPos.transformBy(launcherCamTransform);
+            Transform3d transformToRobot = frontDetections.get(i).getTransform();
+            transformToRobot.plus(frontCamTransform);
+            Pose3d robotPos = tagFieldPos.transformBy(transformToRobot);
+            // Pose3d camFieldPos = tagFieldPos.transformBy(frontDetections.get(i).getTransform());
+            // Pose3d robotPos = camFieldPos.transformBy(frontCamTransform);
             poses[i] = robotPos.toPose2d();
         }
         // rightDetections.clear();

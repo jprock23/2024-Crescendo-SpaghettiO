@@ -96,24 +96,22 @@ public class VisionTablesListener {
         Pose2d[] poses = new Pose2d[launcherDetections.size()];
         for (int i = 0; i < poses.length; i++) {
             Pose3d tagFieldPos = tagLayout.getTagPose(launcherDetections.get(i).getID()).get();
-            // Transform3d robotPos = launcherDetections.get(i).getTransform().plus(launcherCamtoRobot);
+            Transform3d robotPos = launcherDetections.get(i).getTransform().plus(launcherCamTransform);
             // robotPos = new Transform3d(
             //         new Translation3d(
             //                 robotPos.getX(),
             //                 -robotPos.getY(),
             //                 -robotPos.getZ()),
             //         robotPos.getRotation());
-            //poses[i] = tagFieldPos.transformBy(robotPos).toPose2d();
+            poses[i] = tagFieldPos.transformBy(robotPos).toPose2d();
 
             // Pose3d camFieldPos = tagFieldPos.transformBy(launcherDetections.get(i).getTransform());
             // Pose3d robotPos = camFieldPos.transformBy(launcherCamTransform);
 
-            //TRY THIS!!!!!
-            //robotPos = tagFieldPos.transformBy(frontDetections.get(i).getTransform()).transformBy(frontCamTransform);
-            Transform3d transformToRobot = launcherDetections.get(i).getTransform();
-            transformToRobot.plus(launcherCamTransform);
-            Pose3d robotPos = tagFieldPos.transformBy(transformToRobot);
-            poses[i] = robotPos.toPose2d();
+            // Transform3d transformToRobot = launcherDetections.get(i).getTransform();
+            // transformToRobot.plus(launcherCamTransform);
+            // Pose3d robotPos = tagFieldPos.transformBy(transformToRobot);
+            // poses[i] = robotPos.toPose2d();
         }
 
         // rightDetections.clear();
@@ -140,25 +138,25 @@ public class VisionTablesListener {
         Pose2d[] poses = new Pose2d[frontDetections.size()];
         for (int i = 0; i < poses.length; i++) {
             Pose3d tagFieldPos = tagLayout.getTagPose(frontDetections.get(i).getID()).get();
-            // Transform3d robotPos = frontDetections.get(i).getTransform().plus(frontCamTransform);
+            Transform3d robotPos = frontDetections.get(i).getTransform().plus(frontCamTransform);
             // robotPos = new Transform3d(
             //         new Translation3d(
             //                 robotPos.getX(),
             //                 -robotPos.getY(),
             //                 -robotPos.getZ()),
             //         robotPos.getRotation());
-            // poses[i] = tagFieldPos.transformBy(robotPos).toPose2d();
+            poses[i] = tagFieldPos.transformBy(robotPos).toPose2d();
 
-            Transform3d transformToRobot = frontDetections.get(i).getTransform();
-            transformToRobot.plus(frontCamTransform);
-            Pose3d robotPos = tagFieldPos.transformBy(transformToRobot);
+            // Transform3d transformToRobot = frontDetections.get(i).getTransform();
+            // transformToRobot.plus(frontCamTransform);
+            // Pose3d robotPos = tagFieldPos.transformBy(transformToRobot);
 
             //TRY THIS!!!!!
             //robotPos = tagFieldPos.transformBy(frontDetections.get(i).getTransform()).transformBy(frontCamTransform);
 
             // Pose3d camFieldPos = tagFieldPos.transformBy(frontDetections.get(i).getTransform());
             // Pose3d robotPos = camFieldPos.transformBy(frontCamTransform);
-            poses[i] = robotPos.toPose2d();
+            // poses[i] = robotPos.toPose2d();
         }
         // rightDetections.clear();
         return poses;

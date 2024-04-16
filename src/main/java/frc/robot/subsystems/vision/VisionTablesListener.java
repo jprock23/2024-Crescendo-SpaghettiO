@@ -31,6 +31,7 @@ public class VisionTablesListener {
     private Transform3d frontCamTransform = new Transform3d(new Translation3d(0.315, -0.27, 0.22),
             new Rotation3d(0, Units.degreesToRadians(-35), 0));
 
+
     private static LinkedList<AprilTagDetection> launcherDetections = new LinkedList<AprilTagDetection>();
     private static LinkedList<AprilTagDetection> frontDetections = new LinkedList<AprilTagDetection>();
 
@@ -104,8 +105,14 @@ public class VisionTablesListener {
             //         robotPos.getRotation());
             //poses[i] = tagFieldPos.transformBy(robotPos).toPose2d();
 
-            Pose3d camFieldPos = tagFieldPos.transformBy(launcherDetections.get(i).getTransform());
-            Pose3d robotPos = camFieldPos.transformBy(launcherCamTransform);
+            // Pose3d camFieldPos = tagFieldPos.transformBy(launcherDetections.get(i).getTransform());
+            // Pose3d robotPos = camFieldPos.transformBy(launcherCamTransform);
+
+            //TRY THIS!!!!!
+            //robotPos = tagFieldPos.transformBy(frontDetections.get(i).getTransform()).transformBy(frontCamTransform);
+            Transform3d transformToRobot = launcherDetections.get(i).getTransform();
+            transformToRobot.plus(launcherCamTransform);
+            Pose3d robotPos = tagFieldPos.transformBy(transformToRobot);
             poses[i] = robotPos.toPose2d();
         }
 
@@ -145,6 +152,10 @@ public class VisionTablesListener {
             Transform3d transformToRobot = frontDetections.get(i).getTransform();
             transformToRobot.plus(frontCamTransform);
             Pose3d robotPos = tagFieldPos.transformBy(transformToRobot);
+
+            //TRY THIS!!!!!
+            //robotPos = tagFieldPos.transformBy(frontDetections.get(i).getTransform()).transformBy(frontCamTransform);
+
             // Pose3d camFieldPos = tagFieldPos.transformBy(frontDetections.get(i).getTransform());
             // Pose3d robotPos = camFieldPos.transformBy(frontCamTransform);
             poses[i] = robotPos.toPose2d();

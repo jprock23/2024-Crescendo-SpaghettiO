@@ -42,10 +42,11 @@ public class AprilTagDetection {
         //     trl.rotateBy(EDN_TO_NWU), 
         //     new Rotation3d(rot.getX(), rot.getY(), -rot.getZ())
         // );
-
+        Transform3d trs = new Transform3d(trl, rot);
         var EDN = CoordinateSystem.EDN();
         var NWU = CoordinateSystem.NWU();
-        trl = CoordinateSystem.convert(trl, EDN, NWU);
+        //trl = CoordinateSystem.convert(trl, EDN, NWU);
+        trl = CoordinateSystem.convert(trs.getTranslation().rotateBy(trs.inverse().getRotation()), EDN, NWU);
         rot = CoordinateSystem.convert(new Rotation3d(), EDN, NWU).plus(CoordinateSystem.convert(rot, EDN, NWU));
         
         transform = new Transform3d(trl, rot);

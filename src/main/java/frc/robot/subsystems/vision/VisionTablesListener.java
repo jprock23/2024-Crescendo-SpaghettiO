@@ -102,7 +102,13 @@ public class VisionTablesListener {
         Pose2d[] poses = new Pose2d[launcherDetections.size()];
         for (int i = 0; i < poses.length; i++) {
             Pose3d tagFieldPos = tagLayout.getTagPose(launcherDetections.get(i).getID()).get();
-            Transform3d robotPos = launcherDetections.get(i).getTransform().plus(launcherCamTransform);
+            Transform3d tagToCam = launcherDetections.get(i).getTransform();
+            Transform3d camToRobot = new Transform3d(
+                    launcherCamTransform.getTranslation(),
+                    launcherCamTransform.getRotation().rotateBy(new Rotation3d(0, 0, tagToCam.getRotation().getZ()))
+                );
+            //Transform3d robotPos = launcherDetections.get(i).getTransform().plus(launcherCamTransform);
+            Transform3d robotPos = tagToCam.plus(camToRobot);
             // robotPos = new Transform3d(
             //         new Translation3d(
             //                 robotPos.getX(),

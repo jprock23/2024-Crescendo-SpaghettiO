@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.subsystems.IO.DigitalInputs;
 import frc.robot.subsystems.swerve.Drivebase;
+import frc.robot.subsystems.vision.VisionTablesListener;
 import frc.robot.Ports;
 
 public class Launcher {
@@ -95,8 +96,7 @@ public class Launcher {
 
     public static Launcher instance;
 
-    public boolean ansh;
-
+public VisionTablesListener visTables;
     public Launcher() {
         shootMotor1 = new CANSparkMax(Ports.shootMotor1, MotorType.kBrushless);
         shootMotor1.restoreFactoryDefaults();
@@ -172,6 +172,8 @@ public class Launcher {
 
         breakBeam = DigitalInputs.getInstance();
 
+        visTables = VisionTablesListener.getInstance();
+
     }
 
     public void updatePose() {
@@ -198,27 +200,30 @@ public class Launcher {
     }
 
     public void interpolateAngle() {
-        double deltaX = Drivebase.getStaticPose().getX() + .0381;
-        double deltaY = Drivebase.getStaticPose().getY() - 5.56;
-        double delta = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+        double deltaX = visTables.getVisX();
+        // double deltaY = visTables.getVisY();
+        // double delta = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
         double position;
 
-        position = -28.7232 / Math.pow(delta, .8333);
+        if(deltaX > 1){
+                    position = -16.1878 * Math.pow(Math.atan(2/deltaX), 11/8);
+        } else {
+                    position = -20.1878 * Math.pow(Math.atan(2/deltaX), 11/8);
+        }
+
+        position = -16.1878 * Math.pow(Math.atan(2/deltaX), 11/8);
 
         LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position,
                 LauncherState.HOVER.position);
-        // setLauncherState(LauncherState.INTERLOPE);
+        setLauncherState(LauncherState.INTERLOPE);
     }
 
     public void setPivotPower() {
-        // pivotMotor.set(anglePower + feedForward.calculate(encoder.getPosition(), 0));
         pivotMotor.set(anglePower + feedForward.calculate(absEncoder.getPosition(), 0));
 
     }
 
     public void setReversePivotPower() {
-        // pivotMotor.set(-anglePower + feedForward.calculate(encoder.getPosition(),
-        // 0));
         pivotMotor.set(anglePower + feedForward.calculate(absEncoder.getPosition(), 0));
     }
 
@@ -246,7 +251,7 @@ public class Launcher {
     }
 
     public double getTestPosition() {
-        return LauncherState.TEST.position;
+        return LauncherState.INTERLOPE.position;
     }
 
     public double getLeBronPostion(){
@@ -300,14 +305,8 @@ public class Launcher {
         flicker.set(0);
     }
 
-    // public double getRelativePosition(){
-    // return encoder.getPosition() + 16.4;
-    // }
-
     public double getPosition() {
         return encoder.getPosition();
-
-        // return absEncoder.getPosition();
     }
 
     public boolean getBreakBeam() {

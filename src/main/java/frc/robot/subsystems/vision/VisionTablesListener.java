@@ -32,11 +32,9 @@ public class VisionTablesListener {
 
             // private Transform3d frontCamTransform = new Transform3d(new Translation3d(0.3302, -0.2762504, 0.2306066),
             // new Rotation3d(0, Math.toRadians(-35), Math.toRadians(-90)));
-    private Transform3d frontCamTransform = new Transform3d(new Translation3d(0.25, 0.78, -0.22),
+    private Transform3d frontCamTransform = new Transform3d(new Translation3d(0.30, -0.26, -0.22),
         // private Transform3d frontCamTransform = new Transform3d(new Translation3d(0.315, -0.27, -0.23),
-            new Rotation3d(0, Units.degreesToRadians(-35), 0));
-
-
+            new Rotation3d(0, Math.toRadians(33), 0));
 
     private static LinkedList<AprilTagDetection> launcherDetections = new LinkedList<AprilTagDetection>();
     private static LinkedList<AprilTagDetection> frontDetections = new LinkedList<AprilTagDetection>();
@@ -103,12 +101,14 @@ public class VisionTablesListener {
         for (int i = 0; i < poses.length; i++) {
             Pose3d tagFieldPos = tagLayout.getTagPose(launcherDetections.get(i).getID()).get();
             Transform3d robotPos = launcherDetections.get(i).getTransform().plus(launcherCamTransform);
-            // robotPos = new Transform3d(
-            //         new Translation3d(
-            //                 robotPos.getX(),
-            //                 -robotPos.getY(),
-            //                 -robotPos.getZ()),
-            //         robotPos.getRotation());
+            robotPos = new Transform3d(
+                    new Translation3d(
+                        robotPos.getX(),
+                        -robotPos.getY(),
+                        -robotPos.getZ()
+                    ),
+                    robotPos.getRotation()
+                );
             poses[i] = tagFieldPos.transformBy(robotPos).toPose2d();
 
             // Pose3d camFieldPos = tagFieldPos.transformBy(launcherDetections.get(i).getTransform());
@@ -139,20 +139,41 @@ public class VisionTablesListener {
         Pose2d[] poses = new Pose2d[frontDetections.size()];
         for (int i = 0; i < poses.length; i++) {
             Pose3d tagFieldPos = tagLayout.getTagPose(frontDetections.get(i).getID()).get();
-            // Transform3d robotPos = frontDetections.get(i).getTransform().plus(frontCamTransform);
-            // robotPos = new Transform3d(
-            //         new Translation3d(
-            //                 robotPos.getX(),
-            //                 -robotPos.getY(),
-            //                 -robotPos.getZ()),
-            //         robotPos.getRotation());
-            // poses[i] = tagFieldPos.transformBy(robotPos).toPose2d();
+            Transform3d camTransform = new Transform3d(
+                frontCamTransform.getTranslation(),
+                new Rotation3d(
+                    0,
+                    0,
+                    frontCamTransform.getRotation().getZ() + frontDetections.get(i).getTransform().getRotation().getZ()
+                )
+            );
+            Transform3d robotPos = frontDetections.get(i).getTransform().plus(camTransform);
+            robotPos = new Transform3d(
+                    new Translation3d(
+                        robotPos.getX() + .15,
+                        -robotPos.getY() + .58,
+                        -robotPos.getZ()
+                    ),
+                    robotPos.getRotation()
+                );
+            poses[i] = tagFieldPos.transformBy(robotPos).toPose2d();
 
-            Pose3d camFieldPos = tagFieldPos.transformBy(frontDetections.get(i).getTransform());
-            Pose3d robotPos = camFieldPos.transformBy(frontCamTransform);
-            poses[i] = robotPos.toPose2d();
+            SmartDashboard.putNumber("Vis    b   X", poses[i].getX());
+            SmartDashboard.putNumber("VisY", poses[i].getY());
+
+            // Pose3d camFieldPos = tagFieldPos.transformBy(frontDetections.get(i).getTransform());
+            // Pose3d robotPos = camFieldPos.transformBy(frontCamTransform);
+            // poses[i] = robotPos.toPose2d();
         }
         return poses;
+    }
+
+    public double getVisX(){
+        return getFrontPoses()[0].getX();
+    }
+
+        public double getVisY(){
+         return getFrontPoses()[0].getY();
     }
 
     public double[] getFrontTimeStamps() {

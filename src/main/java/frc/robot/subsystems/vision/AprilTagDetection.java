@@ -37,19 +37,16 @@ public class AprilTagDetection {
         
         //Transfrom must be converted from EDN to NWU
         
-        rot = EDN_TO_NWU.unaryMinus().plus(rot.plus(EDN_TO_NWU));
+        // rot = EDN_TO_NWU.unaryMinus().plus(rot.plus(EDN_TO_NWU));
+        // transform = new Transform3d(
+        //     trl.rotateBy(EDN_TO_NWU), 
+        //     new Rotation3d(rot.getX(), rot.getY(), -rot.getZ())
+        // );
+        rot = rot.rotateBy(EDN_TO_NWU);
         transform = new Transform3d(
-            trl.rotateBy(EDN_TO_NWU), 
-            new Rotation3d(rot.getX(), rot.getY(), rot.getZ())
+            trl.rotateBy(EDN_TO_NWU),
+            rot
         );
-        // Transform3d trs = new Transform3d(trl, rot);
-        // var EDN = CoordinateSystem.EDN();
-        // var NWU = CoordinateSystem.NWU();
-        //trl = CoordinateSystem.convert(trl, EDN, NWU);
-        // trl = CoordinateSystem.convert(trs.getTranslation().rotateBy(trs.inverse().getRotation()), EDN, NWU);
-        // rot = CoordinateSystem.convert(new Rotation3d(), EDN, NWU).plus(CoordinateSystem.convert(rot, EDN, NWU));
-        
-        // transform = new Transform3d(trl, rot);
 
         timestamp = Double.parseDouble(splitSerial[8]);
     }

@@ -235,9 +235,9 @@ public class Robot extends LoggedRobot {
       drivebase.zeroHeading();
     }
 
-    // if (operator.getAButton()) {
-    //   intake.setIntakeState(IntakeState.GROUND);
-    // }
+    if (operator.getYButton()) {
+      intake.setIntakeState(IntakeState.GROUND);
+    }
 
     if (driver.getRightTriggerAxis() > 0) {
       drivebase.setDriveState(DriveState.SLOW);
@@ -246,14 +246,6 @@ public class Robot extends LoggedRobot {
     }
 
     /* INTAKE CONTROLS */
-
-    // if(operator.getAButton()){
-    // launcher.setLauncherState(LauncherState.AUTORIGHTSHOT);
-    // }
-
-    // if(operator.getYButton()){
-    // launcher.setLauncherState(LauncherState.AUTOMIDSHOT);
-    // }
 
     if (operator.getRightBumper() && !useCurrentSpike) {
       handoffCommand.schedule();
@@ -316,12 +308,8 @@ public class Robot extends LoggedRobot {
       launcher.setLauncherState(LauncherState.LONG);
     }
 
-    if (operator.getYButtonPressed()) {
-      launcher.increasePosition();
-    }
-
     if (operator.getAButtonPressed()) {
-      launcher.decreasePosition();
+      launcher.interpolateAngle();
     }
 
     if (operator.getStartButton()) {

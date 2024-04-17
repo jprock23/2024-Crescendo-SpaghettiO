@@ -1,5 +1,7 @@
 package frc.robot.subsystems.launcher;
 
+import java.util.HashMap;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -51,13 +53,13 @@ public class Launcher {
         }
     }
 
-    public enum LeBronTeam{
+    public enum LeBronTeam {
         CAVS(-2.0),
         LAKERS(-23);
 
         public double position;
 
-        private LeBronTeam(double position){
+        private LeBronTeam(double position) {
             this.position = position;
         }
     }
@@ -96,7 +98,11 @@ public class Launcher {
 
     public static Launcher instance;
 
-public VisionTablesListener visTables;
+    public VisionTablesListener visTables;
+
+    public HashMap<Double, Double> lookupTable = new HashMap<>();
+    public double[] positions = new double[]{1.62, 1.93, 2.34, 2.41, 2.63, 2.71, 2.94, 3.01, 3.3, 4.14};
+
     public Launcher() {
         shootMotor1 = new CANSparkMax(Ports.shootMotor1, MotorType.kBrushless);
         shootMotor1.restoreFactoryDefaults();
@@ -174,12 +180,23 @@ public VisionTablesListener visTables;
 
         visTables = VisionTablesListener.getInstance();
 
+        lookupTable.put(2.94, -10.25);
+        lookupTable.put(2.41, -13.25);
+        lookupTable.put(2.71, -8.25);
+        lookupTable.put(1.62, -18.25);
+        lookupTable.put(2.63, -8.25);
+        lookupTable.put(2.34, -13.25);
+        lookupTable.put(3.01, -10.25);
+        lookupTable.put(3.3, -7.5);
+        lookupTable.put(1.93, -16.25);
+        lookupTable.put(4.14, -7.25);
+
     }
 
     public void updatePose() {
 
         pivotController1.setReference(launchState.position, CANSparkMax.ControlType.kPosition, 0,
-        feedForward.calculate(encoder.getPosition(), 0));
+                feedForward.calculate(encoder.getPosition(), 0));
 
         // lebronMotor.set(lebronFeedForward.calculate(boxScore.getPosition(), 0));
 
@@ -194,9 +211,9 @@ public VisionTablesListener visTables;
 
     }
 
-    public void moveLeBron(){
-      lebronController.setReference(leBronTeam.position, CANSparkMax.ControlType.kPosition, 0,
-        lebronFeedForward.calculate(boxScore.getPosition(), 0));
+    public void moveLeBron() {
+        lebronController.setReference(leBronTeam.position, CANSparkMax.ControlType.kPosition, 0,
+                lebronFeedForward.calculate(boxScore.getPosition(), 0));
     }
 
     public void interpolateAngle() {
@@ -205,17 +222,28 @@ public VisionTablesListener visTables;
         // double delta = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
         double position;
 
-        if(deltaX > 1){
-                    position = -16.1878 * Math.pow(Math.atan(2/deltaX), 11/8);
+        if (deltaX > 1) {
+            position = -16.1878 * Math.pow(Math.atan(2 / deltaX), 11 / 8);
         } else {
-                    position = -20.1878 * Math.pow(Math.atan(2/deltaX), 11/8);
+            position = -20.1878 * Math.pow(Math.atan(2 / deltaX), 11 / 8);
         }
 
-        position = -16.1878 * Math.pow(Math.atan(2/deltaX), 11/8);
+        position = -16.1878 * Math.pow(Math.atan(2 / deltaX), 11 / 8);
 
         LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position,
                 LauncherState.HOVER.position);
         setLauncherState(LauncherState.INTERLOPE);
+    }
+
+    public void lookUpPosition(){
+        double position = visTables.getVisX();
+
+        if(lookupTable.containsKey(position)){
+            LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position,
+                LauncherState.HOVER.position);
+        } else{
+            
+        }
     }
 
     public void setPivotPower() {
@@ -234,15 +262,15 @@ public VisionTablesListener visTables;
         shootMotor1.set(launchState.launchSpeed);
     }
 
-    public void setLeBronOn(){
+    public void setLeBronOn() {
         lebronMotor.set(-0.5);
     }
 
-    public void setLeBronReverse(){
+    public void setLeBronReverse() {
         lebronMotor.set(0.5);
     }
 
-    public void setLeBronOff(){
+    public void setLeBronOff() {
         lebronMotor.set(0.0);
     }
 
@@ -254,7 +282,7 @@ public VisionTablesListener visTables;
         return LauncherState.INTERLOPE.position;
     }
 
-    public double getLeBronPostion(){
+    public double getLeBronPostion() {
         return boxScore.getPosition();
     }
 
@@ -329,7 +357,7 @@ public VisionTablesListener visTables;
         launchState = state;
     }
 
-    public void setLeBronTeam(LeBronTeam team){
+    public void setLeBronTeam(LeBronTeam team) {
         leBronTeam = team;
     }
 
@@ -344,9 +372,10 @@ public VisionTablesListener visTables;
     public void increasePosition() {
         LauncherState.TEST.position = LauncherState.TEST.position - increment;
         // if (launchState == LauncherState.SPEAKER) {
-        //     LauncherState.SPEAKER.position = LauncherState.SPEAKER.position + increment;
+        // LauncherState.SPEAKER.position = LauncherState.SPEAKER.position + increment;
         // } else if (launchState == LauncherState.ALTSPEAKER) {
-        //     LauncherState.ALTSPEAKER.position = LauncherState.ALTSPEAKER.position + increment;
+        // LauncherState.ALTSPEAKER.position = LauncherState.ALTSPEAKER.position +
+        // increment;
         // }
 
     }
@@ -354,9 +383,10 @@ public VisionTablesListener visTables;
     public void decreasePosition() {
         LauncherState.TEST.position = LauncherState.TEST.position + increment;
         // if (launchState == LauncherState.SPEAKER) {
-        //     LauncherState.SPEAKER.position = LauncherState.SPEAKER.position - increment;
+        // LauncherState.SPEAKER.position = LauncherState.SPEAKER.position - increment;
         // } else if (launchState == LauncherState.ALTSPEAKER) {
-        //     LauncherState.ALTSPEAKER.position = LauncherState.ALTSPEAKER.position - increment;
+        // LauncherState.ALTSPEAKER.position = LauncherState.ALTSPEAKER.position -
+        // increment;
         // }
 
     }

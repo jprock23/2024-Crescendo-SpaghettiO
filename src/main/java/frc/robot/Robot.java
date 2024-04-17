@@ -28,6 +28,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.launcher.Launcher;
 import frc.robot.subsystems.launcher.Launcher.LauncherState;
+import frc.robot.subsystems.launcher.Launcher.LeBronTeam;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
 import frc.robot.subsystems.swerve.Drivebase.DriveState;
@@ -152,7 +153,7 @@ public class Robot extends LoggedRobot {
 
     // SmartDashboard.putString("Intake State", intake.getIntakeState().toString());
     SmartDashboard.putString("Launcher State",
-    launcher.getLaunchState().toString());
+        launcher.getLaunchState().toString());
 
     SmartDashboard.putBoolean("Launcher Breakbeam", launcher.getBreakBeam());
     SmartDashboard.putBoolean("Intake Breakbeam", intake.getBreakBeam());
@@ -227,7 +228,7 @@ public class Robot extends LoggedRobot {
       drivebase.drive(xSpeed, ySpeed, rot);
     }
 
-    if(driver.getPOV() == 180){
+    if (driver.getPOV() == 180) {
       launcher.setLauncherState(LauncherState.TEST);
     }
 
@@ -261,7 +262,9 @@ public class Robot extends LoggedRobot {
     if (operator.getLeftBumper()) {
       intake.setIntakeState(IntakeState.STOP);
       launcher.setLauncherState(LauncherState.HOVER);
+      launcher.setLeBronTeam(LeBronTeam.CAVS);
       launcher.updatePose();
+      launcher.moveLeBron();
       launcher.setLauncherOff();
       launcher.setFlickOff();
       litty.setBlue();
@@ -288,11 +291,11 @@ public class Robot extends LoggedRobot {
     // }
 
     if (operator.getLeftStickButtonPressed()) {
-      // launcher.increasePosition();
-      launcher.increaseIncrement();
+      launcher.increasePosition();
+      // launcher.increaseIncrement();
     } else if (operator.getRightStickButtonPressed()) {
-      launcher.decreaseInrement();
-      // launcher.decreasePosition();
+      // launcher.decreaseInrement();
+      launcher.decreasePosition();
     }
 
     if (operator.getPOV() == 0) {
@@ -308,12 +311,15 @@ public class Robot extends LoggedRobot {
       launcher.setLauncherState(LauncherState.LONG);
     }
 
+        // launcher.interpolateAngle();
+      // launcher.lookUpPosition();
+
     if (operator.getAButtonPressed()) {
-      launcher.interpolateAngle();
+      launcher.setLauncherState(LauncherState.INTERLOPE);
     }
 
     if (operator.getStartButton()) {
-      launcher.setLauncherState(LauncherState.ALTSPEAKER);
+      useCurrentSpike = !useCurrentSpike;
     }
 
     if (operator.getXButton()) {

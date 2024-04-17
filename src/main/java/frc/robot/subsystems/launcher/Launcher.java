@@ -9,6 +9,8 @@ import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax.FaultID;
@@ -18,6 +20,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.subsystems.IO.DigitalInputs;
 import frc.robot.subsystems.swerve.Drivebase;
+import frc.robot.subsystems.swerve.Drivebase.DriveState;
 import frc.robot.subsystems.vision.VisionTablesListener;
 import frc.robot.Ports;
 
@@ -54,7 +57,7 @@ public class Launcher {
     }
 
     public enum LeBronTeam {
-        CAVS(-2.0),
+        CAVS(-0.25),
         LAKERS(-23);
 
         public double position;
@@ -100,8 +103,10 @@ public class Launcher {
 
     public VisionTablesListener visTables;
 
-    public HashMap<Double, Double> lookupTable = new HashMap<>();
-    public double[] positions = new double[]{1.62, 1.93, 2.34, 2.41, 2.63, 2.71, 2.94, 3.01, 3.3, 4.14};
+    private Alliance alliance;
+
+    private HashMap<Double, Double> lookupTable = new HashMap<>();
+    private double[] bluePositions = new double[] { 1.62, 1.93, 2.34, 2.41, 2.63, 2.71, 2.94, 3.01, 3.3, 4.14 };
 
     public Launcher() {
         shootMotor1 = new CANSparkMax(Ports.shootMotor1, MotorType.kBrushless);
@@ -142,7 +147,7 @@ public class Launcher {
         lebronMotor.restoreFactoryDefaults();
 
         lebronMotor.setSmartCurrentLimit(20);
-        lebronMotor.setIdleMode(IdleMode.kCoast);
+        lebronMotor.setIdleMode(IdleMode.kBrake);
 
         feedForward = new ArmFeedforward(0.012, 0.017, 0.0, 0.0);
         // u:.023 l:.011 mid:.017 ks:.012
@@ -179,6 +184,10 @@ public class Launcher {
         breakBeam = DigitalInputs.getInstance();
 
         visTables = VisionTablesListener.getInstance();
+
+        if (DriverStation.getAlliance().isPresent()) {
+            alliance = DriverStation.getAlliance().get();
+        }
 
         lookupTable.put(2.94, -10.25);
         lookupTable.put(2.41, -13.25);
@@ -217,32 +226,62 @@ public class Launcher {
     }
 
     public void interpolateAngle() {
-        double deltaX = visTables.getVisX();
-        // double deltaY = visTables.getVisY();
-        // double delta = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
-        double position;
+        double deltaX;
 
-        if (deltaX > 1) {
-            position = -16.1878 * Math.pow(Math.atan(2 / deltaX), 11 / 8);
-        } else {
-            position = -20.1878 * Math.pow(Math.atan(2 / deltaX), 11 / 8);
+        if (visTables.getFrontDetects()) {
+            if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                deltaX = visTables.getVisX() - .08;
+            } else {
+                deltaX = 16.579342 - visTables.getVisX() + .2;
+            }
+            deltaX = visTables.getVisX();
+            double position;
+
+            if (deltaX > 1) {
+                position = -16.1878 * Math.pow(Math.atan(2 / deltaX), 11 / 8);
+            } else {
+                position = -20.1878 * Math.pow(Math.atan(2 / deltaX), 11 / 8);
+            }
+
+            LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position,
+                    LauncherState.HOVER.position);
+            // setLauncherState(LauncherState.INTERLOPE);
         }
-
-        position = -16.1878 * Math.pow(Math.atan(2 / deltaX), 11 / 8);
-
-        LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position,
-                LauncherState.HOVER.position);
-        setLauncherState(LauncherState.INTERLOPE);
     }
 
-    public void lookUpPosition(){
-        double position = visTables.getVisX();
+    public void lookUpPosition() {
+        double pose;
 
-        if(lookupTable.containsKey(position)){
-            LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position,
-                LauncherState.HOVER.position);
-        } else{
-            
+        if (visTables.getFrontDetects()) {
+            if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                pose = visTables.getVisX() - 0.8;
+            } else {
+                pose = 16.579342 - visTables.getVisX() + .2;
+            }
+            double position;
+
+            if (lookupTable.containsKey(pose)) {
+                position = lookupTable.get(pose);
+            } else {
+                int upper = 0;
+                int lower = 0;
+                for (int i = 0; i < bluePositions.length; i++) {
+                    if (pose < bluePositions[0]) {
+                        pose = LauncherState.ALTSPEAKER.position;
+                        break;
+                    } else if (pose > bluePositions[bluePositions.length]) {
+                        pose = LauncherState.HOVER.position;
+                    } else if (pose > bluePositions[upper]) {
+                        lower = upper;
+                        upper = i + 1;
+                    }
+                }
+
+                position = pose * ((bluePositions[upper] - bluePositions[lower]) / upper - lower);
+                LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position,
+                        LauncherState.HOVER.position);
+                // setLauncherState(LauncherState.INTERLOPE);
+            }
         }
     }
 
@@ -371,12 +410,12 @@ public class Launcher {
 
     public void increasePosition() {
         LauncherState.TEST.position = LauncherState.TEST.position - increment;
-        // if (launchState == LauncherState.SPEAKER) {
-        // LauncherState.SPEAKER.position = LauncherState.SPEAKER.position + increment;
-        // } else if (launchState == LauncherState.ALTSPEAKER) {
-        // LauncherState.ALTSPEAKER.position = LauncherState.ALTSPEAKER.position +
-        // increment;
-        // }
+        if (launchState == LauncherState.SPEAKER) {
+            LauncherState.SPEAKER.position = LauncherState.SPEAKER.position + increment;
+        } else if (launchState == LauncherState.ALTSPEAKER) {
+            LauncherState.ALTSPEAKER.position = LauncherState.ALTSPEAKER.position +
+                    increment;
+        }
 
     }
 

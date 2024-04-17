@@ -6,8 +6,6 @@ import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.*;
 
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,9 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
@@ -28,7 +24,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.subsystems.vision.VisionTablesListener;
 
 public class Drivebase extends SubsystemBase {
   private static Drivebase instance;
@@ -46,8 +41,6 @@ public class Drivebase extends SubsystemBase {
 
   private DriveState driveState = DriveState.NORMAL;
 
-  // private VisionTablesListener visTables;
-
   public SwerveModule frontLeft;
   public SwerveModule backLeft;
   public SwerveModule frontRight;
@@ -62,12 +55,8 @@ public class Drivebase extends SubsystemBase {
   Field2d fieldmap = new Field2d();
 
   private static SwerveDrivePoseEstimator poseEstimator;
-  private static VisionTablesListener visTables;
 
   private ProfiledPIDController headingController;
-
-  private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
-  private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(1));
 
   public double currHeading;
 
@@ -89,11 +78,9 @@ public class Drivebase extends SubsystemBase {
     gyro.setAngleAdjustment(90);
     gyro.zeroYaw();
 
-    visTables = VisionTablesListener.getInstance();
-
     poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics,
         Rotation2d.fromDegrees(-gyro.getAngle()),
-        getPositions(), new Pose2d(), stateStdDevs, visionMeasurementStdDevs);
+        getPositions(), new Pose2d());
 
     config = new HolonomicPathFollowerConfig(new PIDConstants(1.4, 0, 0),
         new PIDConstants(1.1, 0.0000, 0.0),
@@ -116,27 +103,15 @@ public class Drivebase extends SubsystemBase {
   }
 
   public void periodic() {
-    if (visTables.getLauncherDetects() && visTables.getLauncherPoses().length != 0) {
-      poseEstimator.addVisionMeasurement(visTables.getLauncherPoses()[0], visTables.getLauncherTimeStamps()[0]);
-      visTables.clearLauncherDetections();
-      }
-
-    if (visTables.getFrontDetects() && visTables.getFrontPoses().length != 0) {
-      poseEstimator.addVisionMeasurement(visTables.getFrontPoses()[0], visTables.getFrontTimeStamps()[0]);
-      visTables.clearRightDetections();
-    }
-
-    poseEstimator.updateWithTime(Timer.getFPGATimestamp(), Rotation2d.fromDegrees(-gyro.getAngle()), getPositions());
+    poseEstimator.updateWithTime(Timer.getFPGATimestamp(), Rotation2d.fromDegrees(getHeading()), getPositions());
   }
 
   // Returns the currently-estimated pose of the robot
   public Pose2d getPose() {
-
     return poseEstimator.getEstimatedPosition();
   }
 
   public static Pose2d getStaticPose() {
-
     return poseEstimator.getEstimatedPosition();
   }
 
@@ -148,9 +123,7 @@ public class Drivebase extends SubsystemBase {
   }
 
   public void resetOdometry() {
-
     poseEstimator.resetPosition(Rotation2d.fromDegrees(-gyro.getAngle()), getPositions(), getPose());
-
   }
 
   public void drive(double forward, double side, double rot) {

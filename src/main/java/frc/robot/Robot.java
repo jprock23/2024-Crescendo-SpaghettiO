@@ -65,7 +65,7 @@ public class Robot extends LoggedRobot {
 
   private RotationCommand turn;
 
-  private SendableChooser<Command> m_chooser;
+  private SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   StructPublisher<Pose3d> publisher = NetworkTableInstance.getDefault()
       .getStructTopic("Pose", Pose3d.struct).publish();
@@ -107,8 +107,24 @@ public class Robot extends LoggedRobot {
     NamedCommands.registerCommand("AutoPreload", new AutoPreload());
     NamedCommands.registerCommand("AltRevLauncher", new AltRevLauncher());
 
-    m_chooser = AutoBuilder.buildAutoChooser();
+    m_chooser.addOption("P1 4L Long", new PathPlannerAuto("P1 4L Long"));
+    m_chooser.addOption("P1 4L", new PathPlannerAuto("P1 4L"));
+
+    m_chooser.addOption("P2 3L", new PathPlannerAuto("P2 3L"));
+    m_chooser.addOption("P2 3ML", new PathPlannerAuto("P2 3ML"));
+    m_chooser.addOption("P2 3MR", new PathPlannerAuto("P2 3MR"));
+    m_chooser.addOption("P2 3R", new PathPlannerAuto("P2 3R"));
+    m_chooser.addOption("P2 4L Mid", new PathPlannerAuto("P2 4L Mid"));
+    m_chooser.addOption("P2 4L", new PathPlannerAuto("P2 4L"));
+    m_chooser.addOption("P2 4R Long", new PathPlannerAuto("P2 4R Long"));
+    m_chooser.addOption("P2 4R Mid", new PathPlannerAuto("P2 4R Mid"));
+    m_chooser.addOption("P2 4R", new PathPlannerAuto("P2 4R"));
+
+    m_chooser.addOption("P3 4R Long", new PathPlannerAuto("P3 4R"));
+    m_chooser.addOption("P3 4R", new PathPlannerAuto("P3 4R"));
+
     // m_chooser.addOption("Test1", new PathPlannerAuto("Test1"));
+
 
     SmartDashboard.putData("Auto choices", m_chooser);
 

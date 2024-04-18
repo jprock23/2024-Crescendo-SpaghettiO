@@ -82,18 +82,15 @@ public class Drivebase extends SubsystemBase {
         Rotation2d.fromDegrees(-gyro.getAngle()),
         getPositions(), new Pose2d());
 
+    headingController = new ProfiledPIDController(4.5, 0, 0, new TrapezoidProfile.Constraints(0, 0), .02);
+    headingController.enableContinuousInput(-Math.PI, Math.PI);
+
     config = new HolonomicPathFollowerConfig(new PIDConstants(1.4, 0, 0),
         new PIDConstants(1.1, 0.0000, 0.0),
         // 0.12, 0.00001, 0.0
         5, Math.sqrt(Math.pow(DriveConstants.kTrackWidth / 2, 2) +
             Math.pow(DriveConstants.kWheelBase / 2, 2)),
         new ReplanningConfig());
-
-    SmartDashboard.putData("FIELD", fieldmap);
-
-    headingController = new ProfiledPIDController(4.5, 0, 0, new TrapezoidProfile.Constraints(0, 0), .02);
-    headingController.enableContinuousInput(-Math.PI, Math.PI);
-
     AutoBuilder.configureHolonomic(this::getPose, this::resetOdometry, this::getSpeeds, this::setAutoSpeeds, config,
         shouldFlipPath(), this);
   }
@@ -117,9 +114,7 @@ public class Drivebase extends SubsystemBase {
 
   // Resets the odometry to the specified pose
   public void resetOdometry(Pose2d pose) {
-
     poseEstimator.resetPosition(Rotation2d.fromDegrees(-gyro.getAngle()), getPositions(), pose);
-
   }
 
   public void resetOdometry() {
@@ -218,16 +213,6 @@ public class Drivebase extends SubsystemBase {
     setChassisSpeed(new ChassisSpeeds(x, y, reqOmega));
   }
 
-  public void alignToTarget() {
-    // Pose2d speakerPos =
-    // visTables.getBestTagAbsPos((int)visTables.getCam2IDs()[0]).toPose2d();
-
-    // double xDelta = getPose().getX() - speakerPos.getX();
-    // double yDelta = getPose().getY() - speakerPos.getY();
-
-    // rotateTo(0, 0, Math.atan(xDelta/yDelta));
-  }
-
   public void lockWheels() {
     frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
@@ -282,7 +267,6 @@ public class Drivebase extends SubsystemBase {
   }
 
   public double inputDeadband(double input) {
-
     return Math.abs(input) > .075 ? input : 0;
   }
 

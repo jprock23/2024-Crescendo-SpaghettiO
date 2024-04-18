@@ -42,7 +42,7 @@ public class Launcher {
         // height: 20.75
         AUTORIGHTSHOT(-13.5, 1.0),
         // height: ?7
-        SPEAKER(-58, 1.0),
+        SPEAKER(-56, 1.0),
         ALTSPEAKER(-23, 1.0),
         INTERLOPE(0.0, 1.0),
         TEST(-13.25, 1.0);
@@ -58,7 +58,7 @@ public class Launcher {
 
     public enum LeBronTeam {
         CAVS(-0.25),
-        LAKERS(-23);
+        LAKERS(-20);
 
         public double position;
 
@@ -162,6 +162,7 @@ public class Launcher {
         pivotController1.setI(LauncherConstants.pivotICoefficient);
         pivotController1.setD(LauncherConstants.pivotDCoefficient);
 
+
         pivotController1.setFeedbackDevice(encoder);
 
         pivotController1.setOutputRange(-1, 1);
@@ -169,6 +170,7 @@ public class Launcher {
         lebronController = lebronMotor.getPIDController();
 
         boxScore = lebronMotor.getEncoder();
+        boxScore.setPositionConversionFactor(1);
 
         lebronController.setFeedbackDevice(boxScore);
 
@@ -234,7 +236,7 @@ public class Launcher {
             } else {
                 deltaX = 16.579342 - visTables.getVisX() + .2;
             }
-            deltaX = visTables.getVisX();
+
             double position;
 
             if (deltaX > 1) {
@@ -245,6 +247,9 @@ public class Launcher {
 
             LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position,
                     LauncherState.HOVER.position);
+                    
+            SmartDashboard.putNumber("DeltaX", deltaX);
+
             // setLauncherState(LauncherState.INTERLOPE);
         }
     }

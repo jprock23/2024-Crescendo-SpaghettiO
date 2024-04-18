@@ -13,7 +13,7 @@ public class LED {
 
     private AddressableLEDBuffer buffer;
 
-    private int length = 24;
+    private int length = 25;
 
     private Spark PWMLED;
 

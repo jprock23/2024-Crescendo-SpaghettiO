@@ -15,9 +15,9 @@
     "P3",
     "Test"
   ],
-  "defaultMaxVel": 0.5,
-  "defaultMaxAccel": 0.25,
-  "defaultMaxAngVel": 100.0,
-  "defaultMaxAngAccel": 100.0,
-  "maxModuleSpeed": 0.5
+  "defaultMaxVel": 4.0,
+  "defaultMaxAccel": 3.0,
+  "defaultMaxAngVel": 800.0,
+  "defaultMaxAngAccel": 600.0,
+  "maxModuleSpeed": 4.0
 }

@@ -73,7 +73,6 @@ public class BreakBeamHandoff extends Command {
       intake.setRollerOff();
       launcher.setReverseLauncherOn();
       launcher.setFlickerReverse();
-      litty.setProgress(5);
     }
 
     if (intake.getBreakBeam() && intakeHasRing) {

@@ -129,10 +129,6 @@ public class VisionTablesListener {
         return frontTimeStamps;
     }
 
-    // public void clearLauncherDetections(){
-    //      launcherDetections.clear();
-    // }
-
     public void clearRightDetections(){
          frontDetections.clear();
     }

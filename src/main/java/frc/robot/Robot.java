@@ -28,6 +28,8 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.launcher.Launcher;
 import frc.robot.subsystems.launcher.Launcher.LauncherState;
+import frc.robot.subsystems.launcher.Launcher.LeBronTeam;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.swerve.Drivebase;
 import frc.robot.subsystems.swerve.Drivebase.DriveState;
@@ -64,7 +66,7 @@ public class Robot extends LoggedRobot {
 
   private RotationCommand turn;
 
-  private SendableChooser<Command> m_chooser;
+  private SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   StructPublisher<Pose3d> publisher = NetworkTableInstance.getDefault()
       .getStructTopic("Pose", Pose3d.struct).publish();
@@ -106,15 +108,25 @@ public class Robot extends LoggedRobot {
     NamedCommands.registerCommand("AutoPreload", new AutoPreload());
     NamedCommands.registerCommand("AltRevLauncher", new AltRevLauncher());
 
-    m_chooser = AutoBuilder.buildAutoChooser();
-    // m_chooser.addOption("Test1", new PathPlannerAuto("Test1"));
+    m_chooser.addOption("P1 4L Long", new PathPlannerAuto("P1 4L Long"));
+    m_chooser.addOption("P1 4L", new PathPlannerAuto("P1 4L"));
+
+    m_chooser.addOption("P2 3L", new PathPlannerAuto("P2 3L"));
+    m_chooser.addOption("P2 3ML", new PathPlannerAuto("P2 3ML"));
+    m_chooser.addOption("P2 3MR", new PathPlannerAuto("P2 3MR"));
+    m_chooser.addOption("P2 3R", new PathPlannerAuto("P2 3R"));
+    m_chooser.addOption("P2 4L Mid", new PathPlannerAuto("P2 4L Mid"));
+    m_chooser.addOption("P2 4L", new PathPlannerAuto("P2 4L"));
+    m_chooser.addOption("P2 4R Long", new PathPlannerAuto("P2 4R Long"));
+    m_chooser.addOption("P2 4R Mid", new PathPlannerAuto("P2 4R Mid"));
+    m_chooser.addOption("P2 4R", new PathPlannerAuto("P2 4R"));
+
+    m_chooser.addOption("P3 4R Long", new PathPlannerAuto("P3 4R"));
+    m_chooser.addOption("P3 4R", new PathPlannerAuto("P3 4R"));
 
     SmartDashboard.putData("Auto choices", m_chooser);
 
     useCurrentSpike = false;
-
-    // CameraServer.startAutomaticCapture();
-
   }
 
   @Override
@@ -124,44 +136,24 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().run();
     drivebase.periodic();
 
-    // launcher.launcherConnections();
-    // intake.intakeConnections();
-    // climber.climberConnections();
-
-    // launcher.printConnections();
-    // intake.printConnections();
-    // climber.printConnections();
-    // drivebase.printConnections();
-
-    // drivebase.printTranslationalVelocities();
-
     visTables.printDetects();
 
     SmartDashboard.putNumber("Gyro Angle:", (drivebase.getHeading() + 90) % 360);
     SmartDashboard.putNumber("X-coordinate", drivebase.getPose().getX());
     SmartDashboard.putNumber("Y-coordinate", drivebase.getPose().getY());
 
-    // SmartDashboard.putString("Alliance", DriverStation.getAlliance().toString());
+    SmartDashboard.putString("Alliance", DriverStation.getAlliance().toString());
 
-    // SmartDashboard.putNumber("Flipper Current", intake.getFlipperCurrent());
-    // SmartDashboard.putNumber("Pivot Current", launcher.getPivotCurrent());
-    // SmartDashboard.putNumber("Roller Current", intake.getRollerCurrent());
-
-    // SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
+    SmartDashboard.putNumber("Flipper Position", intake.getFlipperPosition());
     SmartDashboard.putNumber("Launcher Position", launcher.getPosition());
 
-    // SmartDashboard.putString("Intake State", intake.getIntakeState().toString());
-    SmartDashboard.putString("Launcher State",
-    launcher.getLaunchState().toString());
+    SmartDashboard.putString("Intake State", intake.getIntakeState().toString());
+    SmartDashboard.putString("Launcher State", launcher.getLaunchState().toString());
 
     SmartDashboard.putBoolean("Launcher Breakbeam", launcher.getBreakBeam());
     SmartDashboard.putBoolean("Intake Breakbeam", intake.getBreakBeam());
 
-    // SmartDashboard.putNumber("Translational Velocity",
-    // drivebase.getTranslationalVelocity());
-    // SmartDashboard.putNumber("Angular Velocity", drivebase.getTurnRate());
-
-    // SmartDashboard.putBoolean("Brownout", hasBrownedOut);
+    SmartDashboard.putBoolean("Brownout", launcher.hasBrownedOut());
 
     SmartDashboard.putNumber("Test Position", launcher.getTestPosition());
 
@@ -186,7 +178,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
-    // litty.setRed();
     litty.setBlue();
     if (m_autoSelected != null) {
       m_autoSelected.cancel();
@@ -227,7 +218,7 @@ public class Robot extends LoggedRobot {
       drivebase.drive(xSpeed, ySpeed, rot);
     }
 
-    if(driver.getPOV() == 180){
+    if (driver.getPOV() == 180) {
       launcher.setLauncherState(LauncherState.TEST);
     }
 
@@ -235,9 +226,9 @@ public class Robot extends LoggedRobot {
       drivebase.zeroHeading();
     }
 
-    // if (operator.getAButton()) {
-    //   intake.setIntakeState(IntakeState.GROUND);
-    // }
+    if (operator.getYButton()) {
+      intake.setIntakeState(IntakeState.GROUND);
+    }
 
     if (driver.getRightTriggerAxis() > 0) {
       drivebase.setDriveState(DriveState.SLOW);
@@ -246,14 +237,6 @@ public class Robot extends LoggedRobot {
     }
 
     /* INTAKE CONTROLS */
-
-    // if(operator.getAButton()){
-    // launcher.setLauncherState(LauncherState.AUTORIGHTSHOT);
-    // }
-
-    // if(operator.getYButton()){
-    // launcher.setLauncherState(LauncherState.AUTOMIDSHOT);
-    // }
 
     if (operator.getRightBumper() && !useCurrentSpike) {
       handoffCommand.schedule();
@@ -269,7 +252,9 @@ public class Robot extends LoggedRobot {
     if (operator.getLeftBumper()) {
       intake.setIntakeState(IntakeState.STOP);
       launcher.setLauncherState(LauncherState.HOVER);
+      launcher.setLeBronTeam(LeBronTeam.CAVS);
       launcher.updatePose();
+      launcher.moveLeBron();
       launcher.setLauncherOff();
       launcher.setFlickOff();
       litty.setBlue();
@@ -296,11 +281,11 @@ public class Robot extends LoggedRobot {
     // }
 
     if (operator.getLeftStickButtonPressed()) {
-      // launcher.increasePosition();
-      launcher.increaseIncrement();
+      launcher.increasePosition();
+      // launcher.increaseIncrement();
     } else if (operator.getRightStickButtonPressed()) {
-      launcher.decreaseInrement();
-      // launcher.decreasePosition();
+      // launcher.decreaseInrement();
+      launcher.decreasePosition();
     }
 
     if (operator.getPOV() == 0) {
@@ -316,16 +301,15 @@ public class Robot extends LoggedRobot {
       launcher.setLauncherState(LauncherState.LONG);
     }
 
-    if (operator.getYButtonPressed()) {
-      launcher.increasePosition();
-    }
+        // launcher.interpolateAngle();
+      // launcher.lookUpPosition();
 
     if (operator.getAButtonPressed()) {
-      launcher.decreasePosition();
+      launcher.setLauncherState(LauncherState.INTERLOPE);
     }
 
     if (operator.getStartButton()) {
-      launcher.setLauncherState(LauncherState.ALTSPEAKER);
+      useCurrentSpike = !useCurrentSpike;
     }
 
     if (operator.getXButton()) {

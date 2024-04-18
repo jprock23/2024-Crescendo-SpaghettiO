@@ -6,6 +6,7 @@ import frc.robot.subsystems.IO.LED;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.launcher.Launcher;
+import frc.robot.subsystems.launcher.Launcher.LauncherState;
 
 public class ShootCommand extends Command {
 
@@ -33,6 +34,9 @@ public class ShootCommand extends Command {
     startTime = Timer.getFPGATimestamp();
     launcher.setLauncherOn();
     intake.setIntakeState(IntakeState.STOP);
+    // if(launcher.getLaunchState() == LauncherState.INTERLOPE){
+    //   launcher.lookUpPosition();
+    // }
   }
 
   @Override

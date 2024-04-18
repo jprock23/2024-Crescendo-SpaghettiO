@@ -21,27 +21,16 @@ public class VisionTablesListener {
     private NetworkTableInstance networkTable;
     private NetworkTable visionTable;
 
-    private StringArraySubscriber tag1Sub;
+    // private StringArraySubscriber tag1Sub;
     private StringArraySubscriber tag3Sub;
 
 
     // Transforms of the camera to robot center
-    private Transform3d launcherCamTransform = new Transform3d(new Translation3d(-0.3, 0, -0.37),
-            new Rotation3d(0, 0, Units.degreesToRadians(-179)));
-            //Math.toRadians(146.5)
+    private Transform3d frontCamTransform = new Transform3d(new Translation3d(0.30, -0.26, -0.22),
+            new Rotation3d(0, Math.toRadians(33), 0));
 
-            // private Transform3d frontCamTransform = new Transform3d(new Translation3d(0.3302, -0.2762504, 0.2306066),
-            // new Rotation3d(0, Math.toRadians(-35), Math.toRadians(-90)));
-    private Transform3d frontCamTransform = new Transform3d(new Translation3d(0.25, 0.78, -0.22),
-        // private Transform3d frontCamTransform = new Transform3d(new Translation3d(0.315, -0.27, -0.23),
-            new Rotation3d(0, Units.degreesToRadians(-35), 0));
-
-
-
-    private static LinkedList<AprilTagDetection> launcherDetections = new LinkedList<AprilTagDetection>();
     private static LinkedList<AprilTagDetection> frontDetections = new LinkedList<AprilTagDetection>();
 
-    private boolean launcherVisible;
     private boolean frontVisible;
 
     private AprilTagFieldLayout tagLayout;
@@ -49,7 +38,6 @@ public class VisionTablesListener {
     public VisionTablesListener() {
         networkTable = NetworkTableInstance.getDefault();
         visionTable = networkTable.getTable("Vision");
-        tag1Sub = visionTable.getStringArrayTopic("Serialized Tags").subscribe(new String[] {});
         tag3Sub = visionTable.getStringArrayTopic("Serialized Tags 3").subscribe(new String[] {});
 
         try {
@@ -66,19 +54,10 @@ public class VisionTablesListener {
     }
 
     public void printLauncherDetects() {
-        SmartDashboard.putBoolean("Launcher Tag", getLauncherDetects());
+        // SmartDashboard.putBoolean("Launcher Tag", getLauncherDetects());
     }
     public void printFrontDetects() {
         SmartDashboard.putBoolean("Front Tag", getFrontDetects());
-    }
-
-    public boolean getLauncherDetects() {
-        if (tag1Sub.get().length > 0)
-            launcherVisible = true;
-        else
-            launcherVisible = false;
-
-        return launcherVisible;
     }
 
     public boolean getFrontDetects() {
@@ -89,49 +68,6 @@ public class VisionTablesListener {
             frontVisible = false;
 
         return frontVisible;
-    }
-
-    public Pose2d[] getLauncherPoses() {
-        String[] serializedTags = tag1Sub.get();
-        for (String tagSerial : serializedTags)
-            launcherDetections.add(new AprilTagDetection(tagSerial));
-
-        if (launcherDetections == null || launcherDetections.size() == 0)
-            return new Pose2d[] {};
-
-        Pose2d[] poses = new Pose2d[launcherDetections.size()];
-        for (int i = 0; i < poses.length; i++) {
-            Pose3d tagFieldPos = tagLayout.getTagPose(launcherDetections.get(i).getID()).get();
-            Transform3d tagToCam = launcherDetections.get(i).getTransform();
-            Transform3d camToRobot = new Transform3d(
-                    launcherCamTransform.getTranslation(),
-                    launcherCamTransform.getRotation().rotateBy(new Rotation3d(0, 0, tagToCam.getRotation().getZ()))
-                );
-            //Transform3d robotPos = launcherDetections.get(i).getTransform().plus(launcherCamTransform);
-            Transform3d robotPos = tagToCam.plus(camToRobot);
-            // robotPos = new Transform3d(
-            //         new Translation3d(
-            //                 robotPos.getX(),
-            //                 -robotPos.getY(),
-            //                 -robotPos.getZ()),
-            //         robotPos.getRotation());
-            poses[i] = tagFieldPos.transformBy(robotPos).toPose2d();
-
-            // Pose3d camFieldPos = tagFieldPos.transformBy(launcherDetections.get(i).getTransform());
-            // Pose3d robotPos = camFieldPos.transformBy(launcherCamTransform);
-            //poses[i] = robotPos.toPose2d();
-        }
-
-        return poses;
-    }
-
-    public double[] getLauncherTimeStamps() {
-        double[] launcherTimestamps = new double[launcherDetections.size()];
-
-        for (int i = 0; i < launcherDetections.size(); i++)
-            launcherTimestamps[i] = launcherDetections.get(i).getTimeStamp();
-
-        return launcherTimestamps;
     }
 
     public Pose2d[] getFrontPoses() {
@@ -145,20 +81,43 @@ public class VisionTablesListener {
         Pose2d[] poses = new Pose2d[frontDetections.size()];
         for (int i = 0; i < poses.length; i++) {
             Pose3d tagFieldPos = tagLayout.getTagPose(frontDetections.get(i).getID()).get();
-            // Transform3d robotPos = frontDetections.get(i).getTransform().plus(frontCamTransform);
-            // robotPos = new Transform3d(
-            //         new Translation3d(
-            //                 robotPos.getX(),
-            //                 -robotPos.getY(),
-            //                 -robotPos.getZ()),
-            //         robotPos.getRotation());
-            // poses[i] = tagFieldPos.transformBy(robotPos).toPose2d();
+            Transform3d camTransform = new Transform3d(
+                frontCamTransform.getTranslation(),
+                new Rotation3d(
+                    0,
+                    0,
+                    frontCamTransform.getRotation().getZ() + frontDetections.get(i).getTransform().getRotation().getZ()
+                )
+            );
+            Transform3d robotPos = frontDetections.get(i).getTransform().plus(camTransform);
+            robotPos = new Transform3d(
+                    new Translation3d(
+                        robotPos.getX() + 0.15,
+                        //lab offset: 0.15 comp:.07
+                        -robotPos.getY() + .58,
+                        //lab:.58
+                        -robotPos.getZ()
+                    ),
+                    robotPos.getRotation()
+                );
+            poses[i] = tagFieldPos.transformBy(robotPos).toPose2d();
 
-            Pose3d camFieldPos = tagFieldPos.transformBy(frontDetections.get(i).getTransform());
-            Pose3d robotPos = camFieldPos.transformBy(frontCamTransform);
-            poses[i] = robotPos.toPose2d();
+            SmartDashboard.putNumber("VisX", poses[i].getX());
+            SmartDashboard.putNumber("VisY", poses[i].getY());
+
+            // Pose3d camFieldPos = tagFieldPos.transformBy(frontDetections.get(i).getTransform());
+            // Pose3d robotPos = camFieldPos.transformBy(frontCamTransform);
+            // poses[i] = robotPos.toPose2d();
         }
         return poses;
+    }
+
+    public double getVisX(){
+        return getFrontPoses()[0].getX();
+    }
+
+        public double getVisY(){
+         return getFrontPoses()[0].getY();
     }
 
     public double[] getFrontTimeStamps() {
@@ -170,9 +129,9 @@ public class VisionTablesListener {
         return frontTimeStamps;
     }
 
-    public void clearLauncherDetections(){
-         launcherDetections.clear();
-    }
+    // public void clearLauncherDetections(){
+    //      launcherDetections.clear();
+    // }
 
     public void clearRightDetections(){
          frontDetections.clear();

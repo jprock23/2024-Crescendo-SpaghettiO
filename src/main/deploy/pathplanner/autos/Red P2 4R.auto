@@ -28,7 +28,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Photon Intake 2"
+                        "pathName": "P2 Intake Second"
                       }
                     },
                     {
@@ -38,7 +38,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Photon Score 2"
+                              "pathName": "Spectrum Score 2"
                             }
                           },
                           {
@@ -92,7 +92,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Spectrum Intake 3"
+                        "pathName": "Red Intake 3"
                       }
                     },
                     {
@@ -112,7 +112,7 @@
                                 {
                                   "type": "wait",
                                   "data": {
-                                    "waitTime": 0.6
+                                    "waitTime": 0.75
                                   }
                                 },
                                 {
@@ -156,7 +156,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Photon Intake 4"
+                        "pathName": "Red Intake 4"
                       }
                     },
                     {
@@ -166,7 +166,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Spectrum Score 2"
+                              "pathName": "Spectrum Score 4"
                             }
                           },
                           {
@@ -176,7 +176,7 @@
                                 {
                                   "type": "wait",
                                   "data": {
-                                    "waitTime": 0.65
+                                    "waitTime": 0.75
                                   }
                                 },
                                 {
@@ -208,35 +208,10 @@
           "data": {
             "name": "AutoSpeaker"
           }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Test MidC"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Handoff"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Test MidC Return"
-          }
         }
       ]
     }
   },
-  "folder": "Test",
+  "folder": "P2",
   "choreoAuto": false
 }

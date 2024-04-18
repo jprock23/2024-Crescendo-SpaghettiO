@@ -36,16 +36,17 @@ public class AprilTagDetection {
         );
         
         //Transfrom must be converted from EDN to NWU
-        var EDN = CoordinateSystem.EDN();
-        var NWU = CoordinateSystem.NWU();
-        Translation3d nwuTrl = CoordinateSystem.convert(trl, EDN, NWU);
-        Rotation3d nwuRot = CoordinateSystem.convert(rot, EDN, NWU);
+        
         // rot = EDN_TO_NWU.unaryMinus().plus(rot.plus(EDN_TO_NWU));
         // transform = new Transform3d(
         //     trl.rotateBy(EDN_TO_NWU), 
-        //     new Rotation3d(rot.getX(), rot.getY(), rot.getZ())
+        //     new Rotation3d(rot.getX(), rot.getY(), -rot.getZ())
         // );
-        transform = new Transform3d(nwuTrl, nwuRot);
+        rot = rot.rotateBy(EDN_TO_NWU);
+        transform = new Transform3d(
+            trl.rotateBy(EDN_TO_NWU),
+            rot
+        );
 
         timestamp = Double.parseDouble(splitSerial[8]);
     }

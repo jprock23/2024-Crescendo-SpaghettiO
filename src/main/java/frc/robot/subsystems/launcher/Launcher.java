@@ -255,34 +255,36 @@ public class Launcher {
     }
 
     public void lookUpPosition() {
-        double pose;
+        double deltaX;
 
         if (visTables.getFrontDetects()) {
             if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                pose = visTables.getVisX() - 0.8;
+                deltaX = visTables.getVisX() - 0.08;
             } else {
-                pose = 16.579342 - visTables.getVisX() + .2;
+                deltaX = 16.579342 - visTables.getVisX() + .2;
             }
             double position;
 
-            if (lookupTable.containsKey(pose)) {
-                position = lookupTable.get(pose);
+            if (lookupTable.containsKey(deltaX)) {
+                position = lookupTable.get(deltaX);
             } else {
                 int upper = 0;
                 int lower = 0;
                 for (int i = 0; i < bluePositions.length; i++) {
-                    if (pose < bluePositions[0]) {
-                        pose = LauncherState.ALTSPEAKER.position;
+                    if (deltaX < bluePositions[0]) {
+                        deltaX = LauncherState.ALTSPEAKER.position;
                         break;
-                    } else if (pose > bluePositions[bluePositions.length]) {
-                        pose = LauncherState.HOVER.position;
-                    } else if (pose > bluePositions[upper]) {
+                    } else if (deltaX > bluePositions[bluePositions.length]) {
+                        deltaX = LauncherState.HOVER.position;
+                    } else if (deltaX > bluePositions[upper]) {
                         lower = upper;
                         upper = i + 1;
                     }
                 }
 
-                position = pose * ((bluePositions[upper] - bluePositions[lower]) / upper - lower);
+                position = deltaX * ((bluePositions[upper] - bluePositions[lower]) / upper - lower);
+
+                            SmartDashboard.putNumber("deltaX", deltaX);
                 LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position,
                         LauncherState.HOVER.position);
                 // setLauncherState(LauncherState.INTERLOPE);

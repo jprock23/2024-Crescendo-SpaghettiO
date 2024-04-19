@@ -303,7 +303,7 @@ public class Robot extends LoggedRobot {
       launcher.setLauncherState(LauncherState.LONG);
     }
 
-      launcher.interpolateAngle();
+      // launcher.interpolateAngle();
       // launcher.lookUpPosition();
 
     if (operator.getAButtonPressed()) {

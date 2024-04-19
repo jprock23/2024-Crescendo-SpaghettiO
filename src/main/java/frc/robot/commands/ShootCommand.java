@@ -30,17 +30,19 @@ public class ShootCommand extends Command {
   public void initialize() {
     ended = false;
 
-    launcher.updatePose();
+            launcher.updatePose();
     startTime = Timer.getFPGATimestamp();
     launcher.setLauncherOn();
     intake.setIntakeState(IntakeState.STOP);
-    // if(launcher.getLaunchState() == LauncherState.INTERLOPE){
-    //   launcher.lookUpPosition();
-    // }
+    if(launcher.getLaunchState() == LauncherState.INTERLOPE){
+      launcher.lookUpPosition();
+    }
   }
 
   @Override
   public void execute() {
+        launcher.updatePose();
+
 
       double elapsedTime = Timer.getFPGATimestamp() - startTime;
 

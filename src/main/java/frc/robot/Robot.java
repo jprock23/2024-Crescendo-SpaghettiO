@@ -228,9 +228,9 @@ public class Robot extends LoggedRobot {
       drivebase.zeroHeading();
     }
 
-    if (operator.getYButton()) {
-      intake.setIntakeState(IntakeState.GROUND);
-    }
+    // if (operator.getYButton()) {
+    //   intake.setIntakeState(IntakeState.GROUND);
+    // }
 
     if (driver.getRightTriggerAxis() > 0) {
       drivebase.setDriveState(DriveState.SLOW);
@@ -282,11 +282,23 @@ public class Robot extends LoggedRobot {
     // launcher.setPivotOff();
     // }
 
+    if(driver.getRightStickButtonPressed()){
+      launcher.setLauncherState(LauncherState.TEST);
+    }
+
     if (operator.getLeftStickButtonPressed()) {
-      launcher.increasePosition();
-      // launcher.increaseIncrement();
+      // launcher.increasePosition();
+      launcher.increaseIncrement();
     } else if (operator.getRightStickButtonPressed()) {
-      // launcher.decreaseInrement();
+      launcher.decreaseInrement();
+      // launcher.decreasePosition();
+    }
+
+    if(operator.getAButton()){
+      launcher.increasePosition();
+    }
+
+    if(operator.getYButton()){
       launcher.decreasePosition();
     }
 
@@ -306,9 +318,9 @@ public class Robot extends LoggedRobot {
       // launcher.interpolateAngle();
       // launcher.lookUpPosition();
 
-    if (operator.getAButtonPressed()) {
-      launcher.setLauncherState(LauncherState.INTERLOPE);
-    }
+    // if (operator.getAButtonPressed()) {
+    //   launcher.setLauncherState(LauncherState.INTERLOPE);
+    // }
 
     if (operator.getStartButton()) {
       useCurrentSpike = !useCurrentSpike;

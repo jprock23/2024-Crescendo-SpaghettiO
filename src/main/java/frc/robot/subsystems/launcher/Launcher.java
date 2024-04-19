@@ -162,7 +162,6 @@ public class Launcher {
         pivotController1.setI(LauncherConstants.pivotICoefficient);
         pivotController1.setD(LauncherConstants.pivotDCoefficient);
 
-
         pivotController1.setFeedbackDevice(encoder);
 
         pivotController1.setOutputRange(-1, 1);
@@ -247,7 +246,7 @@ public class Launcher {
 
             LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position,
                     LauncherState.HOVER.position);
-                    
+
             SmartDashboard.putNumber("DeltaX", deltaX);
 
             // setLauncherState(LauncherState.INTERLOPE);
@@ -270,11 +269,11 @@ public class Launcher {
             } else {
                 int upper = 0;
                 int lower = 0;
-                for (int i = 0; i < bluePositions.length; i++) {
+                for (int i = 0; i < bluePositions.length - 1; i++) {
                     if (deltaX < bluePositions[0]) {
                         deltaX = LauncherState.ALTSPEAKER.position;
                         break;
-                    } else if (deltaX > bluePositions[bluePositions.length]) {
+                    } else if (deltaX > bluePositions[bluePositions.length - 1]) {
                         deltaX = LauncherState.HOVER.position;
                     } else if (deltaX > bluePositions[upper]) {
                         lower = upper;
@@ -284,7 +283,8 @@ public class Launcher {
 
                 position = deltaX * ((bluePositions[upper] - bluePositions[lower]) / upper - lower);
 
-                            SmartDashboard.putNumber("deltaX", deltaX);
+                // SmartDashboard.putNumber("deltaX", deltaX + .08);
+                // SmartDashboard.putNumber("deltaX", 16.579342 + visTables.getVisX() - .2);
                 LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position,
                         LauncherState.HOVER.position);
                 // setLauncherState(LauncherState.INTERLOPE);
@@ -325,7 +325,7 @@ public class Launcher {
     }
 
     public double getTestPosition() {
-        return LauncherState.INTERLOPE.position;
+        return LauncherState.TEST.position;
     }
 
     public double getLeBronPostion() {

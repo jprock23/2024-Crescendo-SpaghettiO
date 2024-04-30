@@ -121,7 +121,10 @@ public class Robot extends LoggedRobot {
     m_chooser.addOption("P2 4R Mid", new PathPlannerAuto("P2 4R Mid"));
     m_chooser.addOption("P2 4R", new PathPlannerAuto("P2 4R"));
     m_chooser.addOption("Red P2 4R", new PathPlannerAuto("Red P2 4R"));
-    m_chooser.addOption("Red P2 3MR", new PathPlannerAuto("Red P2 3MR"));
+    m_chooser.addOption("Red P2 4R Mid", new PathPlannerAuto("Red P2 4R Mid"));
+    m_chooser.addOption("Q117", new PathPlannerAuto("Q117"));
+        m_chooser.addOption("Red P2 3MR Mid", new PathPlannerAuto("Red P2 3MR Mid"));
+
 
     m_chooser.addOption("P3 4R Long", new PathPlannerAuto("P3 4R"));
     m_chooser.addOption("P3 4R", new PathPlannerAuto("P3 4R"));

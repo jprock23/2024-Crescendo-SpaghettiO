@@ -76,10 +76,6 @@ public class LED {
 
         LEDs.setData(buffer);
     }
-
-    public void setYellow() {
-        PWMLED.set(.67);
-    }
     
     public void setOrange(){
         PWMLED.set(-.97);

@@ -81,9 +81,7 @@ public class BreakBeamHandoff extends Command {
       if (intakeStarttime == -1) {
         intakeStarttime = Timer.getFPGATimestamp();
       }
-      if (intakeStarttime - Timer.getFPGATimestamp() > timeout) {
-        litty.setYellow();
-      }
+
     }
 
     if (intake.getIntakeState() == IntakeState.HANDOFF && intake.hasReachedPose(3.0)) {
@@ -103,9 +101,8 @@ public class BreakBeamHandoff extends Command {
         if (launcherStarttime == -1) {
           launcherStarttime = Timer.getFPGATimestamp();
         }
-        if (Timer.getFPGATimestamp() - launcherStarttime > timeout) {
-          litty.setYellow();
-        }
+        // if (Timer.getFPGATimestamp() - launcherStarttime > timeout) {
+        // }
       }
 
       if (launcherHasRing && !launcher.getBreakBeam()) {

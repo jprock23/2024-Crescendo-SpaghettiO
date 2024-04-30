@@ -75,9 +75,6 @@ public class AutoHandoff extends Command {
       if (intakeStarttime == -1) {
         intakeStarttime = Timer.getFPGATimestamp();
       }
-      if (Timer.getFPGATimestamp() - intakeStarttime > timeout) {
-        litty.setYellow();
-      }
     }
 
     if (intake.getIntakeState() == IntakeState.HANDOFF && intake.hasReachedPose(3.0)) {
@@ -97,7 +94,6 @@ public class AutoHandoff extends Command {
           launcherStarttime = Timer.getFPGATimestamp();
         }
         if (Timer.getFPGATimestamp() - launcherStarttime > timeout) {
-          litty.setYellow();
           launcher.eject();
         }
       }

@@ -15,8 +15,9 @@ import frc.robot.subsystems.IO.DigitalInputs;
 public class Intake {
 
     public enum IntakeState {
+        
         STOP(0.2),
-        GROUND(-17),
+        GROUND(-16),
         HANDOFF(-4),
         HOLD(-2.5);
 

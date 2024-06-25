@@ -2,7 +2,6 @@ package frc.robot.subsystems.launcher;
 
 import java.util.HashMap;
 
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -10,7 +9,6 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax.FaultID;
@@ -19,8 +17,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.subsystems.IO.DigitalInputs;
-import frc.robot.subsystems.swerve.Drivebase;
-import frc.robot.subsystems.swerve.Drivebase.DriveState;
 import frc.robot.subsystems.vision.VisionTablesListener;
 import frc.robot.Ports;
 
@@ -42,7 +38,7 @@ public class Launcher {
         // height: 20.75
         AUTORIGHTSHOT(-13.5, 1.0),
         // height: ?7
-        SPEAKER(-56, 1.0),
+        SPEAKER(-58, 1.0),
         ALTSPEAKER(-23, 1.0),
         INTERLOPE(0.0, 1.0),
         TEST(-13.25, 1.0);
@@ -88,7 +84,6 @@ public class Launcher {
     private SparkMaxPIDController lebronController;
 
     private static RelativeEncoder encoder;
-    private static AbsoluteEncoder absEncoder;
 
     private static RelativeEncoder boxScore;
 
@@ -102,8 +97,6 @@ public class Launcher {
     public static Launcher instance;
 
     public VisionTablesListener visTables;
-
-    private Alliance alliance;
 
     private HashMap<Double, Double> lookupTable = new HashMap<>();
     private double[] bluePositions = new double[] { 1.62, 1.93, 2.34, 2.41, 2.63, 2.71, 2.94, 3.01, 3.3, 4.14 };
@@ -185,10 +178,6 @@ public class Launcher {
         breakBeam = DigitalInputs.getInstance();
 
         visTables = VisionTablesListener.getInstance();
-
-        if (DriverStation.getAlliance().isPresent()) {
-            alliance = DriverStation.getAlliance().get();
-        }
 
         lookupTable.put(2.94, -10.25);
         lookupTable.put(2.41, -13.25);
@@ -292,18 +281,7 @@ public class Launcher {
         }
     }
 
-    public void setPivotPower() {
-        pivotMotor.set(anglePower + feedForward.calculate(absEncoder.getPosition(), 0));
-
-    }
-
-    public void setReversePivotPower() {
-        pivotMotor.set(anglePower + feedForward.calculate(absEncoder.getPosition(), 0));
-    }
-
     public void eject() {
-        // shootMotor1.set(launchState.launchSpeed / 4);
-        // shootMotor2.set(launchState.launchSpeed / 3);
         shootMotor2.set(0);
         shootMotor1.set(launchState.launchSpeed);
     }

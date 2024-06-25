@@ -23,12 +23,7 @@ public class BreakBeamHandoff extends Command {
 
   private double startTime;
   private double duration = 0.5;
-  private double timeout = 1;
 
-  private double intakeStarttime;
-  private double launcherStarttime;
-
-  private boolean intakeHasRing;
 
   public BreakBeamHandoff() {
     launcher = Launcher.getInstance();
@@ -38,10 +33,6 @@ public class BreakBeamHandoff extends Command {
     launcherHasRing = false;
     ended = false;
 
-    intakeStarttime = -1;
-    launcherStarttime = -1;
-
-    intakeHasRing = false;
   }
 
   @Override
@@ -52,57 +43,30 @@ public class BreakBeamHandoff extends Command {
     launcher.updatePose();
     
     startTime = -1;
-    intakeStarttime = -1;
-    launcherStarttime = -1;
 
     launcherHasRing = false;
     ended = false;
 
-    intakeHasRing = false;
+    intake.setRollerPower();
 
     litty.setRed();
   }
 
   @Override
   public void execute() {
-    intake.setRollerPower();
 
-    if (intake.getBreakBeam() && !intakeHasRing) {
-
+    if (intake.getBreakBeam()) {
       intake.setIntakeState(IntakeState.HANDOFF);
       intake.setRollerOff();
       launcher.setReverseLauncherOn();
       launcher.setFlickerReverse();
     }
 
-    if (intake.getBreakBeam() && intakeHasRing) {
-
-
-      if (intakeStarttime == -1) {
-        intakeStarttime = Timer.getFPGATimestamp();
-      }
-
-    }
-
     if (intake.getIntakeState() == IntakeState.HANDOFF && intake.hasReachedPose(3.0)) {
       intake.setRollerPower();
 
-      if (!intake.getBreakBeam() && intakeHasRing) {
-        intake.setRollerOff();
-      }
-
       if (!launcherHasRing && launcher.getBreakBeam()) {
         launcherHasRing = true;
-        intakeHasRing = false;
-      }
-
-      if (launcher.getBreakBeam() && launcherHasRing) {
-
-        if (launcherStarttime == -1) {
-          launcherStarttime = Timer.getFPGATimestamp();
-        }
-        // if (Timer.getFPGATimestamp() - launcherStarttime > timeout) {
-        // }
       }
 
       if (launcherHasRing && !launcher.getBreakBeam()) {
@@ -127,7 +91,6 @@ public class BreakBeamHandoff extends Command {
     intake.setIntakeState(IntakeState.HOLD);
     launcher.updatePose();
     litty.setGreen();
-    // litty.setProgress(58);
   }
 
   @Override

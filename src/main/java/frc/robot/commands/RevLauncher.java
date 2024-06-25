@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.launcher.Launcher;
 import frc.robot.subsystems.launcher.Launcher.LauncherState;
@@ -10,11 +9,6 @@ public class RevLauncher extends Command {
   private Launcher launcher;
 
   private boolean ended;
-
-  private double startTime;
-  private double elapsedTime;
-  private double windup = 0.5;
-  private double duration = windup + .4;
 
   public RevLauncher() {
     launcher = Launcher.getInstance();

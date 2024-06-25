@@ -99,16 +99,9 @@ public class AutoHandoff extends Command {
       }
 
       if (launcherHasRing && !launcher.getBreakBeam()) {
-        // launcher.setLauncherOff();
         intake.setRollerOff();
 
-        // if (startTime == -1) {
-        //   startTime = Timer.getFPGATimestamp();
-        // }
-
-        // if (Timer.getFPGATimestamp() - startTime > duration) {
           ended = true;
-        // }
       }
     }
 
@@ -118,7 +111,6 @@ public class AutoHandoff extends Command {
   public void end(boolean interrupted) {
     launcher.setFlickOff();
     intake.setIntakeState(IntakeState.HOLD);
-    // launcher.setLauncherOff();
     intake.setRollerOff();
     litty.setGreen();
   }

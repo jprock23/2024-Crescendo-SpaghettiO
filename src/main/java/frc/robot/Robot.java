@@ -1,8 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,7 +34,6 @@ import frc.robot.subsystems.vision.VisionTablesListener;
 
 import org.littletonrobotics.junction.LoggedRobot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -64,12 +60,7 @@ public class Robot extends LoggedRobot {
 
   private boolean useCurrentSpike;
 
-  private RotationCommand turn;
-
   private SendableChooser<Command> m_chooser = new SendableChooser<>();
-
-  StructPublisher<Pose3d> publisher = NetworkTableInstance.getDefault()
-      .getStructTopic("Pose", Pose3d.struct).publish();
 
   @Override
   public void robotInit() {
@@ -82,15 +73,12 @@ public class Robot extends LoggedRobot {
 
     driver = new XboxController(0);
     operator = new XboxController(1);
-    // drivebase.resetOdometry(new Pose2d(1, 1, new Rotation2d(0)));
 
     handoffCommand = new BreakBeamHandoff();
     shootCommand = new ShootCommand();
     autoSpeaker = new AutoSpeaker();
     ampCommand = new AmpCommand();
     altAmpCommand = new AltAmpCommand();
-
-    turn = new RotationCommand(-25);
 
     currentSpikeHandoff = new HandoffCommand();
 
@@ -108,7 +96,6 @@ public class Robot extends LoggedRobot {
     NamedCommands.registerCommand("AutoPreload", new AutoPreload());
     NamedCommands.registerCommand("AltRevLauncher", new AltRevLauncher());
 
-    m_chooser.addOption("P1 4L Long", new PathPlannerAuto("P1 4L Long"));
     m_chooser.addOption("P1 4L", new PathPlannerAuto("P1 4L"));
 
     m_chooser.addOption("P2 3L", new PathPlannerAuto("P2 3L"));
@@ -117,16 +104,12 @@ public class Robot extends LoggedRobot {
     m_chooser.addOption("P2 3R", new PathPlannerAuto("P2 3R"));
     m_chooser.addOption("P2 4L Mid", new PathPlannerAuto("P2 4L Mid"));
     m_chooser.addOption("P2 4L", new PathPlannerAuto("P2 4L"));
-    m_chooser.addOption("P2 4R Long", new PathPlannerAuto("P2 4R Long"));
     m_chooser.addOption("P2 4R Mid", new PathPlannerAuto("P2 4R Mid"));
     m_chooser.addOption("P2 4R", new PathPlannerAuto("P2 4R"));
     m_chooser.addOption("Red P2 4R", new PathPlannerAuto("Red P2 4R"));
     m_chooser.addOption("Red P2 4R Mid", new PathPlannerAuto("Red P2 4R Mid"));
-    m_chooser.addOption("Q117", new PathPlannerAuto("Q117"));
-        m_chooser.addOption("Red P2 3MR Mid", new PathPlannerAuto("Red P2 3MR Mid"));
+    m_chooser.addOption("Red P2 3MR Mid", new PathPlannerAuto("Red P2 3MR Mid"));
 
-
-    m_chooser.addOption("P3 4R Long", new PathPlannerAuto("P3 4R"));
     m_chooser.addOption("P3 4R", new PathPlannerAuto("P3 4R"));
 
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -183,6 +166,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
+
     litty.setBlue();
     if (m_autoSelected != null) {
       m_autoSelected.cancel();
@@ -217,11 +201,12 @@ public class Robot extends LoggedRobot {
       drivebase.currHeading = -1;
       drivebase.rotateTo(xSpeed, ySpeed, 90);
     } else if (driver.getLeftTriggerAxis() > 0) {
-      drivebase.holdHeading(xSpeed, ySpeed);
+      // drivebase.holdHeading(xSpeed, ySpeed);
     } else {
       drivebase.currHeading = -1;
       drivebase.drive(xSpeed, ySpeed, rot);
     }
+    // drivebase.lockWheels();
 
     if (driver.getPOV() == 180) {
       launcher.setLauncherState(LauncherState.TEST);
@@ -231,9 +216,9 @@ public class Robot extends LoggedRobot {
       drivebase.zeroHeading();
     }
 
-    // if (operator.getYButton()) {
-    //   intake.setIntakeState(IntakeState.GROUND);
-    // }
+    if (operator.getYButton()) {
+      intake.setIntakeState(IntakeState.GROUND);
+    }
 
     if (driver.getRightTriggerAxis() > 0) {
       drivebase.setDriveState(DriveState.SLOW);
@@ -277,17 +262,9 @@ public class Robot extends LoggedRobot {
 
     /* LAUNCHER CONTROLS */
 
-    // if (-operator.getRightY() > 0) {
-    // launcher.setPivotPower();
-    // } else if (-operator.getRightY() < 0) {
-    // launcher.setReversePivotPower();
-    // } else {
-    // launcher.setPivotOff();
+    // if(driver.getRightStickButtonPressed()){
+    //   launcher.setLauncherState(LauncherState.TEST);
     // }
-
-    if(driver.getRightStickButtonPressed()){
-      launcher.setLauncherState(LauncherState.TEST);
-    }
 
     if (operator.getLeftStickButtonPressed()) {
       // launcher.increasePosition();
@@ -295,14 +272,6 @@ public class Robot extends LoggedRobot {
     } else if (operator.getRightStickButtonPressed()) {
       launcher.decreaseInrement();
       // launcher.decreasePosition();
-    }
-
-    if(operator.getAButton()){
-      launcher.increasePosition();
-    }
-
-    if(operator.getYButton()){
-      launcher.decreasePosition();
     }
 
     if (operator.getPOV() == 0) {

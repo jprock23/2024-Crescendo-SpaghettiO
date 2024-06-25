@@ -2,42 +2,48 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3,
-      "y": 5.56
+      "x": 0.7595396729271964,
+      "y": 6.672026728663196
     },
-    "rotation": 0
+    "rotation": 60.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Q117"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 12.0
+            "name": "AutoPreload"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Q117 Score"
+            "pathName": "P1 Intake Second"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "shot"
+            "name": "Handoff"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "P1 Score Second"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoLeftShot"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "P2",
   "choreoAuto": false
 }

@@ -2,37 +2,31 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3,
-      "y": 5.56
+      "x": 0.6332428049471499,
+      "y": 4.371055665188254
     },
-    "rotation": 0
+    "rotation": -60.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Q117"
+            "name": "AutoPreload"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 12.0
+            "waitTime": 5.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Q117 Score"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shot"
+            "pathName": "Semi2"
           }
         }
       ]

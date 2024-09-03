@@ -1,6 +1,11 @@
 package frc.robot.subsystems.swerve;
 
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
+
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -23,6 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
+import frc.robot.subsystems.vision.DualCamera;
 import frc.robot.Constants.DriveConstants;
 
 public class Drivebase extends SubsystemBase {
@@ -120,6 +126,24 @@ public class Drivebase extends SubsystemBase {
 
   public void resetOdometry() {
     poseEstimator.resetPosition(Rotation2d.fromDegrees(-gyro.getAngle()), getPositions(), getPose());
+  }
+
+  public Pose2d updateOdometry(Pose2d pose, PhotonPipelineResult result){
+      Pose2d position = poseEstimator.update(gyro.getRotation2d(), getPositions());
+      DualCamera dualCamera = DualCamera.getInstance();
+      Optional<EstimatedRobotPose> photonPoseEstimator = dualCamera.getEstimatedPose(pose);
+      Pose2d defaultPose = new Pose2d(0, 0, new Rotation2d(0));
+      double timestamp;
+      if(pose != null && pose != defaultPose && (DualCamera.hasTargets(dualCamera.getBack())) && !photonPoseEstimator.isEmpty())
+      {
+      timestamp = result.getTimestampSeconds();
+      poseEstimator.addVisionMeasurement(photonPoseEstimator.get().estimatedPose.toPose2d(), photonPoseEstimator.get().timestampSeconds);
+      }
+      else if(pose != null && pose != defaultPose && DualCamera.hasTargets(dualCamera.getFront()) && !photonPoseEstimator.isEmpty()){
+      timestamp = result.getTimestampSeconds();
+       poseEstimator.addVisionMeasurement(photonPoseEstimator.get().estimatedPose.toPose2d(), timestamp);
+      }
+      return new Pose2d();
   }
 
   public void drive(double forward, double side, double rot) {

@@ -33,6 +33,7 @@ public class HandoffCommand extends Command {
   private boolean ended;
 
   public HandoffCommand() {
+    
     launcher = Launcher.getInstance();
     intake = Intake.getInstance();
   }
@@ -90,6 +91,7 @@ public class HandoffCommand extends Command {
       if (timeElapsed2 > .5) {
         ended = true;
       }
+
     }
   }
 

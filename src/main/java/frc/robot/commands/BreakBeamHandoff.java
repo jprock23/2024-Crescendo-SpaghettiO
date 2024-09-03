@@ -60,6 +60,7 @@ public class BreakBeamHandoff extends Command {
       intake.setRollerOff();
       launcher.setReverseLauncherOn();
       launcher.setFlickerReverse();
+      litty.setBlue();
     }
 
     if (intake.getIntakeState() == IntakeState.HANDOFF && intake.hasReachedPose(3.0)) {
@@ -72,7 +73,7 @@ public class BreakBeamHandoff extends Command {
       if (launcherHasRing && !launcher.getBreakBeam()) {
         launcher.setLauncherOff();
         intake.setRollerOff();
-
+        litty.setGreen();
         if (startTime == -1) {
           startTime = Timer.getFPGATimestamp();
         }
@@ -80,7 +81,7 @@ public class BreakBeamHandoff extends Command {
         if (Timer.getFPGATimestamp() - startTime > duration) {
           ended = true;
         }
-      }
+      } 
     }
   }
 
@@ -90,7 +91,7 @@ public class BreakBeamHandoff extends Command {
     launcher.setLauncherState(LauncherState.HOVER);
     intake.setIntakeState(IntakeState.HOLD);
     launcher.updatePose();
-    litty.setGreen();
+    
   }
 
   @Override

@@ -17,11 +17,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.subsystems.IO.DigitalInputs;
-import frc.robot.subsystems.vision.VisionTablesListener;
+//import frc.robot.subsystems.vision.VisionTablesListener;
 import frc.robot.Ports;
 
 public class Launcher {
-
+    
     public enum LauncherState {
         // AMP(-48.5, 1.0),
         AMP(-60.5, 1.0),
@@ -38,10 +38,11 @@ public class Launcher {
         // height: 20.75
         AUTORIGHTSHOT(-13.5, 1.0),
         // height: ?7
-        SPEAKER(-58, 1.0),
+        SPEAKER(-52, 1.0),
         ALTSPEAKER(-23, 1.0),
         INTERLOPE(0.0, 1.0),
-        TEST(-13.25, 1.0);
+        TEST(-13.25, 1.0),
+        FIXER(-20, 0);
 
         public double position;
         public double launchSpeed;
@@ -96,7 +97,7 @@ public class Launcher {
 
     public static Launcher instance;
 
-    public VisionTablesListener visTables;
+    //public VisionTablesListener visTables;
 
     private HashMap<Double, Double> lookupTable = new HashMap<>();
     private double[] bluePositions = new double[] { 1.62, 1.93, 2.34, 2.41, 2.63, 2.71, 2.94, 3.01, 3.3, 4.14 };
@@ -177,7 +178,7 @@ public class Launcher {
 
         breakBeam = DigitalInputs.getInstance();
 
-        visTables = VisionTablesListener.getInstance();
+        //visTables = VisionTablesListener.getInstance();
 
         lookupTable.put(2.94, -10.25);
         lookupTable.put(2.41, -13.25);
@@ -218,68 +219,68 @@ public class Launcher {
     public void interpolateAngle() {
         double deltaX;
 
-        if (visTables.getFrontDetects()) {
-            if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                deltaX = visTables.getVisX() - .08;
-            } else {
-                deltaX = 16.579342 - visTables.getVisX() + .2;
-            }
+    //     if (visTables.getLauncherDetects()) {
+    //         if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+    //             deltaX = visTables.getVisX() - .08;
+    //         } else {
+    //             deltaX = 16.579342 - visTables.getVisX() + .2;
+    //         }
 
-            double position;
+    //         double position;
 
-            if (deltaX > 1) {
-                position = -16.1878 * Math.pow(Math.atan(2 / deltaX), 11 / 8);
-            } else {
-                position = -20.1878 * Math.pow(Math.atan(2 / deltaX), 11 / 8);
-            }
+    //         if (deltaX > 1) {
+    //             position = -16.1878 * Math.pow(Math.atan(2 / deltaX), 11 / 8);
+    //         } else {
+    //             position = -20.1878 * Math.pow(Math.atan(2 / deltaX), 11 / 8);
+    //         }
 
-            LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position,
-                    LauncherState.HOVER.position);
+    //         LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position,
+    //                 LauncherState.HOVER.position);
 
-            SmartDashboard.putNumber("DeltaX", deltaX);
+    //         SmartDashboard.putNumber("DeltaX", deltaX);
 
-            // setLauncherState(LauncherState.INTERLOPE);
-        }
-    }
+    //         // setLauncherState(LauncherState.INTERLOPE);
+    //     }
+    // }
 
-    public void lookUpPosition() {
-        double deltaX;
+    // public void lookUpPosition() {
+    //     double deltaX;
 
-        if (visTables.getFrontDetects()) {
-            if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                deltaX = visTables.getVisX() - 0.08;
-            } else {
-                deltaX = 16.579342 - visTables.getVisX() + .2;
-            }
-            double position;
+    //     if (visTables.getLauncherDetects()) {
+    //         if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+    //             deltaX = visTables.getVisX() - 0.08;
+    //         } else {
+    //             deltaX = 16.579342 - visTables.getVisX() + .2;
+    //         }
+    //         double position;
 
-            if (lookupTable.containsKey(deltaX)) {
-                position = lookupTable.get(deltaX);
-            } else {
-                int upper = 0;
-                int lower = 0;
-                for (int i = 0; i < bluePositions.length - 1; i++) {
-                    if (deltaX < bluePositions[0]) {
-                        deltaX = LauncherState.ALTSPEAKER.position;
-                        break;
-                    } else if (deltaX > bluePositions[bluePositions.length - 1]) {
-                        deltaX = LauncherState.HOVER.position;
-                    } else if (deltaX > bluePositions[upper]) {
-                        lower = upper;
-                        upper = i + 1;
-                    }
-                }
+    //         if (lookupTable.containsKey(deltaX)) {
+    //             position = lookupTable.get(deltaX);
+    //         } else {
+    //             int upper = 0;
+    //             int lower = 0;
+    //             for (int i = 0; i < bluePositions.length - 1; i++) {
+    //                 if (deltaX < bluePositions[0]) {
+    //                     deltaX = LauncherState.ALTSPEAKER.position;
+    //                     break;
+    //                 } else if (deltaX > bluePositions[bluePositions.length - 1]) {
+    //                     deltaX = LauncherState.HOVER.position;
+    //                 } else if (deltaX > bluePositions[upper]) {
+    //                     lower = upper;
+    //                     upper = i + 1;
+    //                 }
+    //             }
 
-                position = deltaX * ((bluePositions[upper] - bluePositions[lower]) / upper - lower);
+    //             position = deltaX * ((bluePositions[upper] - bluePositions[lower]) / upper - lower);
 
-                // SmartDashboard.putNumber("deltaX", deltaX + .08);
-                // SmartDashboard.putNumber("deltaX", 16.579342 + visTables.getVisX() - .2);
-                LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position,
-                        LauncherState.HOVER.position);
-                // setLauncherState(LauncherState.INTERLOPE);
-            }
-        }
-    }
+    //             // SmartDashboard.putNumber("deltaX", deltaX + .08);
+    //             // SmartDashboard.putNumber("deltaX", 16.579342 + visTables.getVisX() - .2);
+    //             LauncherState.INTERLOPE.position = MathUtil.clamp(position, LauncherState.SPEAKER.position,
+    //                     LauncherState.HOVER.position);
+    //             // setLauncherState(LauncherState.INTERLOPE);
+    //         }
+    //     }
+     }
 
     public void eject() {
         shootMotor2.set(0);
@@ -306,9 +307,22 @@ public class Launcher {
         return LauncherState.TEST.position;
     }
 
+     public double getSpeakerPosition() {
+        return LauncherState.SPEAKER.position;
+    }
+
     public double getLeBronPostion() {
         return boxScore.getPosition();
     }
+
+    public double getLebronCurrent(){
+        return lebronMotor.getOutputCurrent();
+
+    }
+
+    
+
+    
 
     public void setLauncherOn() {
         if (launchState == LauncherState.AMP) {
@@ -349,7 +363,8 @@ public class Launcher {
         flicker.set(-1.0);
     }
 
-    public void setFlickerPartial() {
+    public void 
+    setFlickerPartial() {
         flicker.set(0.85);
     }
 
@@ -394,24 +409,17 @@ public class Launcher {
     }
 
     public void increasePosition() {
-        LauncherState.TEST.position = LauncherState.TEST.position - increment;
+        
         if (launchState == LauncherState.SPEAKER) {
             LauncherState.SPEAKER.position = LauncherState.SPEAKER.position + increment;
-        } else if (launchState == LauncherState.ALTSPEAKER) {
-            LauncherState.ALTSPEAKER.position = LauncherState.ALTSPEAKER.position +
-                    increment;
-        }
+        } 
 
     }
 
     public void decreasePosition() {
-        LauncherState.TEST.position = LauncherState.TEST.position + increment;
-        // if (launchState == LauncherState.SPEAKER) {
-        // LauncherState.SPEAKER.position = LauncherState.SPEAKER.position - increment;
-        // } else if (launchState == LauncherState.ALTSPEAKER) {
-        // LauncherState.ALTSPEAKER.position = LauncherState.ALTSPEAKER.position -
-        // increment;
-        // }
+        if (launchState == LauncherState.SPEAKER) {
+        LauncherState.SPEAKER.position = LauncherState.SPEAKER.position - increment;
+        } 
 
     }
 

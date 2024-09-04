@@ -21,7 +21,7 @@ import frc.robot.subsystems.IO.DigitalInputs;
 import frc.robot.Ports;
 
 public class Launcher {
-    
+
     public enum LauncherState {
         // AMP(-48.5, 1.0),
         AMP(-60.5, 1.0),
@@ -38,7 +38,7 @@ public class Launcher {
         // height: 20.75
         AUTORIGHTSHOT(-13.5, 1.0),
         // height: ?7
-        SPEAKER(-52, 1.0),
+        SPEAKER(-54, 1.0),
         ALTSPEAKER(-23, 1.0),
         INTERLOPE(0.0, 1.0),
         TEST(-13.25, 1.0),

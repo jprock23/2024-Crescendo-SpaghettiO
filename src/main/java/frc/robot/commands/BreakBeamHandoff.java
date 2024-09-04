@@ -22,7 +22,10 @@ public class BreakBeamHandoff extends Command {
   private boolean ended;
 
   private double startTime;
-  private double duration = 0.5;
+  private double duration = 1.5;
+
+  private boolean intakeGood;
+  private double timestuff;
 
 
   public BreakBeamHandoff() {
@@ -32,7 +35,8 @@ public class BreakBeamHandoff extends Command {
 
     launcherHasRing = false;
     ended = false;
-
+    intakeGood = true;
+    timestuff = -1;
   }
 
   @Override
@@ -68,7 +72,7 @@ public class BreakBeamHandoff extends Command {
 
       if (!launcherHasRing && launcher.getBreakBeam()) {
         launcherHasRing = true;
-      }
+      } 
 
       if (launcherHasRing && !launcher.getBreakBeam()) {
         launcher.setLauncherOff();
@@ -77,10 +81,16 @@ public class BreakBeamHandoff extends Command {
         if (startTime == -1) {
           startTime = Timer.getFPGATimestamp();
         }
-
+        if(intakeGood && intake.getBreakBeam()){
+          intakeGood = false;
+          timestuff = Timer.getFPGATimestamp();
+        }
+        if(Timer.getFPGATimestamp() - timestuff > duration && intake.getBreakBeam()){
+          intake.setReverseRollerPower();
+        }
         if (Timer.getFPGATimestamp() - startTime > duration) {
           ended = true;
-        }
+        } 
       } 
     }
   }

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.43,
-        "y": 4.05
+        "x": 2.5079619390008028,
+        "y": 4.1046482092964185
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8962114847306633,
-        "y": 4.577729235458472
+        "x": 1.9741734237314659,
+        "y": 4.632377444754891
       },
       "isLocked": false,
       "linkedName": "RightRingFront"

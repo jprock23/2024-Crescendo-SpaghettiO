@@ -17,7 +17,7 @@ public class Intake {
     public enum IntakeState {
         
         STOP(0.2),
-        GROUND(-16),
+        GROUND(-13.5),
         HANDOFF(-4),
         HOLD(-2.5);
 
@@ -94,11 +94,11 @@ public class Intake {
     }
 
     public void setRollerPower() {
-        roller.set(power);
+        roller.set(.8 * power);
     }
 
     public void setReverseRollerPower() {
-        roller.set(-power);
+        roller.set(.8* -power);
     }
 
     public void setFlipperPower() {

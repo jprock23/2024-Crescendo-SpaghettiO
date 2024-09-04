@@ -341,6 +341,7 @@ public class Robot extends LoggedRobot {
     }
 
     if (operator.getBButton()) {
+      launcher.setLauncherState(LauncherState.TEST);
       launcher.eject();
       launcher.setFlickerPartial();
       litty.setRed();

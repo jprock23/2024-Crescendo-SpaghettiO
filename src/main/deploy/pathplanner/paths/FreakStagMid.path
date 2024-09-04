@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 8.299857368945508,
-        "y": 3.976377952755906
+        "x": 8.289990426134699,
+        "y": 4.065180438053184
       },
       "prevControl": {
-        "x": 7.303296145053829,
-        "y": 6.482581426701315
+        "x": 7.293429202243019,
+        "y": 6.571383911998593
       },
       "nextControl": null,
       "isLocked": false,
@@ -40,7 +40,7 @@
   "goalEndState": {
     "velocity": 0,
     "rotation": -90.0,
-    "rotateFast": true
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "More Test",

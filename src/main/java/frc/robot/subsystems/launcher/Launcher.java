@@ -28,17 +28,17 @@ public class Launcher {
         ALTAMP(-55, 0.9),
         START(0, 0.0),
         TRAP(-70.04991149902344, 0.8),
-        LONG(-13.25, 1.0),
+        LONG(-15.75, 1.0),
         HANDOFF(9, 0.5),
         HOVER(-3, 1.0),
         TOSS(-22, .80),
         AUTOMIDSHOT(-12, 1.0),
         // height: ?
         AUTOLEFTSHOT(-13.5, 1.0),
-        // height: 20.75
+        // height: 20.75    
         AUTORIGHTSHOT(-13.5, 1.0),
         // height: ?7
-        SPEAKER(-54, 1.0),
+        SPEAKER(-55.5, 1.0),
         ALTSPEAKER(-23, 1.0),
         INTERLOPE(0.0, 1.0),
         TEST(-13.25, 1.0),

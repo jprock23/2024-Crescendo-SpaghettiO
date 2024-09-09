@@ -126,6 +126,7 @@ public class Robot extends LoggedRobot {
     m_chooser.addOption("Mid:ine", new PathPlannerAuto("MidLine"));
     
     m_chooser.addOption("FreakyMid", new PathPlannerAuto("FreakyMid"));
+    m_chooser.addOption("P2 Middle", new PathPlannerAuto("P2 Middle"));
 
     m_chooser.addOption("P3 4R", new PathPlannerAuto("P3 4R"));
 
@@ -205,7 +206,7 @@ public class Robot extends LoggedRobot {
 
     //visTables.printDetects();
     SmartDashboard.putNumber("Gyro Angle:", (drivebase.getHeading() + 90) % 360);
-    SmartDashboard.putNumber("X-coordinate", 16.579342 - drivebase.getPose().getX());
+    SmartDashboard.putNumber("X-coordinate", drivebase.getPose().getX());
     SmartDashboard.putNumber("Y-coordinate", drivebase.getPose().getY());
 
     //SmartDashboard.putString("Alliance", DriverStation.getAlliance().toString());
@@ -324,9 +325,12 @@ public class Robot extends LoggedRobot {
     if(driver.getPOV() == 180){
       litty.setRed();
     }
-    // if (operator.getYButton()) {
-    //   intake.setIntakeState(IntakeState.GROUND);
-    // }
+    if (operator.getYButton()) {
+      launcher.setLauncherState(LauncherState.SPEAKER);
+      launcher.updatePose();
+      launcher.setReverseLauncherOn();
+      launcher.setFlickerReverse();
+    }
 
     if (driver.getRightTriggerAxis() > 0) {
       drivebase.setDriveState(DriveState.SLOW);
@@ -413,9 +417,11 @@ public class Robot extends LoggedRobot {
    
 
     if (operator.getXButton()) {
+      launcher.setLauncherState(LauncherState.TEST);
+      launcher.setReverseLauncherOn();
       intake.setReverseRollerPower();
       launcher.setFlickerReverse();
-      launcher.setReverseLauncherOn();
+      
     }
 
     if (operator.getRightTriggerAxis() > 0) {

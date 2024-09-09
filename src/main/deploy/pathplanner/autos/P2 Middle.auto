@@ -28,7 +28,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Photon Intake 4"
+                        "pathName": "Photon Intake 2"
                       }
                     },
                     {
@@ -38,7 +38,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Photon Score 4"
+                              "pathName": "Photon Score 2"
                             }
                           },
                           {
@@ -156,7 +156,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Photon Intake 2"
+                        "pathName": "Photon Intake 4"
                       }
                     },
                     {
@@ -166,7 +166,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Photon Score 2"
+                              "pathName": "Photon Score 4"
                             }
                           },
                           {

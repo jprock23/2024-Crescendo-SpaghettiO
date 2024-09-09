@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6332428049471499,
-      "y": 4.371055665188254
+      "x": 0.7713800042984719,
+      "y": 6.660186397295872
     },
-    "rotation": -60.0
+    "rotation": 60.0
   },
   "command": {
     "type": "sequential",
@@ -15,18 +15,6 @@
           "type": "named",
           "data": {
             "name": "AutoPreload"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 5.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Semi2"
           }
         }
       ]

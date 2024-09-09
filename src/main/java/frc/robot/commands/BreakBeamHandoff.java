@@ -69,7 +69,6 @@ public class BreakBeamHandoff extends Command {
 
     if (intake.getIntakeState() == IntakeState.HANDOFF && intake.hasReachedPose(3.0)) {
       intake.setRollerPower();
-
       if (!launcherHasRing && launcher.getBreakBeam()) {
         launcherHasRing = true;
       } 

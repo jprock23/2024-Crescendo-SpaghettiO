@@ -94,11 +94,11 @@ public class Intake {
     }
 
     public void setRollerPower() {
-        roller.set(.8 * power);
+        roller.set(power);
     }
 
     public void setReverseRollerPower() {
-        roller.set(.8* -power);
+        roller.set(-power);
     }
 
     public void setFlipperPower() {

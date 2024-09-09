@@ -24,13 +24,15 @@ public class Launcher {
 
     public enum LauncherState {
         // AMP(-48.5, 1.0),
-        AMP(-60.5, 1.0),
+        AMP(-60.5, 0.8),
         ALTAMP(-55, 0.9),
         START(0, 0.0),
         TRAP(-70.04991149902344, 0.8),
         LONG(-15.75, 1.0),
-        HANDOFF(9, 0.5),
-        HOVER(-3, 1.0),
+        //was 9 before (HANDOFF)
+        HANDOFF(8.5, 0.5),
+        //was -3 before (HOVER)
+        HOVER(-4, 1.0),
         TOSS(-22, .80),
         AUTOMIDSHOT(-12, 1.0),
         // height: ?
@@ -38,7 +40,9 @@ public class Launcher {
         // height: 20.75    
         AUTORIGHTSHOT(-13.5, 1.0),
         // height: ?7
-        SPEAKER(-55.5, 1.0),
+        //angle from the negative vertical (3pi/2 to pi type beat): 149.85
+        SPEAKER(-54, 1.0),
+        
         ALTSPEAKER(-23, 1.0),
         INTERLOPE(0.0, 1.0),
         TEST(-13.25, 1.0),
